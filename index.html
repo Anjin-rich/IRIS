@@ -71,7 +71,6 @@
             --energy-high-text: #8a6a00;
             --energy-low-text: #1a6a8a;
             --energy-rest-text: #5a3a7a;
-            /* 长按进度条颜色 */
             --press-progress-color: var(--main-purple);
         }
         body.dark-theme {
@@ -479,7 +478,7 @@
             transition: background 0.2s, opacity 0.3s, border-color 0.3s;
             cursor: grab;
             position: relative;
-            touch-action: none;
+            touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -685,18 +684,22 @@
         .energy-bar-card .card-content {
             width: 100%;
         }
-        /* 长按进度条 — 纯视觉反馈，无文字 */
-        .energy-bar-card .press-progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 3px;
-            background: var(--press-progress-color);
-            width: 0%;
-            border-radius: 0 2px 2px 0;
-            transition: width 0.05s linear;
-            opacity: 0.6;
-            pointer-events: none;
+
+        /* 长按星光反馈 */
+        .energy-star {
+            display: inline-block;
+            font-size: 1.5rem;
+            transition: transform 0.2s, color 0.2s;
+            color: var(--step-inactive);
+            margin-right: 6px;
+        }
+        .energy-bar-card.long-press-active .energy-star {
+            animation: star-pulse 0.6s ease-in-out infinite alternate;
+            color: var(--step-active);
+        }
+        .energy-bar-card.long-press-done .energy-star {
+            animation: star-done 0.4s ease;
+            color: var(--step-done);
         }
 
         /* ================================================================
@@ -1533,6 +1536,51 @@
         body.dark-theme .reader-controls .progress-row input[type="range"]::-moz-range-thumb { background: var(--main-purple); }
         .achieve-list-wrap { padding-bottom: 10px; }
         @media (max-width:480px) { .achieve-list-wrap { max-height: 55vh; } .app-body { padding-bottom: 80px; } .sound-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; } .sound-btn { font-size: 0.55rem; padding: 6px 2px; } .routine-steps { padding-left: 0; } .step-star { width: 20px; font-size: 1.1rem; } .routine-step-add { padding-left: 28px; } }
+
+        /* 长按星星动画（待办事项） */
+        .todo-star {
+            display: inline-block;
+            transition: transform 0.2s, color 0.2s;
+            font-size: 1.2rem;
+            margin-right: 8px;
+            color: var(--step-inactive);
+            flex-shrink: 0;
+        }
+        .todo-item.long-press-active .todo-star {
+            animation: star-pulse 0.6s ease-in-out infinite alternate;
+            color: var(--step-active);
+        }
+        .todo-item.long-press-done .todo-star {
+            animation: star-done 0.4s ease;
+            color: var(--step-done);
+        }
+
+        /* 长按星星动画（能量卡片） */
+        .energy-star {
+            display: inline-block;
+            font-size: 1.5rem;
+            transition: transform 0.2s, color 0.2s;
+            color: var(--step-inactive);
+            margin-right: 6px;
+        }
+        .energy-bar-card.long-press-active .energy-star {
+            animation: star-pulse 0.6s ease-in-out infinite alternate;
+            color: var(--step-active);
+        }
+        .energy-bar-card.long-press-done .energy-star {
+            animation: star-done 0.4s ease;
+            color: var(--step-done);
+        }
+
+        @keyframes star-pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            100% { transform: scale(1.5); opacity: 1; }
+        }
+        @keyframes star-done {
+            0% { transform: scale(0.5) rotate(0deg); opacity: 0; }
+            60% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -1573,10 +1621,10 @@
                             </div>
                             <div class="energy-streak-display" id="energyStreakDisplay">🔥 连续 0 天</div>
                         </div>
-                        <!-- 卡片状态 (展示) — 长按交互区，无文字提示，进度条在底部 -->
+                        <!-- 卡片状态 (展示) — 长按交互区，无进度条，使用星光动画 -->
                         <div class="energy-bar-card" id="energyCard">
+                            <span class="energy-star">✧</span>
                             <div class="card-content" id="energyCardContent"></div>
-                            <div class="press-progress" id="pressProgress"></div>
                         </div>
                     </div>
 
@@ -1639,7 +1687,6 @@
                             <div style="font-size:0.6rem;color:var(--text-sub);margin-top:6px;text-align:center;">💡 音频文件需放在 assets/ 目录下</div>
                         </div>
                     </div>
-                    <!-- 已删除今日能量折叠块 -->
                 </div>
             </section>
 
@@ -2688,6 +2735,95 @@
 
             let todoDragSrc = null;
 
+            // 长按状态管理（使用 ID 作为键）
+            const longPressState = new Map();
+
+            // 事件委托：长按 + 拖拽（桌面端使用 HTML5 draggable，移动端使用自定义 touch 拖拽）
+            function setupTodoListDelegation() {
+                const list = document.getElementById('todoList');
+                if (!list) return;
+
+                // 移除旧的监听器以避免重复
+                if (list._longPressListener) {
+                    list.removeEventListener('pointerdown', list._longPressListener);
+                    list.removeEventListener('pointerup', list._longPressUpListener);
+                    list.removeEventListener('pointercancel', list._longPressCancelListener);
+                }
+
+                // ----- 长按逻辑 (Pointer Events) -----
+                const pointerDownHandler = (e) => {
+                    const item = e.target.closest('.todo-item');
+                    if (!item) return;
+                    // 排除拖拽手柄、删除按钮、复选框
+                    if (e.target.closest('.todo-drag-handle') || e.target.closest('.todo-delete') || e.target
+                        .closest('.todo-checkbox')) {
+                        return;
+                    }
+                    const id = item.dataset.id;
+                    if (!id) return;
+
+                    // 检查冷却状态
+                    if (longPressState.has(id)) {
+                        const st = longPressState.get(id);
+                        if (st.cooldown) return;
+                        if (st.timer) {
+                            clearTimeout(st.timer);
+                            st.timer = null;
+                        }
+                    }
+
+                    // 设置状态
+                    const st = longPressState.get(id) || { cooldown: false, done: false, timer: null };
+                    if (st.cooldown) return;
+
+                    // 添加活跃类
+                    item.classList.add('long-press-active');
+
+                    // 设置计时器 (600ms)
+                    st.timer = setTimeout(() => {
+                        // 执行长按操作
+                        triggerLoveEffect(item, id);
+                        item.classList.remove('long-press-active');
+                        item.classList.add('long-press-done');
+                        st.done = true;
+                        st.timer = null;
+
+                        // 500ms 后移除完成类并进入冷却
+                        setTimeout(() => {
+                            item.classList.remove('long-press-done');
+                            st.done = false;
+                            st.cooldown = true;
+                            setTimeout(() => {
+                                st.cooldown = false;
+                            }, 500);
+                        }, 500);
+                    }, 600);
+
+                    longPressState.set(id, st);
+
+                    // 取消事件 (pointerup / pointercancel)
+                    const cancelHandler = (ev) => {
+                        const currentSt = longPressState.get(id);
+                        if (currentSt && currentSt.timer) {
+                            clearTimeout(currentSt.timer);
+                            currentSt.timer = null;
+                            item.classList.remove('long-press-active');
+                        }
+                        document.removeEventListener('pointerup', cancelHandler);
+                        document.removeEventListener('pointercancel', cancelHandler);
+                    };
+                    document.addEventListener('pointerup', cancelHandler);
+                    document.addEventListener('pointercancel', cancelHandler);
+                };
+
+                list.addEventListener('pointerdown', pointerDownHandler);
+                list._longPressListener = pointerDownHandler;
+
+                // ----- 保留原有的拖拽逻辑 (桌面 HTML5 draggable + 移动端 touch) -----
+                // 桌面端 draggable 事件已在 renderTodos 中绑定，此处不再重复
+                // 移动端 touch 事件也在 renderTodos 中绑定
+            }
+
             function renderTodos() {
                 const list = document.getElementById('todoList');
                 const visibleTodos = state.todos.filter(t => !state.hiddenTodoIds.includes(t.id));
@@ -2701,22 +2837,20 @@
                 list.innerHTML = visibleTodos.map((todo, idx) => {
                     const realIdx = state.todos.indexOf(todo);
                     return `
-                    <li class="todo-item ${todo.done ? 'done' : ''}" id="todo-${realIdx}" draggable="true" data-idx="${realIdx}">
-                        <span class="todo-drag-handle" title="拖拽排序"><i class="fa-solid fa-grip-lines"></i></span>
-                        <input type="checkbox" class="todo-checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${realIdx})">
-                        <span class="todo-text">${escapeHtml(todo.text)}</span>
-                        <span class="todo-reward">+1</span>
-                        <span class="todo-delete" onclick="deleteTodo(${realIdx})"><i class="fa-regular fa-trash-can"></i></span>
-                    </li>
-                `;
+                        <li class="todo-item ${todo.done ? 'done' : ''}" id="todo-${realIdx}" draggable="true" data-idx="${realIdx}" data-id="${todo.id}">
+                            <span class="todo-drag-handle" title="拖拽排序"><i class="fa-solid fa-grip-lines"></i></span>
+                            <span class="todo-star">✧</span>
+                            <input type="checkbox" class="todo-checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${realIdx})">
+                            <span class="todo-text">${escapeHtml(todo.text)}</span>
+                            <span class="todo-reward">+1</span>
+                            <span class="todo-delete" onclick="deleteTodo(${realIdx})"><i class="fa-regular fa-trash-can"></i></span>
+                        </li>
+                    `;
                 }).join('');
 
-                // 绑定拖拽事件
+                // 绑定拖拽事件 (桌面 + 移动端)
                 list.querySelectorAll('.todo-item[draggable]').forEach(item => {
                     const idx = parseInt(item.dataset.idx);
-
-                    // 长按爱心 (排除拖拽手柄)
-                    bindLongPressEvents(item, idx);
 
                     // ---- 桌面拖拽 ----
                     item.addEventListener('dragstart', function(e) {
@@ -2844,50 +2978,9 @@
                 });
             }
 
-            // 长按爱心 (排除拖拽手柄)
-            function bindLongPressEvents(element, todoIdx) {
-                let pressTimer = null;
-                let progress = 0;
-
-                const startPress = (e) => {
-                    if (e.target.closest('.todo-drag-handle') ||
-                        e.target.closest('.todo-delete') ||
-                        e.target.closest('.todo-checkbox')) {
-                        return;
-                    }
-                    progress = 0;
-                    pressTimer = setInterval(() => {
-                        progress += 10;
-                        if (progress >= 50) {
-                            element.style.transform = 'scale(1.04)';
-                            element.style.transition = 'transform 0.1s';
-                            if (navigator.vibrate) navigator.vibrate(30);
-                        }
-                        if (progress >= 100) {
-                            clearInterval(pressTimer);
-                            triggerLoveEffect(element, todoIdx);
-                            element.style.transform = '';
-                        }
-                    }, 80);
-                };
-
-                const endPress = () => {
-                    clearInterval(pressTimer);
-                    element.style.transform = '';
-                    progress = 0;
-                };
-
-                element.addEventListener('mousedown', startPress);
-                element.addEventListener('mouseup', endPress);
-                element.addEventListener('mouseleave', endPress);
-                element.addEventListener('touchstart', startPress, { passive: true });
-                element.addEventListener('touchend', endPress);
-                element.addEventListener('touchcancel', endPress);
-            }
-
-            function triggerLoveEffect(element, todoIdx) {
+            function triggerLoveEffect(element, todoId) {
                 playGentleSound('longPress');
-                const todo = state.todos[todoIdx];
+                const todo = state.todos.find(t => t.id === todoId);
                 spawnHeartParticles(element);
                 if (todo && !todo.done) {
                     todo.done = true;
@@ -3414,7 +3507,6 @@
                 const selectEl = document.getElementById('energySelect');
                 const cardEl2 = document.getElementById('energyCard');
                 const contentEl = document.getElementById('energyCardContent');
-                const progressEl = document.getElementById('pressProgress');
 
                 selectEl.classList.add('hidden');
                 cardEl2.classList.add('show');
@@ -3422,8 +3514,6 @@
                 cardEl2.classList.add(`mode-${mode}`);
                 const msg = getRandomMessage(mode);
                 contentEl.textContent = msg;
-                // 重置进度条
-                if (progressEl) progressEl.style.width = '0%';
             }
 
             // 重置能量选择（长按触发）
@@ -3437,14 +3527,12 @@
 
                 const selectEl = document.getElementById('energySelect');
                 const cardEl = document.getElementById('energyCard');
-                const progressEl = document.getElementById('pressProgress');
 
                 if (selectEl) selectEl.classList.remove('hidden');
                 if (cardEl) {
                     cardEl.classList.remove('show');
                     cardEl.className = 'energy-bar-card';
                 }
-                if (progressEl) progressEl.style.width = '0%';
 
                 saveState();
                 renderTodos();
@@ -3455,103 +3543,51 @@
             }
 
             // ============================================================
-            //  长按监听器 (双端通用，带进度条视觉反馈)
+            //  长按监听器 (能量卡片)
             // ============================================================
             function setupEnergyCardLongPress() {
                 const cardEl = document.getElementById('energyCard');
                 if (!cardEl) return;
 
-                // 进度条元素
-                const progressEl = document.getElementById('pressProgress');
-                if (!progressEl) return;
-
-                let pressTimer = null;
-                let progressInterval = null;
-                let progress = 0;
+                let timer = null;
+                let isCooldown = false;
                 const DURATION = 600;
-                const STEP_INTERVAL = 16; // ~60fps
-
-                // 清除所有残留
-                function clearPress() {
-                    if (pressTimer) {
-                        clearTimeout(pressTimer);
-                        pressTimer = null;
-                    }
-                    if (progressInterval) {
-                        clearInterval(progressInterval);
-                        progressInterval = null;
-                    }
-                    progress = 0;
-                    cardEl.classList.remove('pressing');
-                    if (progressEl) progressEl.style.width = '0%';
-                }
 
                 const startPress = (e) => {
-                    // 只在卡片显示时响应
                     if (!cardEl.classList.contains('show')) return;
+                    if (isCooldown) return;
 
-                    // 阻止移动端默认行为（放大镜、选文字等）
-                    if (e.type === 'touchstart') {
-                        e.preventDefault();
-                    }
+                    cardEl.classList.add('long-press-active');
 
-                    // 清除之前的残留
-                    clearPress();
-
-                    // 添加下压样式
-                    cardEl.classList.add('pressing');
-                    progress = 0;
-                    if (progressEl) progressEl.style.width = '0%';
-
-                    // 启动进度条动画 (使用 setInterval 保证兼容性)
-                    progressInterval = setInterval(() => {
-                        progress += 2;
-                        if (progress >= 100) {
-                            progress = 100;
-                            if (progressEl) progressEl.style.width = '100%';
-                            // 触发重置
-                            resetEnergySelection();
-                            clearPress();
-                            return;
-                        }
-                        if (progressEl) progressEl.style.width = progress + '%';
-                    }, STEP_INTERVAL);
-
-                    // 安全超时 (防止 setInterval 因某些原因卡住)
-                    pressTimer = setTimeout(() => {
-                        if (progress < 100) {
-                            resetEnergySelection();
-                            clearPress();
-                        }
-                    }, DURATION + 100);
+                    timer = setTimeout(() => {
+                        resetEnergySelection();
+                        cardEl.classList.remove('long-press-active');
+                        cardEl.classList.add('long-press-done');
+                        isCooldown = true;
+                        setTimeout(() => {
+                            cardEl.classList.remove('long-press-done');
+                            isCooldown = false;
+                        }, 500);
+                        timer = null;
+                    }, DURATION);
                 };
 
                 const endPress = (e) => {
-                    // 如果触发了重置，clearPress 已经清理了所有
-                    // 但为了防止 endPress 在 reset 之后又被调用，我们检查一下状态
-                    if (pressTimer || progressInterval) {
-                        clearPress();
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null;
                     }
-                    // 移除按压样式（如果还没被清除）
-                    cardEl.classList.remove('pressing');
-                    if (progressEl) progressEl.style.width = '0%';
+                    cardEl.classList.remove('long-press-active');
                 };
 
                 // 移除旧监听，防止重复绑定
-                cardEl.removeEventListener('mousedown', startPress);
-                cardEl.removeEventListener('mouseup', endPress);
-                cardEl.removeEventListener('mouseleave', endPress);
-                cardEl.removeEventListener('touchstart', startPress);
-                cardEl.removeEventListener('touchend', endPress);
-                cardEl.removeEventListener('touchcancel', endPress);
+                cardEl.removeEventListener('pointerdown', startPress);
+                cardEl.removeEventListener('pointerup', endPress);
+                cardEl.removeEventListener('pointercancel', endPress);
 
-                // 绑定新监听
-                cardEl.addEventListener('mousedown', startPress);
-                cardEl.addEventListener('mouseup', endPress);
-                cardEl.addEventListener('mouseleave', endPress);
-                cardEl.addEventListener('touchstart', startPress, { passive: false });
-                cardEl.addEventListener('touchend', endPress);
-                cardEl.addEventListener('touchcancel', endPress);
+                cardEl.addEventListener('pointerdown', startPress);
+                cardEl.addEventListener('pointerup', endPress);
+                cardEl.addEventListener('pointercancel', endPress);
             }
 
             // ============================================================
@@ -5143,7 +5179,6 @@
                     const selectEl = document.getElementById('energySelect');
                     const cardEl = document.getElementById('energyCard');
                     const contentEl = document.getElementById('energyCardContent');
-                    const progressEl = document.getElementById('pressProgress');
                     if (selectEl) selectEl.classList.add('hidden');
                     if (cardEl) {
                         cardEl.classList.add('show');
@@ -5154,7 +5189,6 @@
                         const msg = getRandomMessage(currentMode);
                         contentEl.textContent = msg;
                     }
-                    if (progressEl) progressEl.style.width = '0%';
                 } else {
                     const selectEl = document.getElementById('energySelect');
                     const cardEl = document.getElementById('energyCard');
@@ -5167,6 +5201,7 @@
 
                 // 设置长按监听
                 setupEnergyCardLongPress();
+                setupTodoListDelegation();
 
                 document.getElementById('diaryPrompt').textContent = '💭 ' + getRandomPrompt();
                 if (state.currentAfk && !state.currentAfk.isPaused) {
