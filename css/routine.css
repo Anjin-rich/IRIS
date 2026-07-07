@@ -5,11 +5,10 @@
     margin-top: 0;
 }
 
-/* 整宽创建按钮 (Notion风格) — 高度调整为44px */
+/* 整宽创建按钮 (Notion风格) — 高度统一44px */
 .routine-create-btn {
     width: 100%;
-    min-height: 44px;
-    /* 原52px → 44px */
+    height: 44px;
     background: var(--cream-yellow);
     border: 1px solid var(--cream-yellow-border);
     border-radius: 16px;
@@ -26,6 +25,7 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
     font-family: 'Noto Sans SC', sans-serif;
     padding: 0 16px;
+    box-sizing: border-box;
 }
 
 .routine-create-btn:active {

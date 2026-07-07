@@ -210,49 +210,6 @@
     transform: scale(0.98);
 }
 
-.affirm-area {
-    margin: 6px 0 10px;
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.affirm-area input {
-    flex: 1;
-    min-width: 100px;
-    border: 1px solid var(--light-purple);
-    padding: 6px 12px;
-    border-radius: 14px;
-    outline: none;
-    font-size: 0.8rem;
-    background: var(--input-bg);
-    color: var(--text-main);
-}
-
-.affirm-area input:focus {
-    border-color: var(--main-purple);
-}
-
-.affirm-area .affirm-btn {
-    background: var(--main-purple);
-    color: white;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 14px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.affirm-area .affirm-result {
-    font-size: 0.8rem;
-    color: var(--text-sub);
-    font-style: italic;
-    width: 100%;
-    padding: 4px 0;
-}
-
 .diary-calendar {
     margin: 12px 0 8px;
     background: var(--calendar-bg);

@@ -503,9 +503,9 @@
 .rule-list li {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--border-light);
-    font-size: 0.88rem;
+    font-size: 0.95rem;
 }
 
 .rule-list li:last-child {
@@ -519,18 +519,20 @@
 .rule-list .rule-value {
     color: var(--main-purple);
     font-weight: 700;
+    font-size: 1rem;
 }
 
 .rule-usage {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--text-sub);
-    margin-top: 10px;
-    padding: 10px 12px;
+    margin-top: 12px;
+    padding: 12px 14px;
     background: var(--item-bg);
     border-radius: 12px;
-    line-height: 1.7;
+    line-height: 1.8;
 }
 
 .rule-usage strong {
     color: var(--dark-purple);
+    font-size: 0.95rem;
 }

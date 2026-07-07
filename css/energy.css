@@ -1,11 +1,8 @@
 /* ----- 今日能量紧凑栏 (清单页顶部) ----- */
 .energy-bar-compact {
     display: flex;
-    /* 改为 Flex 布局 */
     align-items: center;
-    /* 强制内部元素垂直居中（解决黄色框问题） */
     justify-content: center;
-    /* 强制内部元素水平居中（让整行在框内更舒适） */
     padding: 8px 12px;
     background: var(--card-bg);
     border-radius: 16px;
@@ -27,7 +24,6 @@
     align-items: center;
     gap: 8px;
     flex-wrap: nowrap;
-    /* 强制不换行，解决iPad折行问题 */
     transition: opacity 0.3s ease;
 }
 
@@ -54,7 +50,6 @@
 /* ----- 按钮核心修改 ----- */
 .energy-pill-btn {
     flex: 0 1 auto;
-    /* 改为 0 1 auto 允许按内容收缩，避免被过分拉伸 */
     padding: 5px 8px;
     border-radius: 20px;
     border: 1.5px solid transparent;
@@ -65,8 +60,6 @@
     transition: all 0.2s;
     white-space: nowrap;
     font-weight: 500;
-
-    /* 内部强制水平+垂直居中，并固定emoji和文字的间隔 */
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -116,7 +109,6 @@
     text-align: center;
     color: var(--energy-card-text);
     font-size: clamp(0.75rem, 2.5vw, 0.9rem);
-    /* 自适应字体 */
     font-weight: 500;
     line-height: 1.4;
     transition: background 0.4s, transform 0.2s ease, box-shadow 0.2s ease;
@@ -134,7 +126,7 @@
     -webkit-touch-callout: none;
     touch-action: manipulation;
     word-break: break-word;
-    /* 长词换行 */
+    overflow: hidden;
 }
 
 .energy-bar-card.show {
@@ -146,10 +138,112 @@
     transform: scale(0.98);
 }
 
-/* 长按进行中的状态 (由JS添加) */
-.energy-bar-card.pressing {
+/* ============================================================
+   长按动画 — 星星逐个亮起 + 文案消散
+   ============================================================ */
+
+/* 长按按下时的下压反馈 */
+.energy-bar-card.long-press-active {
     transform: scale(0.97);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* 文案容器 */
+.card-text {
+    transition: opacity 0.3s, filter 0.3s, letter-spacing 0.3s;
+}
+
+/* 文案消散动画 — 从两边向中间模糊消失 */
+.long-press-active .card-text {
+    animation: textDissolve 0.6s ease-in forwards;
+    animation-delay: 0.15s;
+}
+
+@keyframes textDissolve {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+        letter-spacing: 0;
+    }
+    50% {
+        opacity: 0.5;
+        filter: blur(2px);
+        letter-spacing: 3px;
+    }
+    100% {
+        opacity: 0;
+        filter: blur(8px);
+        letter-spacing: 8px;
+    }
+}
+
+/* 长按完成后的闪烁消失 */
+.energy-bar-card.long-press-done .card-text {
+    animation: textFinalFade 0.35s ease-out forwards;
+}
+
+@keyframes textFinalFade {
+    0% { opacity: 0; transform: scale(1); }
+    50% { opacity: 0.2; transform: scale(1.05); }
+    100% { opacity: 0; transform: scale(0.85); }
+}
+
+/* 长按进度星星容器 */
+.energy-stars-progress {
+    position: absolute;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--accent-yellow);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.long-press-active .energy-stars-progress {
+    opacity: 1;
+}
+
+/* 星星逐个亮起 */
+.energy-stars-progress .star {
+    opacity: 0;
+    transform: scale(0.3);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.long-press-active .energy-stars-progress .star:nth-child(1) {
+    opacity: 1; transform: scale(1); transition-delay: 0ms;
+}
+.long-press-active .energy-stars-progress .star:nth-child(2) {
+    opacity: 1; transform: scale(1); transition-delay: 120ms;
+}
+.long-press-active .energy-stars-progress .star:nth-child(3) {
+    opacity: 1; transform: scale(1); transition-delay: 240ms;
+}
+.long-press-active .energy-stars-progress .star:nth-child(4) {
+    opacity: 1; transform: scale(1); transition-delay: 360ms;
+}
+.long-press-active .energy-stars-progress .star:nth-child(5) {
+    opacity: 1; transform: scale(1); transition-delay: 480ms;
+    color: var(--accent-yellow-dark);
+    font-weight: bold;
+}
+
+/* 文案排版：强制两行，尽量从逗号断句 */
+.energy-bar-card .card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    hyphens: auto;
+    text-align: center;
+    max-width: 100%;
 }
 
 /* 不同能量模式的背景色 (使用CSS变量) */
@@ -168,11 +262,33 @@
     color: var(--energy-rest-text);
 }
 
-/* 修改内容容器：高度占满且内容垂直居中，保证短句也能完美铺满背景 */
+/* 修改内容容器：高度占满且内容垂直居中 */
 .energy-bar-card .card-content {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    animation: energyTextReveal 0.8s ease-out;
+    position: relative;
+}
+
+/* 星星渐现动画 */
+@keyframes energyTextReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: blur(4px);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.05);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
 }

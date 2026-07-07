@@ -37,10 +37,7 @@
                 <div class="app-title">Iris</div>
             </div>
             <div class="header-right">
-                <span class="header-icon-btn" title="预留">💜</span>
-                <button class="gallery-header-btn" onclick="openGalleryPreview()" title="时光画廊">
-                    <i class="fa-regular fa-moon"></i>
-                </button>
+                <button class="gallery-header-btn" onclick="openGalleryPreview()" title="时光画廊">💜</button>
                 <div class="user-badge" onclick="openRulesModal()">
                     <i class="fa-solid fa-seedling"></i>
                     <span id="headerEnergy">0</span>
@@ -67,9 +64,16 @@
                             </div>
                             <div class="energy-streak-display" id="energyStreakDisplay">🔥 连续 0 天</div>
                         </div>
-                        <!-- 卡片状态 (展示) — 已移除星星符号，改为纯文案展示 -->
+                        <!-- 卡片状态 (展示) — 长按星星动画 -->
                         <div class="energy-bar-card" id="energyCard">
                             <div class="card-content" id="energyCardContent"></div>
+                            <div class="energy-stars-progress">
+                                <span class="star">✧</span>
+                                <span class="star">✧</span>
+                                <span class="star">✧</span>
+                                <span class="star">✧</span>
+                                <span class="star">✦</span>
+                            </div>
                         </div>
                     </div>
 
@@ -158,11 +162,6 @@
             <!-- 日记页 -->
             <section id="tab-diary" class="tab-panel">
                 <div class="card-ins">
-                    <div class="affirm-area">
-                        <input type="text" id="affirmInputDiary" placeholder="输入一句话，比如“我收拾了桌子”">
-                        <button class="affirm-btn" onclick="generateAffirmDiary()">✨ 生成</button>
-                        <div class="affirm-result" id="affirmResultDiary"></div>
-                    </div>
                     <div class="diary-prompt-box" id="diaryPromptBox">
                         <span class="prompt-text" id="diaryPrompt">💭 今天有没有哪一刻，让你觉得世界很温柔？</span>
                         <button class="prompt-refresh" onclick="refreshPrompt()" title="换一个提问"><i
