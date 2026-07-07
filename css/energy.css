@@ -1,0 +1,174 @@
+/* ----- 今日能量紧凑栏 (清单页顶部) ----- */
+.energy-bar-compact {
+    display: flex;
+    /* 改为 Flex 布局 */
+    align-items: center;
+    /* 强制内部元素垂直居中（解决黄色框问题） */
+    justify-content: center;
+    /* 强制内部元素水平居中（让整行在框内更舒适） */
+    padding: 8px 12px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-light);
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+    min-height: 52px;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+    cursor: default;
+}
+
+/* 选择状态 (默认) - 强制不换行 */
+.energy-bar-select {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    /* 强制不换行，解决iPad折行问题 */
+    transition: opacity 0.3s ease;
+}
+
+.energy-bar-select.hidden {
+    display: none;
+}
+
+.energy-bar-label {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    white-space: nowrap;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.energy-bar-pills {
+    display: flex;
+    gap: 6px;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* ----- 按钮核心修改 ----- */
+.energy-pill-btn {
+    flex: 0 1 auto;
+    /* 改为 0 1 auto 允许按内容收缩，避免被过分拉伸 */
+    padding: 5px 8px;
+    border-radius: 20px;
+    border: 1.5px solid transparent;
+    background: var(--input-bg);
+    font-size: 0.72rem;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    font-weight: 500;
+
+    /* 内部强制水平+垂直居中，并固定emoji和文字的间隔 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+}
+
+.energy-pill-btn[data-mode="high"].active-high {
+    background: rgba(255, 210, 80, 0.18);
+    border-color: rgba(255, 185, 30, 0.55);
+    color: #a07800;
+    font-weight: 600;
+}
+
+.energy-pill-btn[data-mode="low"].active-low {
+    background: rgba(130, 190, 220, 0.18);
+    border-color: rgba(80, 160, 200, 0.5);
+    color: #2a7a9a;
+    font-weight: 600;
+}
+
+.energy-pill-btn[data-mode="rest"].active-rest {
+    background: rgba(168, 148, 200, 0.18);
+    border-color: rgba(140, 110, 190, 0.5);
+    color: #6a4a9a;
+    font-weight: 600;
+}
+
+.energy-streak-display {
+    font-size: 0.68rem;
+    color: var(--text-sub);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   卡片状态 — 核心长按交互区
+   ============================================================ */
+.energy-bar-card {
+    display: none;
+    padding: 10px 16px;
+    border-radius: 14px;
+    text-align: center;
+    color: var(--energy-card-text);
+    font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+    /* 自适应字体 */
+    font-weight: 500;
+    line-height: 1.4;
+    transition: background 0.4s, transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    background: var(--energy-card-bg);
+    transform: scale(1);
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+    word-break: break-word;
+    /* 长词换行 */
+}
+
+.energy-bar-card.show {
+    display: flex;
+}
+
+/* 按下时的下压反馈 */
+.energy-bar-card:active {
+    transform: scale(0.98);
+}
+
+/* 长按进行中的状态 (由JS添加) */
+.energy-bar-card.pressing {
+    transform: scale(0.97);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* 不同能量模式的背景色 (使用CSS变量) */
+.energy-bar-card.mode-high {
+    background: var(--energy-high-bg);
+    color: var(--energy-high-text);
+}
+
+.energy-bar-card.mode-low {
+    background: var(--energy-low-bg);
+    color: var(--energy-low-text);
+}
+
+.energy-bar-card.mode-rest {
+    background: var(--energy-rest-bg);
+    color: var(--energy-rest-text);
+}
+
+/* 修改内容容器：高度占满且内容垂直居中，保证短句也能完美铺满背景 */
+.energy-bar-card .card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

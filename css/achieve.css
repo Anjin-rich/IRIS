@@ -1,0 +1,301 @@
+/* 成就等其他 (保留原有) */
+.achieve-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.achieve-popup-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.achieve-popup-box {
+    background: var(--card-bg);
+    border-radius: 28px;
+    padding: 32px 28px 24px;
+    text-align: center;
+    width: 280px;
+    position: relative;
+    transform: scale(0.7) translateY(30px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+    opacity: 0;
+    box-shadow: 0 20px 60px rgba(156, 142, 185, 0.35);
+    border: 2px solid var(--light-purple);
+}
+
+.achieve-popup-overlay.show .achieve-popup-box {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.achieve-popup-badge {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 4px 12px rgba(156, 142, 185, 0.4));
+    animation: achieve-bounce 0.6s 0.3s ease both;
+}
+
+@keyframes achieve-bounce {
+    0% {
+        transform: scale(0);
+    }
+
+    60% {
+        transform: scale(1.25);
+    }
+
+    80% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.achieve-popup-label {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--main-purple);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    background: var(--light-purple);
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 20px;
+}
+
+.achieve-popup-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--dark-purple);
+    margin: 8px 0 6px;
+}
+
+.achieve-popup-desc {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.achieve-popup-exp {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--main-purple);
+    background: var(--light-purple);
+    padding: 6px 18px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+.achieve-popup-close {
+    width: 100%;
+    background: var(--main-purple);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.achieve-popup-close:active {
+    transform: scale(0.97);
+}
+
+.achieve-stars {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    letter-spacing: 4px;
+}
+
+.particle.confetti {
+    border-radius: 2px;
+    width: 6px !important;
+    height: 10px !important;
+}
+
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: particle-fall 1.5s ease-out forwards;
+}
+
+@keyframes particle-fall {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(120px) scale(0);
+    }
+}
+
+.particle-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1300;
+    overflow: hidden;
+}
+
+/* 其他保留原有样式... */
+.achieve-progress-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    background: var(--light-purple);
+    padding: 10px 14px;
+    border-radius: 16px;
+    transition: background 0.3s;
+}
+
+.progress-bar-container {
+    flex: 1;
+    height: 8px;
+    background: var(--progress-track);
+    border-radius: 4px;
+    margin: 0 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--main-purple);
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.achieve-list-wrap {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 6px;
+    padding-bottom: 10px;
+}
+
+.achieve-list-wrap::-webkit-scrollbar {
+    width: 8px;
+}
+
+.achieve-list-wrap::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 4px;
+}
+
+.achieve-list-wrap::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+
+.steam-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--item-bg);
+    border-radius: 18px;
+    border: 1px solid var(--border-light);
+    transition: background 0.3s, border-color 0.3s, filter 0.3s, opacity 0.3s;
+    filter: grayscale(100%);
+    opacity: 0.45;
+    margin-bottom: 8px;
+}
+
+.steam-row.unlocked {
+    filter: grayscale(0);
+    opacity: 1;
+    background: var(--card-bg);
+    border-color: var(--light-purple);
+    box-shadow: 0 2px 10px rgba(156, 142, 185, 0.05);
+}
+
+.steam-icon-frame {
+    width: 48px;
+    height: 48px;
+    background: var(--light-purple);
+    color: var(--dark-purple);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    transition: background 0.3s, color 0.3s;
+}
+
+.steam-row.unlocked .steam-icon-frame {
+    background: linear-gradient(135deg, var(--main-purple), #b3a5cc);
+    color: white;
+    box-shadow: 0 4px 12px rgba(156, 142, 185, 0.2);
+}
+
+.steam-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.steam-title-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.steam-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--dark-purple);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.steam-cheer {
+    font-size: 0.7rem;
+    color: var(--accent-yellow-dark);
+    background: #fdf6e3;
+    padding: 1px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.steam-desc {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    line-height: 1.4;
+}
+
+.steam-time-stamp {
+    font-size: 0.65rem;
+    color: #ac9fba;
+    display: block;
+    margin-top: 2px;
+}

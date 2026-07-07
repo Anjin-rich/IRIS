@@ -1,0 +1,305 @@
+.app-navbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 68px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 4px;
+    z-index: 20;
+    border-radius: 0 0 32px 32px;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+@media (max-width:480px) {
+    .app-navbar {
+        border-radius: 0;
+    }
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-sub);
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 20%;
+    padding: 4px 0;
+    border: none;
+    background: transparent;
+    font-size: 0.6rem;
+    font-weight: 500;
+    gap: 1px;
+}
+
+.nav-item.active {
+    color: var(--dark-purple);
+}
+
+.nav-item i {
+    font-size: 1.2rem;
+    margin-bottom: 1px;
+}
+
+.nav-item span {
+    font-size: 0.55rem;
+    font-weight: 500;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--overlay-bg);
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    max-width: 80%;
+    height: 100%;
+    background: var(--sidebar-bg);
+    z-index: 51;
+    box-shadow: var(--sidebar-shadow);
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border-radius: 0 20px 20px 0;
+    overflow-y: auto;
+}
+
+.sidebar.open {
+    left: 0;
+}
+
+.sidebar-header {
+    padding: 24px 20px 16px;
+    background: linear-gradient(135deg, var(--main-purple), var(--dark-purple));
+    color: white;
+    border-radius: 0 20px 0 0;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    color: white;
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    cursor: default;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.sidebar-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sidebar-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: default;
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 8px;
+}
+
+.sidebar-id {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    margin-top: 2px;
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: 8px 0 12px;
+    overflow-y: auto;
+}
+
+.sidebar-group {
+    margin-bottom: 2px;
+}
+
+.sidebar-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.sidebar-group-header:hover {
+    border-bottom-color: var(--border-light);
+}
+
+.sidebar-group-header .group-chevron {
+    font-size: 0.65rem;
+    transition: transform 0.3s;
+}
+
+.sidebar-group-header .group-chevron.open {
+    transform: rotate(180deg);
+}
+
+.sidebar-group-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+}
+
+.sidebar-group-body.open {
+    max-height: 300px;
+}
+
+.sidebar-menu .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 20px 12px 28px;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-main);
+    border-left: 3px solid transparent;
+    font-size: 0.95rem;
+}
+
+.sidebar-menu .menu-item:hover {
+    background: var(--light-purple);
+}
+
+.sidebar-menu .menu-item:active {
+    transform: scale(0.97);
+}
+
+.sidebar-menu .menu-item i {
+    width: 24px;
+    text-align: center;
+    color: var(--main-purple);
+    font-size: 1.1rem;
+}
+
+.sidebar-menu .menu-item .badge {
+    margin-left: auto;
+    background: var(--light-purple);
+    padding: 0 10px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    color: var(--text-sub);
+}
+
+.sidebar-menu .menu-item.shop-trigger {
+    border-left-color: var(--butter-yellow);
+}
+
+.sidebar-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-light);
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.pet-container {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    z-index: 30;
+    font-size: 2.8rem;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+    line-height: 1;
+}
+
+.pet-container:active {
+    transform: scale(0.85);
+}
+
+.pet-container .pet-bubble {
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card-bg);
+    padding: 6px 14px;
+    border-radius: 16px;
+    font-size: 0.7rem;
+    color: var(--text-main);
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    border: 1px solid var(--border-light);
+}
+
+.pet-container:hover .pet-bubble {
+    opacity: 1;
+}
+
+.pet-container .pet-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--card-bg);
+}
+
+.pet-container .pet-decoration {
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    pointer-events: none;
+}

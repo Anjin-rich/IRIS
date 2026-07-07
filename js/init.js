@@ -1,0 +1,83 @@
+function init() {
+  checkEnergySelectionReset();
+
+  if (!state.shopItems || state.shopItems.length === 0) {
+    state.shopItems = DEFAULT_SHOP_ITEMS;
+    saveState();
+  }
+  resetCustomMoods();
+  updateSidebarInfo();
+  updatePetUI();
+  updateLockBadge();
+  renderMoodSelector();
+  renderTodos();
+  renderRoutines();
+  renderAchievements();
+  renderDiaries();
+  renderCalendar();
+  renderBooks();
+  updateEnergyDisplay();
+  updateAfkUI();
+  updateTotalMeditationDisplay();
+  updateEnergyUI();
+  updateDiaryRemain();
+
+  const today = getTodayDateKey();
+  const currentMode = state.energyHistory[today];
+  if (currentMode) {
+    const selectEl = document.getElementById('energySelect');
+    const cardEl = document.getElementById('energyCard');
+    const contentEl = document.getElementById('energyCardContent');
+    if (selectEl) selectEl.classList.add('hidden');
+    if (cardEl) {
+      cardEl.classList.add('show');
+      cardEl.className = 'energy-bar-card show';
+      cardEl.classList.add(`mode-${currentMode}`);
+    }
+    if (contentEl) {
+      const msg = getRandomMessage(currentMode);
+      contentEl.textContent = msg;
+    }
+  } else {
+    const selectEl = document.getElementById('energySelect');
+    const cardEl = document.getElementById('energyCard');
+    if (selectEl) selectEl.classList.remove('hidden');
+    if (cardEl) {
+      cardEl.classList.remove('show');
+      cardEl.className = 'energy-bar-card';
+    }
+  }
+
+  setupEnergyCardLongPress();
+  setupTodoListDelegation();
+
+  document.getElementById('diaryPrompt').textContent = '💭 ' + getRandomPrompt();
+  if (state.currentAfk && !state.currentAfk.isPaused) {
+    startAfkTimer();
+    document.getElementById('meditationCircle').classList.add('breathing');
+  }
+  document.getElementById('todoInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter')
+      addTodo();
+  });
+  document.getElementById('diaryInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.ctrlKey) saveDiary();
+  });
+  document.getElementById('editDiaryModal').addEventListener('click', function (e) {
+    if (e.target === this) closeEditDiary();
+  });
+  checkGenAchievements();
+  if (state.isFirstLaunch) {
+    setTimeout(startGuide, 500);
+  }
+  if (state.lockPassword && state.lockPassword.length === 4) {
+    setTimeout(showLockScreen, 400);
+  }
+  setTimeout(() => {
+    document.getElementById('energyFold')?.classList.add('open');
+    document.getElementById('energyFoldChevron')?.classList.add('open');
+  }, 100);
+  console.log('🌸 Iris v4.2 手账版 · 能量即选择');
+}
+
+init();

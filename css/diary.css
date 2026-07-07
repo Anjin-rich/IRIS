@@ -1,0 +1,1095 @@
+/* 日记、沉淀等原有样式... (保留) */
+.diary-prompt-box {
+    background: var(--light-purple);
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s;
+    border-left: 3px solid var(--main-purple);
+}
+
+.diary-prompt-box .prompt-text {
+    font-size: 0.82rem;
+    color: var(--dark-purple);
+    flex: 1;
+    line-height: 1.5;
+}
+
+.diary-prompt-box .prompt-refresh {
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: var(--text-sub);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.diary-input-area {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    height: 140px;
+    border: 1px solid var(--light-purple);
+    border-radius: 18px;
+    padding: 12px 14px;
+    resize: vertical;
+    outline: none;
+    font-size: 0.88rem;
+    color: var(--text-main);
+    background: var(--input-bg);
+    margin-bottom: 6px;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.diary-input-area:focus {
+    border-color: var(--main-purple);
+    background: var(--card-bg);
+}
+
+.diary-remain {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    text-align: right;
+    margin-bottom: 8px;
+    padding-right: 4px;
+}
+
+.diary-media-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.media-preview-wrapper {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+}
+
+.media-preview-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--light-purple);
+}
+
+.media-delete-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #f06a6a;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.diary-upload-btn {
+    width: 60px;
+    height: 60px;
+    border: 2px dashed var(--main-purple);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--main-purple);
+    cursor: pointer;
+    background: var(--input-bg);
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.diary-upload-btn i {
+    font-size: 1rem;
+}
+
+.diary-upload-btn span {
+    font-size: 0.55rem;
+    margin-top: 2px;
+    font-weight: bold;
+}
+
+.mood-selector {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.mood-option {
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.2s;
+    border-radius: 50%;
+    padding: 4px;
+    background: transparent;
+    border: 2px solid transparent;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+    max-width: 2.6rem;
+    margin: 0 auto;
+}
+
+.mood-option:hover,
+.mood-option.selected {
+    opacity: 1;
+    border-color: var(--main-purple);
+    background: var(--light-purple);
+    transform: scale(1.1);
+}
+
+.mood-add-btn {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    border: 2px dashed var(--butter-yellow) !important;
+    color: var(--dark-purple);
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    line-height: 1;
+    flex-shrink: 0;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.2s;
+    max-width: 1.8rem;
+    margin: 0 auto;
+}
+
+.mood-add-btn:hover {
+    opacity: 1;
+    background: var(--light-purple) !important;
+    transform: scale(1.1);
+}
+
+.mood-add-btn:active {
+    transform: scale(0.92);
+}
+
+.btn-submit-diary {
+    width: 100%;
+    background: var(--main-purple);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 16px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-submit-diary:active {
+    transform: scale(0.98);
+}
+
+.affirm-area {
+    margin: 6px 0 10px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.affirm-area input {
+    flex: 1;
+    min-width: 100px;
+    border: 1px solid var(--light-purple);
+    padding: 6px 12px;
+    border-radius: 14px;
+    outline: none;
+    font-size: 0.8rem;
+    background: var(--input-bg);
+    color: var(--text-main);
+}
+
+.affirm-area input:focus {
+    border-color: var(--main-purple);
+}
+
+.affirm-area .affirm-btn {
+    background: var(--main-purple);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.affirm-area .affirm-result {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    font-style: italic;
+    width: 100%;
+    padding: 4px 0;
+}
+
+.diary-calendar {
+    margin: 12px 0 8px;
+    background: var(--calendar-bg);
+    border-radius: 18px;
+    padding: 12px;
+    border: 1px solid var(--border-light);
+    transition: background 0.3s;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.calendar-header button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--dark-purple);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.calendar-header button:active {
+    background: var(--light-purple);
+}
+
+.calendar-header .month-year {
+    font-weight: 600;
+    color: var(--dark-purple);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.calendar-header .month-year:hover {
+    background: var(--light-purple);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    font-weight: 600;
+    padding: 4px 0;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background: var(--calendar-hover);
+}
+
+.calendar-day.has-diary {
+    background: var(--butter-yellow);
+    border-color: var(--butter-yellow);
+    color: var(--dark-purple);
+}
+
+.calendar-day.today {
+    background: var(--butter-yellow-light);
+    border-color: var(--butter-yellow);
+    color: var(--dark-purple);
+    font-weight: 700;
+}
+
+.calendar-day .mood-emoji {
+    font-size: 0.7rem;
+    margin-top: 1px;
+}
+
+.calendar-day.other-month {
+    opacity: 0.3;
+}
+
+.calendar-day .day-number {
+    font-weight: 500;
+}
+
+.history-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.history-diary-card {
+    background: var(--item-bg);
+    border-radius: 18px;
+    padding: 14px 16px;
+    border-left: 3px solid var(--main-purple);
+    position: relative;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.history-diary-card .diary-edit-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-sub);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.history-diary-card .diary-edit-btn:hover {
+    background: var(--light-purple);
+    color: var(--dark-purple);
+}
+
+.history-diary-date {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    font-weight: bold;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.history-diary-date .mood-emoji {
+    font-size: 1rem;
+}
+
+.history-diary-text {
+    font-size: 0.85rem;
+    color: var(--text-main);
+    line-height: 1.4;
+    white-space: pre-wrap;
+    padding-right: 40px;
+}
+
+.history-diary-pics {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.history-diary-pics img {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid var(--light-purple);
+}
+
+.edit-diary-images {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 8px 0;
+}
+
+.edit-diary-images .edit-img-wrapper {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.edit-diary-images .edit-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--light-purple);
+}
+
+.edit-diary-images .edit-img-del {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #f06a6a;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.edit-diary-upload {
+    display: inline-block;
+    background: var(--light-purple);
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 0.7rem;
+    color: var(--dark-purple);
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.diary-month-group {
+    margin-bottom: 10px;
+}
+
+.diary-month-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--light-purple);
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark-purple);
+    transition: background 0.2s;
+}
+
+.diary-month-header:hover {
+    background: var(--main-purple);
+    color: white;
+}
+
+.diary-month-chevron {
+    transition: transform 0.25s;
+    font-size: 0.75rem;
+}
+
+.diary-month-body {
+    padding: 8px 0 0;
+}
+
+.meditation-center {
+    text-align: center;
+    padding: 20px 6px;
+}
+
+.meditation-circle {
+    width: 140px;
+    height: 140px;
+    background: var(--circle-bg);
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(156, 142, 185, 0.10);
+    position: relative;
+    transition: background 0.3s;
+}
+
+.meditation-circle.breathing::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(156, 142, 185, 0.2);
+    animation: pulse 3s infinite ease-in-out;
+    z-index: 1;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.18);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+}
+
+.timer-display {
+    font-family: 'Comfortaa', cursive;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--dark-purple);
+    position: relative;
+    z-index: 2;
+    letter-spacing: 1px;
+}
+
+.meditation-tip {
+    font-size: 0.78rem;
+    color: var(--text-sub);
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.afk-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 6px;
+}
+
+.afk-controls button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 14px;
+    font-weight: 500;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--light-purple);
+    color: var(--dark-purple);
+}
+
+.afk-controls button:active {
+    transform: scale(0.95);
+}
+
+.afk-controls .btn-primary {
+    background: var(--main-purple);
+    color: white;
+}
+
+.afk-controls .btn-primary.active {
+    background: #d3cbdc;
+    color: var(--dark-purple);
+}
+
+.afk-controls .btn-danger {
+    background: #f0d0d0;
+    color: #a06060;
+}
+
+.afk-presets {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 10px 0 8px;
+    flex-wrap: wrap;
+}
+
+.afk-preset-btn {
+    padding: 4px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border-light);
+    background: var(--item-bg);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.afk-preset-btn.active {
+    background: var(--main-purple);
+    color: white;
+    border-color: var(--main-purple);
+}
+
+.afk-preset-btn:active {
+    transform: scale(0.94);
+}
+
+.afk-custom-input {
+    width: 60px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    text-align: center;
+    outline: none;
+}
+
+.afk-custom-input:focus {
+    border-color: var(--main-purple);
+}
+
+.fold-section {
+    margin-top: 14px;
+    border-top: 1px solid var(--border-light);
+    padding-top: 12px;
+    text-align: left;
+}
+
+.fold-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 0;
+    color: var(--dark-purple);
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+    user-select: none;
+}
+
+.fold-header:hover {
+    color: var(--main-purple);
+}
+
+.fold-header .fold-chevron {
+    transition: transform 0.3s;
+    font-size: 0.7rem;
+    color: var(--text-sub);
+}
+
+.fold-header .fold-chevron.open {
+    transform: rotate(180deg);
+}
+
+.fold-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding-top: 0;
+}
+
+.fold-body.open {
+    max-height: 400px;
+    padding-top: 10px;
+}
+
+.sound-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+}
+
+.sound-btn {
+    padding: 8px 2px;
+    border-radius: 10px;
+    border: 2px solid var(--border-light);
+    background: var(--item-bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--text-main);
+    position: relative;
+    font-weight: 500;
+}
+
+.sound-btn:active {
+    transform: scale(0.94);
+}
+
+.sound-btn.active {
+    border-color: var(--main-purple);
+    background: var(--light-purple);
+}
+
+.sound-btn .sound-volume {
+    margin-top: 3px;
+    width: 100%;
+    accent-color: var(--main-purple);
+    height: 4px;
+    -webkit-appearance: none;
+    background: var(--progress-track);
+    border-radius: 2px;
+    outline: none;
+    display: none;
+}
+
+.sound-btn .sound-volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--main-purple);
+    cursor: pointer;
+}
+
+.sound-btn .sound-volume::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--main-purple);
+    cursor: pointer;
+    border: none;
+}
+
+.sound-btn .sound-volume.show {
+    display: block;
+}
+
+.energy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.energy-btn {
+    padding: 10px 4px;
+    border-radius: 16px;
+    border: 2px solid var(--border-light);
+    background: var(--item-bg);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-main);
+}
+
+.energy-btn:active {
+    transform: scale(0.94);
+}
+
+.energy-btn .energy-emoji {
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.energy-btn.active-high {
+    border-color: var(--energy-high);
+    background: var(--energy-high);
+    color: var(--dark-purple);
+}
+
+.energy-btn.active-low {
+    border-color: var(--energy-low);
+    background: var(--energy-low);
+    color: var(--dark-purple);
+}
+
+.energy-btn.active-rest {
+    border-color: var(--energy-rest);
+    background: var(--energy-rest);
+    color: var(--dark-purple);
+}
+
+.energy-btn:hover:not(.active-high):not(.active-low):not(.active-rest) {
+    background: var(--light-purple);
+}
+
+.energy-streak-display-old {
+    font-size: 0.7rem;
+    color: var(--text-sub);
+    text-align: right;
+    padding: 2px 0;
+}
+
+.book-add-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.book-add-area .row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.book-add-area .row input,
+.book-add-area .row select {
+    flex: 1;
+    min-width: 80px;
+    padding: 8px 12px;
+    border: 1px solid var(--light-purple);
+    border-radius: 14px;
+    outline: none;
+    font-size: 0.78rem;
+    background: var(--input-bg);
+    color: var(--text-main);
+    transition: border-color 0.2s;
+}
+
+.book-add-area .row input:focus,
+.book-add-area .row select:focus {
+    border-color: var(--main-purple);
+}
+
+.book-add-area .book-cover-upload {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.book-add-area .book-cover-upload label {
+    background: var(--light-purple);
+    padding: 6px 14px;
+    border-radius: 14px;
+    font-size: 0.7rem;
+    color: var(--dark-purple);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.book-add-area .book-cover-upload label:active {
+    transform: scale(0.95);
+}
+
+.book-add-area .book-cover-upload .cover-preview {
+    width: 40px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--border-light);
+}
+
+.book-add-area .book-cover-upload input {
+    display: none;
+}
+
+.book-add-area .add-book-btn {
+    background: var(--import-btn-bg);
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 14px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    align-self: flex-end;
+}
+
+.book-add-area .add-book-btn:active {
+    transform: scale(0.96);
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.book-card {
+    background: var(--item-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(156, 142, 185, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    padding-bottom: 4px;
+    position: relative;
+}
+
+.book-card:active {
+    transform: scale(0.96);
+}
+
+.book-card .book-cover-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    background: var(--light-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--text-sub);
+}
+
+.book-card .book-cover-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-card .book-info {
+    padding: 6px 8px 4px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-card .book-title {
+    font-weight: 700;
+    font-size: 0.7rem;
+    color: var(--dark-purple);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-card .book-author {
+    font-size: 0.6rem;
+    color: var(--text-sub);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.book-card .book-meta {
+    font-size: 0.55rem;
+    color: var(--text-sub);
+    margin-top: 2px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.book-card .book-date {
+    font-size: 0.5rem;
+    color: var(--text-sub);
+    opacity: 0.6;
+    margin-top: 2px;
+}
+
+.book-card .book-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border-light);
+    border-radius: 2px;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.book-card .book-progress-bar .fill {
+    height: 100%;
+    background: var(--main-purple);
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+
+.book-card .book-remove-hint {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 0.5rem;
+    color: var(--text-sub);
+    opacity: 0.3;
+}
+
+.book-detail-modal .book-detail-cover {
+    width: 80px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 0 auto 8px;
+    display: block;
+    background: var(--light-purple);
+}
+
+.book-detail-modal .book-detail-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--dark-purple);
+    text-align: center;
+}
+
+.book-detail-modal .book-detail-author {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.book-detail-modal .book-detail-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.book-detail-modal .book-detail-progress input[type="range"] {
+    flex: 1;
+    accent-color: var(--main-purple);
+}
+
+.book-detail-modal .book-detail-progress span {
+    font-size: 0.8rem;
+    color: var(--text-sub);
+    min-width: 40px;
+}
+
+.book-detail-modal .book-detail-excerpt {
+    width: 100%;
+    height: 80px;
+    border: 1px solid var(--light-purple);
+    border-radius: 14px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    resize: vertical;
+    background: var(--input-bg);
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+    margin: 8px 0;
+}
+
+.book-detail-modal .book-detail-excerpt:focus {
+    border-color: var(--main-purple);
+}
+
+.book-detail-modal .book-detail-save {
+    width: 100%;
+    padding: 8px;
+    background: var(--main-purple);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.book-detail-modal .book-detail-save:active {
+    transform: scale(0.96);
+}

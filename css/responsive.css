@@ -1,0 +1,112 @@
+/* ===== 移动端窄屏适配 (手机 < 480px) ===== */
+@media (max-width:480px) {
+    .achieve-list-wrap {
+        max-height: 55vh;
+    }
+
+    .app-body {
+        padding-bottom: 80px;
+    }
+
+    .sound-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+    }
+
+    .sound-btn {
+        font-size: 0.55rem;
+        padding: 6px 2px;
+    }
+
+    .routine-steps {
+        padding-left: 0;
+    }
+
+    .step-star {
+        width: 20px;
+        font-size: 1.1rem;
+    }
+
+    .routine-step-add {
+        padding-left: 28px;
+    }
+
+    /* 今日能量卡片移动端不换行 + 居中均匀分布 */
+    .energy-bar-select {
+        flex-wrap: nowrap;
+        gap: 4px;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .energy-bar-pills {
+        flex: 1 1 0;
+        gap: 3px;
+        justify-content: center;
+        overflow: hidden;
+        min-width: 0;
+    }
+
+    /* 移动端按钮核心修改 */
+    .energy-pill-btn {
+        font-size: 0.6rem;
+        padding: 4px 6px;
+        flex: 1 0 auto;
+        min-width: 0;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 3px;
+        text-align: center;
+    }
+
+    .energy-bar-label {
+        font-size: 0.6rem;
+        flex-shrink: 0;
+    }
+
+    .energy-streak-display {
+        font-size: 0.55rem;
+        flex-shrink: 0;
+    }
+
+    .energy-bar-compact {
+        padding: 4px 6px;
+    }
+}
+
+/* ===== 平板/中等屏幕适配 (481px ~ 1024px) ===== */
+@media (min-width: 481px) and (max-width: 1024px) {
+    .energy-bar-select {
+        flex-wrap: nowrap;
+        gap: 4px;
+        justify-content: center;
+    }
+
+    .energy-bar-pills {
+        flex: 0 1 auto;
+        gap: 3px;
+    }
+
+    .energy-pill-btn {
+        font-size: 0.65rem;
+        padding: 4px 6px;
+        flex: 0 1 auto;
+        min-width: 0;
+        gap: 2px;
+    }
+
+    .energy-bar-label,
+    .energy-streak-display {
+        flex-shrink: 0;
+        font-size: 0.6rem;
+    }
+}
+
+/* 长按星星动画（待办事项）- 保留兼容 */
+.todo-star {
+    display: none;
+}

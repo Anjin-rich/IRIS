@@ -1,0 +1,536 @@
+.lock-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.lock-screen.open {
+    display: flex;
+}
+
+.lock-screen .lock-title {
+    font-size: 1.4rem;
+    color: var(--dark-purple);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.lock-screen .lock-sub {
+    font-size: 0.85rem;
+    color: var(--text-sub);
+    margin-bottom: 24px;
+}
+
+.lock-screen .lock-pin-display {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.lock-screen .lock-pin-display .pin-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--light-purple);
+    border: 2px solid var(--border-light);
+    transition: background 0.2s;
+}
+
+.lock-screen .lock-pin-display .pin-dot.filled {
+    background: var(--main-purple);
+    border-color: var(--main-purple);
+}
+
+.lock-screen .lock-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 280px;
+    width: 100%;
+}
+
+.lock-screen .lock-pad button {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: none;
+    font-size: 1.6rem;
+    background: var(--card-bg);
+    color: var(--text-main);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 300;
+    border: 1px solid var(--border-light);
+}
+
+.lock-screen .lock-pad button:active {
+    transform: scale(0.88);
+    background: var(--light-purple);
+}
+
+.lock-screen .lock-pad button.del-btn {
+    font-size: 1.2rem;
+    background: transparent;
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.lock-screen .lock-error {
+    color: #e06a6a;
+    font-size: 0.8rem;
+    margin-top: 16px;
+    min-height: 20px;
+}
+
+.guide-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.guide-overlay.open {
+    display: flex;
+}
+
+.guide-box {
+    background: var(--card-bg);
+    border-radius: 28px;
+    padding: 32px 24px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: guidePop 0.4s ease;
+}
+
+@keyframes guidePop {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.guide-box .guide-icon {
+    font-size: 3.2rem;
+    margin-bottom: 12px;
+}
+
+.guide-box .guide-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--dark-purple);
+}
+
+.guide-box .guide-desc {
+    font-size: 0.9rem;
+    color: var(--text-sub);
+    margin: 8px 0 18px;
+    line-height: 1.5;
+}
+
+.guide-box .guide-progress {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.guide-box .guide-progress .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--light-purple);
+    transition: background 0.3s;
+}
+
+.guide-box .guide-progress .dot.active {
+    background: var(--main-purple);
+}
+
+.guide-box .guide-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.guide-box .guide-actions button {
+    padding: 8px 24px;
+    border: none;
+    border-radius: 14px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.guide-box .guide-actions .btn-primary {
+    background: var(--main-purple);
+    color: white;
+}
+
+.guide-box .guide-actions .btn-secondary {
+    background: var(--light-purple);
+    color: var(--dark-purple);
+}
+
+.guide-box .guide-actions button:active {
+    transform: scale(0.94);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-box {
+    background: var(--modal-bg);
+    border-radius: 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background 0.3s, color 0.3s;
+    color: var(--text-main);
+}
+
+.modal-header {
+    flex-shrink: 0;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--modal-bg);
+    border-radius: 28px 28px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.modal-header h3 {
+    color: var(--dark-purple);
+    font-size: 1.1rem;
+    margin: 0;
+    padding-right: 10px;
+}
+
+.modal-header .modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.modal-header .modal-close:hover {
+    color: var(--dark-purple);
+}
+
+.modal-body {
+    flex: 1;
+    padding: 16px 20px 20px;
+    overflow-y: auto;
+}
+
+.modal-body textarea {
+    width: 100%;
+    height: 100px;
+    border: 1px solid var(--light-purple);
+    border-radius: 16px;
+    padding: 12px;
+    font-size: 0.88rem;
+    resize: vertical;
+    outline: none;
+    background: var(--input-bg);
+    color: var(--text-main);
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.modal-body textarea:focus {
+    border-color: var(--main-purple);
+}
+
+.modal-body input[type="number"] {
+    width: 60px;
+    padding: 6px;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-size: 1rem;
+    text-align: center;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.modal-actions button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 14px;
+    font-weight: 500;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal-actions .btn-cancel {
+    background: var(--light-purple);
+    color: var(--dark-purple);
+}
+
+.modal-actions .btn-save {
+    background: var(--main-purple);
+    color: white;
+}
+
+.modal-actions .btn-danger {
+    background: #f0d0d0;
+    color: #a06060;
+}
+
+.modal-actions button:active {
+    transform: scale(0.95);
+}
+
+.pet-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.pet-grid .pet-card {
+    background: var(--item-bg);
+    border-radius: 16px;
+    padding: 12px 4px;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+}
+
+.pet-grid .pet-card:active {
+    transform: scale(0.94);
+}
+
+.pet-grid .pet-card .emoji {
+    font-size: 2rem;
+    display: block;
+}
+
+.pet-grid .pet-card .name {
+    font-size: 0.6rem;
+    color: var(--text-sub);
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pet-grid .pet-card.owned {
+    border-color: var(--accent-yellow-dark);
+    background: var(--light-purple);
+}
+
+.pet-grid .pet-card .badge {
+    font-size: 0.5rem;
+    background: var(--main-purple);
+    color: white;
+    padding: 1px 6px;
+    border-radius: 8px;
+    margin-top: 2px;
+    display: inline-block;
+}
+
+.pet-grid .pet-card .rarity {
+    font-size: 0.5rem;
+    color: var(--text-sub);
+    margin-top: 2px;
+}
+
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 8px 0;
+}
+
+.shop-item {
+    background: var(--item-bg);
+    border-radius: 16px;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    transition: border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.shop-item .item-emoji {
+    font-size: 2.4rem;
+}
+
+.shop-item .item-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-purple);
+}
+
+.shop-item .item-status {
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    min-height: 1.4em;
+}
+
+.shop-item .item-btn {
+    padding: 4px 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+    background: var(--light-purple);
+    color: var(--dark-purple);
+    width: 100%;
+}
+
+.shop-item .item-btn:active {
+    transform: scale(0.94);
+}
+
+.shop-item .item-btn.buy {
+    background: var(--main-purple);
+    color: white;
+}
+
+.shop-item .item-btn.equip {
+    background: var(--accent-yellow-dark);
+    color: white;
+}
+
+.shop-item .item-btn.locked {
+    background: var(--border-light);
+    color: var(--text-sub);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.shop-item .item-btn.equipped {
+    background: var(--butter-yellow);
+    color: var(--dark-purple);
+}
+
+.shop-item .item-requirement {
+    font-size: 0.55rem;
+    color: var(--text-sub);
+    opacity: 0.7;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 24px 0 10px;
+    color: var(--text-sub);
+    font-size: 0.82rem;
+}
+
+.empty-state i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 8px;
+    opacity: 0.5;
+}
+
+.rule-list {
+    list-style: none;
+    padding: 0;
+}
+
+.rule-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.88rem;
+}
+
+.rule-list li:last-child {
+    border-bottom: none;
+}
+
+.rule-list .rule-label {
+    font-weight: 500;
+}
+
+.rule-list .rule-value {
+    color: var(--main-purple);
+    font-weight: 700;
+}
+
+.rule-usage {
+    font-size: 0.75rem;
+    color: var(--text-sub);
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--item-bg);
+    border-radius: 12px;
+    line-height: 1.7;
+}
+
+.rule-usage strong {
+    color: var(--dark-purple);
+}
