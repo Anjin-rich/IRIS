@@ -53,7 +53,8 @@ document.getElementById('bookCoverInput')?.addEventListener('change', function (
 
 function addReadingRecord() {
   const title = document.getElementById('bookTitleInput').value.trim();
-  const author = document.getElementById('bookAuthorInput').value.trim() || '未知作者';
+  const rawAuthor = document.getElementById('bookAuthorInput').value.trim();
+  const author = (!rawAuthor || rawAuthor === '无' || rawAuthor === '未知') ? '' : rawAuthor;
   if (!title) { showToast('📚 请填写书名'); return; }
   const record = {
     id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
@@ -91,20 +92,24 @@ function renderBooks() {
       `<div class="empty-state" style="grid-column:1/-1;"><i class="fa-regular fa-books"></i>还没有阅读记录，添加一本吧</div>`;
     return;
   }
-  grid.innerHTML = state.books.map(book => `
+  grid.innerHTML = state.books.map(book => {
+    const dt = new Date(book.createdAt);
+    const dateStr = `${dt.getFullYear()} / ${String(dt.getMonth() + 1).padStart(2, '0')} / ${String(dt.getDate()).padStart(2, '0')}`;
+    const authorHtml = book.author
+      ? `<div class="book-author">${escapeHtml(book.author)}</div>`
+      : `<div class="book-author-placeholder"></div>`;
+    return `
     <div class="book-card" onclick="openBookDetail('${book.id}')" data-id="${book.id}">
       <div class="book-cover-img">
         ${book.cover ? `<img src="${book.cover}" alt="${escapeHtml(book.title)}">` : `<i class="fa-solid fa-book" style="font-size:1.4rem;opacity:0.3;"></i>`}
       </div>
       <div class="book-info">
         <div class="book-title">${escapeHtml(book.title)}</div>
-        <div class="book-author">${escapeHtml(book.author)}</div>
-        <div class="book-meta"><span>📊 ${book.progress || 0}%</span></div>
-        <div class="book-progress-bar"><div class="fill" style="width:${book.progress || 0}%;"></div></div>
-        <div class="book-date">${new Date(book.createdAt).toLocaleDateString('zh-CN')}</div>
+        ${authorHtml}
+        <div class="book-date">${dateStr}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function openBookDetail(id) {

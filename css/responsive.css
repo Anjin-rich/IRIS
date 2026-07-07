@@ -20,6 +20,12 @@
     .app-title {
         font-size: 1.7rem;
     }
+
+    /* 书架网格：大屏一行三张 */
+    .book-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
 }
 
 @media (min-width: 1600px) {
@@ -139,6 +145,11 @@
     .sound-btn {
         font-size: 0.55rem;
         padding: 6px 2px;
+    }
+
+    /* 书架网格：手机端间距收紧 */
+    .book-grid {
+        gap: 12px;
     }
 
     .routine-steps {

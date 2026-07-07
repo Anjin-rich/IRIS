@@ -188,21 +188,21 @@
 
             <!-- 书架页 -->
             <section id="tab-books" class="tab-panel">
-                <div class="card-ins">
+                <div class="card-ins" style="margin-bottom:16px;">
                     <div class="book-add-area">
                         <div class="row">
                             <input type="text" id="bookTitleInput" placeholder="书名 *">
-                            <input type="text" id="bookAuthorInput" placeholder="作者">
+                            <input type="text" id="bookAuthorInput" placeholder="作者（填写无/未知 则留空）">
                         </div>
                         <div class="book-cover-upload">
                             <label for="bookCoverInput">📷 封面</label>
                             <input type="file" id="bookCoverInput" accept="image/*">
                             <img id="bookCoverPreview" class="cover-preview" style="display:none;" alt="封面预览">
+                            <button class="add-book-btn" onclick="addReadingRecord()">记录读书笔记</button>
                         </div>
-                        <button class="add-book-btn" onclick="addReadingRecord()">📖 记录读书笔记</button>
                     </div>
-                    <div class="book-grid" id="bookGrid"></div>
                 </div>
+                <div class="book-grid" id="bookGrid"></div>
             </section>
 
             <!-- 成就页 -->
