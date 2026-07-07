@@ -11,6 +11,7 @@
     justify-content: space-around;
     align-items: center;
     padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     z-index: 20;
     border-radius: 0 0 32px 32px;
     transition: background 0.3s, border-color 0.3s;

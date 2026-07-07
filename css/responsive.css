@@ -1,5 +1,8 @@
-/* ===== 超大屏幕 (≥1200px) — 放大显示 ===== */
+/* ===== 超大屏幕 (≥1200px) — 放大显示 + 字体放大 ===== */
 @media (min-width: 1200px) {
+    :root {
+        font-size: 18px;
+    }
     .app-phone {
         max-width: 520px;
         max-height: 960px;
@@ -20,26 +23,42 @@
 }
 
 @media (min-width: 1600px) {
+    :root {
+        font-size: 20px;
+    }
     .app-phone {
         max-width: 560px;
         max-height: 1000px;
     }
 }
 
-/* ===== 平板竖屏 / iPad (768px ~ 1024px) ===== */
+/* ===== 平板竖屏 / iPad (768px ~ 1024px) — 保持手机框样式 ===== */
 @media (min-width: 768px) and (max-width: 1024px) {
+    :root {
+        font-size: 17px;
+    }
     body {
         padding: 0;
-        align-items: stretch;
+        justify-content: center;
+        align-items: center;
     }
 
     .app-phone {
-        max-width: 100%;
-        max-height: 100vh;
-        height: 100vh;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
+        width: 88%;
+        max-width: 600px;
+        height: 88vh;
+        max-height: 1100px;
+        border-radius: 40px;
+        border: 8px solid #ece8f2;
+        box-shadow: 0 20px 60px rgba(78, 64, 91, 0.15);
+    }
+    body.dark-theme .app-phone {
+        border-color: #2a2a3a;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .app-navbar {
+        border-radius: 0 0 32px 32px;
     }
 
     /* 能量栏强制一行 */
@@ -80,6 +99,10 @@
 
 /* ===== 手机窄屏 (< 480px) ===== */
 @media (max-width: 480px) {
+    :root {
+        font-size: 16px;
+    }
+
     body {
         padding: 0;
     }
