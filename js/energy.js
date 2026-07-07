@@ -217,48 +217,99 @@ function setupEnergyCardLongPress() {
   const cardEl = document.getElementById('energyCard');
   if (!cardEl) return;
 
-  if (cardEl._lpController) cardEl._lpController.abort();
-  const controller = new AbortController();
-  cardEl._lpController = controller;
-  const { signal } = controller;
-
-  let timer = null;
-  let isCooldown = false;
-  const DURATION = 600;
+  let pressTimer = null;
+  let isLongPress = false;
+  let startX, startY;
+  let pressProgress = 0;
+  let progressInterval = null;
+  const progressEl = cardEl.querySelector('.press-progress');
 
   const startPress = (e) => {
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
     if (!cardEl.classList.contains('show')) return;
-    if (isCooldown) return;
+    if (e.type === 'touchstart') {
+      e.preventDefault();
+    }
+    const touch = e.touches ? e.touches[0] : e;
+    startX = touch.clientX;
+    startY = touch.clientY;
+    isLongPress = false;
+    pressProgress = 0;
+    if (progressEl) progressEl.style.width = '0%';
 
-    cardEl.setPointerCapture(e.pointerId);
+    cardEl.classList.add('pressing');
+    if (pressTimer) clearTimeout(pressTimer);
 
-    if (timer) { clearTimeout(timer); timer = null; }
+    pressTimer = setTimeout(() => {
+      isLongPress = true;
+      resetEnergySelection();
+      cardEl.classList.remove('pressing');
+      if (progressEl) progressEl.style.width = '0%';
+    }, 600);
 
-    cardEl.classList.add('long-press-active');
-
-    timer = setTimeout(() => {
-      cardEl.classList.remove('long-press-active');
-      cardEl.classList.add('long-press-done');
-      setTimeout(() => {
-        resetEnergySelection();
-        cardEl.classList.remove('long-press-done');
-        isCooldown = true;
-        setTimeout(() => { isCooldown = false; }, 300);
-      }, 400);
-      timer = null;
-    }, DURATION);
+    if (progressInterval) clearInterval(progressInterval);
+    progressInterval = setInterval(() => {
+      if (!cardEl.classList.contains('pressing') || isLongPress) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+        return;
+      }
+      pressProgress += 2;
+      if (pressProgress <= 100) {
+        if (progressEl) progressEl.style.width = pressProgress + '%';
+      }
+    }, 10);
   };
 
-  const endPress = () => {
-    if (timer) { clearTimeout(timer); timer = null; }
-    cardEl.classList.remove('long-press-active');
+  const endPress = (e) => {
+    if (isLongPress) {
+      cardEl.classList.remove('pressing');
+      if (progressEl) progressEl.style.width = '0%';
+      if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+      return;
+    }
+    clearTimeout(pressTimer);
+    pressTimer = null;
+    cardEl.classList.remove('pressing');
+    if (progressEl) progressEl.style.width = '0%';
+    if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
   };
 
-  cardEl.addEventListener('pointerdown', startPress, { signal });
-  cardEl.addEventListener('pointerup', endPress, { signal });
-  cardEl.addEventListener('pointercancel', endPress, { signal });
-  cardEl.addEventListener('contextmenu', e => e.preventDefault(), { signal });
+  const movePress = (e) => {
+    if (!cardEl.classList.contains('pressing')) return;
+    const touch = e.touches ? e.touches[0] : e;
+    if (touch && startX !== undefined && startY !== undefined) {
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+      if (Math.sqrt(dx * dx + dy * dy) > 10) {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+        cardEl.classList.remove('pressing');
+        if (progressEl) progressEl.style.width = '0%';
+        if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+        startX = undefined;
+        startY = undefined;
+      }
+    }
+  };
+
+  cardEl.removeEventListener('mousedown', startPress);
+  cardEl.removeEventListener('mouseup', endPress);
+  cardEl.removeEventListener('mouseleave', endPress);
+  cardEl.removeEventListener('mousemove', movePress);
+  cardEl.removeEventListener('touchstart', startPress);
+  cardEl.removeEventListener('touchend', endPress);
+  cardEl.removeEventListener('touchcancel', endPress);
+  cardEl.removeEventListener('touchmove', movePress);
+
+  cardEl.addEventListener('mousedown', startPress);
+  cardEl.addEventListener('mouseup', endPress);
+  cardEl.addEventListener('mouseleave', endPress);
+  cardEl.addEventListener('mousemove', movePress);
+
+  cardEl.addEventListener('touchstart', startPress, { passive: false });
+  cardEl.addEventListener('touchend', endPress, { passive: true });
+  cardEl.addEventListener('touchcancel', endPress, { passive: true });
+  cardEl.addEventListener('touchmove', movePress, { passive: true });
 }
 
 // ============================================================

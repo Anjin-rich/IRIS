@@ -200,6 +200,7 @@ function changeDiaryMonth(delta) {
 function renderCalendar() {
     const grid = document.getElementById('calendarGrid');
     const monthYear = document.getElementById('calendarMonthYear');
+    if (!grid || !monthYear) return;
     monthYear.textContent = `${diaryCalendarYear}年${diaryCalendarMonth + 1}月`;
     const firstDay = new Date(diaryCalendarYear, diaryCalendarMonth, 1).getDay();
     const daysInMonth = new Date(diaryCalendarYear, diaryCalendarMonth + 1, 0).getDate();
