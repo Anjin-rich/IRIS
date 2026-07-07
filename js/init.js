@@ -73,10 +73,6 @@ function init() {
   if (state.lockPassword && state.lockPassword.length === 4) {
     setTimeout(showLockScreen, 400);
   }
-  setTimeout(() => {
-    document.getElementById('energyFold')?.classList.add('open');
-    document.getElementById('energyFoldChevron')?.classList.add('open');
-  }, 100);
   console.log('🌸 Iris v4.2 手账版 · 能量即选择');
 }
 

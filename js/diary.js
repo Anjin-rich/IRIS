@@ -3,6 +3,33 @@
 // ============================================================
 let tempImages = [];
 let selectedMood = null;
+let diarySortDesc = true; // 默认倒序（最新在前）
+
+function toggleDiarySort() {
+    diarySortDesc = !diarySortDesc;
+    updateSortBtnStyle();
+    // 如果弹窗已打开，重新渲染列表
+    if (document.getElementById('allDiariesModal').classList.contains('open')) {
+        openAllDiaries();
+    }
+}
+
+function updateSortBtnStyle() {
+    const asc = document.getElementById('sortAsc');
+    const desc = document.getElementById('sortDesc');
+    if (!asc || !desc) return;
+    if (diarySortDesc) {
+        asc.style.background = '#fff';
+        asc.style.color = 'var(--text-sub)';
+        desc.style.background = 'var(--light-purple)';
+        desc.style.color = 'var(--dark-purple)';
+    } else {
+        asc.style.background = 'var(--light-purple)';
+        asc.style.color = 'var(--dark-purple)';
+        desc.style.background = '#fff';
+        desc.style.color = 'var(--text-sub)';
+    }
+}
 
 function updateDiaryRemain() {
     const todayStr = getTodayDateKey();
@@ -279,14 +306,23 @@ function openAllDiaries() {
         document.getElementById('allDiariesModal').classList.add('open');
         return;
     }
+    // 按创建时间精确排序（ISO字符串可直接比较）
+    const sorted = [...state.diaries].sort((a, b) => {
+        return diarySortDesc ? b.createdAt.localeCompare(a.createdAt) : a.createdAt.localeCompare(b.createdAt);
+    });
+    // 按年月分组
     const groups = {};
-    state.diaries.forEach(d => {
+    sorted.forEach(d => {
         const dt = new Date(d.createdAt);
         const key = `${dt.getFullYear()}年${String(dt.getMonth() + 1).padStart(2, '0')}月`;
         if (!groups[key]) groups[key] = [];
         groups[key].push(d);
     });
-    body.innerHTML = Object.keys(groups).map(month => {
+    // 月份顺序：倒序最新在前，正序最早在前
+    const monthKeys = Object.keys(groups);
+    if (!diarySortDesc) monthKeys.reverse();
+    updateSortBtnStyle();
+    body.innerHTML = monthKeys.map(month => {
         const entries = groups[month];
         return `
             <div class="diary-month-group">

@@ -33,25 +33,6 @@ function setSoundVolume(id, value) {
   if (soundPlayers[id]) soundPlayers[id].volume = parseFloat(value);
 }
 
-// 更新能量UI
-function updateEnergyUI() {
-  const today = getTodayDateKey();
-  const currentMode = state.energyHistory[today] || null;
-
-  document.querySelectorAll('.energy-pill-btn').forEach(btn => {
-    const mode = btn.dataset.mode;
-    btn.classList.remove('active-high', 'active-low', 'active-rest');
-    if (currentMode === mode) {
-      btn.classList.add(`active-${mode}`);
-    }
-  });
-
-  const streakDisplay = document.getElementById('energyStreakDisplay');
-  if (streakDisplay) {
-    streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
-  }
-}
-
 // ============================================================
 //  书架 (与之前相同)
 // ============================================================
@@ -122,7 +103,6 @@ function renderBooks() {
         <div class="book-progress-bar"><div class="fill" style="width:${book.progress || 0}%;"></div></div>
         <div class="book-date">${new Date(book.createdAt).toLocaleDateString('zh-CN')}</div>
       </div>
-      <div class="book-remove-hint">长按删除</div>
     </div>
   `).join('');
 }
@@ -162,6 +142,17 @@ function saveBookDetail() {
   renderBooks();
   showToast('💾 已保存');
   closeBookDetail();
+}
+
+function deleteBook() {
+  const id = state.editingBookId;
+  if (!id) return;
+  state.books = state.books.filter(b => b.id !== id);
+  state.stats.bookCount = Math.max(0, (state.stats.bookCount || 0) - 1);
+  saveState();
+  renderBooks();
+  closeBookDetail();
+  showToast('🗑️ 已删除');
 }
 
 document.getElementById('bookDetailProgress')?.addEventListener('input', function () {

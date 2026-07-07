@@ -49,6 +49,47 @@ D:\中转\IRIS\
 
 ---
 
+## 2026-07-08 修改：7 项体验优化（备份提示、书架删除、日记排序、能量卡片对齐、规则文案等）
+
+**为什么这样改：**
+> 用户体验细节优化：备份导入成功后无提示、书架"长按删除"误导用户、日记无法排序、能量卡片文字偏上、能量规则文案与实际不符。
+
+**决策要点：**
+- 备份 toast 移到 `location.reload()` 之前，用 `setTimeout` 延迟 500ms 刷新
+- 书架删除：删掉"长按删除"提示，在书籍详情弹窗里加删除按钮（和日记一致）
+- 日记排序：在"查看全部日记"旁加胶囊按钮，支持正序/倒序切换
+- 能量卡片：`display: block` 改 `display: flex` + `align-items: center`，修复文字偏上
+- 能量规则："每日首次免费"改为"每日前两次免费"（与代码逻辑一致）
+- baseMoods 重复 🤤 改为 😴
+- init.js 删除 `#energyFold` 死代码
+
+**涉及文件：**
+- `js/backup.js` — toast 顺序调整
+- `js/audio.js` — 删除书架"长按删除"提示 + 新增 `deleteBook()` 函数
+- `index.html` — 书架弹窗加删除按钮 + 日记排序胶囊按钮 + 能量规则文案
+- `js/diary.js` — 新增 `diarySortDesc` 状态 + `toggleDiarySort()` + `openAllDiaries` 支持排序
+- `css/energy.css` — 能量栏 `display: flex` + 按钮 `line-height` 对齐
+- `js/state.js` — baseMoods 去重
+- `js/init.js` — 删除 `#energyFold` 死代码
+
+---
+
+## 2026-07-08 修改：修复 `--transition` 变量未定义 + 删除 audio.js 重复函数
+
+**为什么这样改：**
+> 全站 27 处 `transition: var(--transition)` 引用了一个从未定义的 CSS 变量，导致所有按钮动画、侧边栏滑入、弹窗过渡全部失效。同时 audio.js 里有一份和 energy.js 完全相同的 `updateEnergyUI` 函数，后者覆盖前者，是隐患。
+
+**决策要点：**
+- 在 `:root` 加 `--transition: all 0.2s ease;`，一行修复全站动画
+- 删除 `audio.js` 里重复的 `updateEnergyUI`，保留 `energy.js` 里的版本
+- 日记日历缺失不是 bug，是用户故意去掉的，不处理
+
+**涉及文件：**
+- `css/variables.css` — `:root` 新增 `--transition` 变量
+- `js/audio.js` — 删除重复的 `updateEnergyUI` 函数
+
+---
+
 ## 2026-07-08 修改：长按能量卡片无反应，三端全部修复
 
 **为什么这样改：**

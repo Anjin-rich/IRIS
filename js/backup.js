@@ -49,8 +49,8 @@ function handleBackupImport(e) {
         if (state.energySelectionCount === undefined) state.energySelectionCount = 0;
         if (!state.energySelectionDate) state.energySelectionDate = null;
         saveState();
-        location.reload();
         showToast('📥 数据导入成功！');
+        setTimeout(() => location.reload(), 500);
       }
     } catch (err) {
       showToast('❌ 导入失败，文件格式错误');

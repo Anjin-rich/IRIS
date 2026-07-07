@@ -13,6 +13,7 @@
     --glass-bg: rgba(255, 255, 255, 0.50);
     --glass-border: rgba(255, 255, 255, 0.7);
     --nav-bg: rgba(255, 255, 255, 0.92);
+    --transition: all 0.2s ease;
     --border-light: #f0eef3;
     --input-bg: #fafafc;
     --item-bg: #faf9fb;

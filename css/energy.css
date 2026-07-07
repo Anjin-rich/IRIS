@@ -1,6 +1,7 @@
 /* ----- 今日能量紧凑栏 (清单页顶部) ----- */
 .energy-bar-compact {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 8px 12px;
     background: var(--card-bg);
     border-radius: 16px;
@@ -20,7 +21,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
+    flex: 1;
+    flex-wrap: nowrap;
     transition: opacity 0.3s ease;
 }
 .energy-bar-select.hidden {
@@ -49,6 +51,8 @@
     transition: all 0.2s;
     white-space: nowrap;
     font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
 }
 .energy-pill-btn[data-mode="high"].active-high {
     background: rgba(255, 210, 80, 0.18);

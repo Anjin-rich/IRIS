@@ -176,12 +176,14 @@
                         保存此刻</button>
                 </div>
                 <div class="history-timeline" id="diaryList"></div>
-                <button onclick="openAllDiaries()"
-                    style="width:100%;margin-top:2px;padding:9px;background:transparent;border:1px dashed var(--border-light);border-radius:16px;color:var(--text-sub);font-size:0.78rem;cursor:pointer;transition:all 0.2s;"
-                    onmouseover="this.style.borderColor='var(--main-purple)';this.style.color='var(--main-purple)'"
-                    onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-sub)'">
-                    <i class="fa-regular fa-calendar-days"></i> 查看全部日记
-                </button>
+                <div style="margin-top:2px;">
+                    <button onclick="openAllDiaries()"
+                        style="width:100%;padding:9px;background:transparent;border:1px dashed var(--border-light);border-radius:16px;color:var(--text-sub);font-size:0.78rem;cursor:pointer;transition:all 0.2s;"
+                        onmouseover="this.style.borderColor='var(--main-purple)';this.style.color='var(--main-purple)'"
+                        onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-sub)'">
+                        <i class="fa-regular fa-calendar-days"></i> 查看全部日记
+                    </button>
+                </div>
             </section>
 
             <!-- 书架页 -->
@@ -289,7 +291,7 @@
                     </ul>
                     <div class="rule-usage">
                         <strong>⚡ 能量使用场景：</strong><br>
-                        · 切换能量模式（满电/低电量/休整）：消耗 5 能量 / 次（每日首次免费）<br>
+                        · 切换能量模式（满电/低电量/休整）：消耗 5 能量 / 次（每日前两次免费）<br>
                         · 栖所小铺购买桌宠或装饰：按商品标价消耗<br>
                     </div>
                     <div style="text-align:right;margin-top:12px;">
@@ -312,7 +314,10 @@
                     <div class="book-detail-progress"><span>进度</span><input type="range" id="bookDetailProgress" min="0"
                             max="100" value="0"><span id="bookDetailProgressLabel">0%</span></div>
                     <textarea id="bookDetailExcerpt" class="book-detail-excerpt" placeholder="摘抄或碎碎念…"></textarea>
-                    <button class="book-detail-save" onclick="saveBookDetail()">💾 保存</button>
+                    <div style="display:flex;gap:8px;margin-top:8px;">
+                        <button class="btn-danger" onclick="deleteBook()" style="flex-shrink:0;">🗑️ 删除</button>
+                        <button class="book-detail-save" onclick="saveBookDetail()" style="flex:1;">💾 保存</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -610,7 +615,15 @@
         <div class="modal-overlay" id="allDiariesModal">
             <div class="modal-box" style="max-height:92vh;">
                 <div class="modal-header">
-                    <h3>📅 全部日记</h3><button class="modal-close" onclick="closeAllDiaries()">×</button>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <h3>📅 全部日记</h3>
+                        <div id="diarySortBtn" onclick="toggleDiarySort()"
+                            style="display:flex;border:1px solid var(--main-purple);border-radius:20px;overflow:hidden;font-size:0.7rem;cursor:pointer;user-select:none;">
+                            <span id="sortAsc" style="padding:3px 10px;transition:all 0.2s;">正序</span>
+                            <span id="sortDesc" style="padding:3px 10px;transition:all 0.2s;">倒序</span>
+                        </div>
+                    </div>
+                    <button class="modal-close" onclick="closeAllDiaries()">×</button>
                 </div>
                 <div class="modal-body" id="allDiariesBody" style="overflow-y:auto;padding-bottom:16px;"></div>
             </div>
