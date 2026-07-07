@@ -217,45 +217,48 @@ function setupEnergyCardLongPress() {
   const cardEl = document.getElementById('energyCard');
   if (!cardEl) return;
 
+  if (cardEl._lpController) cardEl._lpController.abort();
+  const controller = new AbortController();
+  cardEl._lpController = controller;
+  const { signal } = controller;
+
   let timer = null;
   let isCooldown = false;
   const DURATION = 600;
 
   const startPress = (e) => {
-    e.preventDefault();
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
     if (!cardEl.classList.contains('show')) return;
     if (isCooldown) return;
+
+    cardEl.setPointerCapture(e.pointerId);
+
+    if (timer) { clearTimeout(timer); timer = null; }
 
     cardEl.classList.add('long-press-active');
 
     timer = setTimeout(() => {
-      resetEnergySelection();
       cardEl.classList.remove('long-press-active');
       cardEl.classList.add('long-press-done');
-      isCooldown = true;
       setTimeout(() => {
+        resetEnergySelection();
         cardEl.classList.remove('long-press-done');
-        isCooldown = false;
-      }, 500);
+        isCooldown = true;
+        setTimeout(() => { isCooldown = false; }, 300);
+      }, 400);
       timer = null;
     }, DURATION);
   };
 
-  const endPress = (e) => {
-    if (timer) {
-      clearTimeout(timer);
-      timer = null;
-    }
+  const endPress = () => {
+    if (timer) { clearTimeout(timer); timer = null; }
     cardEl.classList.remove('long-press-active');
   };
 
-  cardEl.removeEventListener('pointerdown', startPress);
-  cardEl.removeEventListener('pointerup', endPress);
-  cardEl.removeEventListener('pointercancel', endPress);
-
-  cardEl.addEventListener('pointerdown', startPress);
-  cardEl.addEventListener('pointerup', endPress);
-  cardEl.addEventListener('pointercancel', endPress);
+  cardEl.addEventListener('pointerdown', startPress, { signal });
+  cardEl.addEventListener('pointerup', endPress, { signal });
+  cardEl.addEventListener('pointercancel', endPress, { signal });
+  cardEl.addEventListener('contextmenu', e => e.preventDefault(), { signal });
 }
 
 // ============================================================
