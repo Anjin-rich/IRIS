@@ -1,11 +1,111 @@
-/* ===== 移动端窄屏适配 (手机 < 480px) ===== */
-@media (max-width:480px) {
+/* ===== 超大屏幕 (≥1200px) — 放大显示 ===== */
+@media (min-width: 1200px) {
+    .app-phone {
+        max-width: 520px;
+        max-height: 960px;
+        border-radius: 44px;
+        border: 10px solid #ece8f2;
+        box-shadow: 0 30px 80px rgba(78, 64, 91, 0.18);
+    }
+    body.dark-theme .app-phone {
+        border-color: #2a2a3a;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+    }
+    .app-header {
+        padding: 22px 24px 14px;
+    }
+    .app-title {
+        font-size: 1.7rem;
+    }
+}
+
+@media (min-width: 1600px) {
+    .app-phone {
+        max-width: 560px;
+        max-height: 1000px;
+    }
+}
+
+/* ===== 平板竖屏 / iPad (768px ~ 1024px) ===== */
+@media (min-width: 768px) and (max-width: 1024px) {
+    body {
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .app-phone {
+        max-width: 100%;
+        max-height: 100vh;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* 能量栏强制一行 */
+    .energy-bar-select {
+        flex-wrap: nowrap;
+        gap: 6px;
+        justify-content: center;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .energy-bar-pills {
+        flex: 1 1 0;
+        gap: 4px;
+        justify-content: center;
+        overflow: hidden;
+        min-width: 0;
+    }
+
+    .energy-pill-btn {
+        font-size: 0.72rem;
+        padding: 5px 8px;
+        flex: 1 0 auto;
+        min-width: 0;
+        white-space: nowrap;
+    }
+
+    .energy-bar-label {
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
+
+    .energy-streak-display {
+        font-size: 0.68rem;
+        flex-shrink: 0;
+    }
+}
+
+/* ===== 手机窄屏 (< 480px) ===== */
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+
+    .app-phone {
+        border-radius: 0;
+        border: none;
+        max-height: 100vh;
+        height: 100vh;
+        box-shadow: none;
+    }
+
+    .app-header {
+        padding: 14px 16px 10px;
+    }
+
+    .app-title {
+        font-size: 1.3rem;
+    }
+
     .achieve-list-wrap {
         max-height: 55vh;
     }
 
     .app-body {
-        padding-bottom: 80px;
+        padding: 8px 14px 80px;
     }
 
     .sound-grid {
@@ -31,7 +131,11 @@
         padding-left: 28px;
     }
 
-    /* 今日能量卡片移动端不换行 + 居中均匀分布 */
+    /* 能量栏 — 强制一行不换行 */
+    .energy-bar-compact {
+        padding: 6px 8px;
+    }
+
     .energy-bar-select {
         flex-wrap: nowrap;
         gap: 4px;
@@ -49,60 +153,46 @@
         min-width: 0;
     }
 
-    /* 移动端按钮核心修改 */
     .energy-pill-btn {
-        font-size: 0.6rem;
-        padding: 4px 6px;
+        font-size: 0.62rem;
+        padding: 4px 5px;
         flex: 1 0 auto;
         min-width: 0;
-
+        white-space: nowrap;
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 3px;
+        gap: 2px;
         text-align: center;
     }
 
     .energy-bar-label {
-        font-size: 0.6rem;
+        font-size: 0.62rem;
         flex-shrink: 0;
+        white-space: nowrap;
     }
 
     .energy-streak-display {
-        font-size: 0.55rem;
+        font-size: 0.58rem;
         flex-shrink: 0;
-    }
-
-    .energy-bar-compact {
-        padding: 4px 6px;
+        white-space: nowrap;
     }
 }
 
-/* ===== 平板/中等屏幕适配 (481px ~ 1024px) ===== */
-@media (min-width: 481px) and (max-width: 1024px) {
-    .energy-bar-select {
-        flex-wrap: nowrap;
-        gap: 4px;
-        justify-content: center;
-    }
-
-    .energy-bar-pills {
-        flex: 0 1 auto;
-        gap: 3px;
-    }
-
+/* ===== 超小屏幕 (< 360px) — 极端压缩 ===== */
+@media (max-width: 360px) {
     .energy-pill-btn {
-        font-size: 0.65rem;
-        padding: 4px 6px;
-        flex: 0 1 auto;
-        min-width: 0;
-        gap: 2px;
+        font-size: 0.56rem;
+        padding: 3px 4px;
+        gap: 1px;
     }
 
-    .energy-bar-label,
+    .energy-bar-label {
+        font-size: 0.56rem;
+    }
+
     .energy-streak-display {
-        flex-shrink: 0;
-        font-size: 0.6rem;
+        font-size: 0.52rem;
     }
 }
 

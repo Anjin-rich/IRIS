@@ -67,11 +67,15 @@
     font-weight: 500;
 
     /* 内部强制水平+垂直居中，并固定emoji和文字的间隔 */
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     gap: 4px;
     text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    vertical-align: middle;
 }
 
 .energy-pill-btn[data-mode="high"].active-high {
