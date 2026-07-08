@@ -251,14 +251,51 @@ D:\中转\IRIS\
 - 始终两列起步，大屏三列
 
 ### 6. 性能
-- `backdrop-filter: blur(14px)` 控制在 10-15px 范围内
+- `backdrop-filter: blur(25px)` 强化毛玻璃模糊感
 - 不嵌套毛玻璃元素
+
+### 7. 最终精调（用户提供代码）
+- 卡片背景 → `linear-gradient(135deg, rgba(245,235,250,0.85), rgba(225,238,255,0.85))`
+- 模糊 → `blur(25px)`，阴影 → 复合双层（`0 4px 10px` + `0 20px 40px`）
+- 圆角 → `24px`，边框 → `1.5px solid rgba(255,255,255,0.9)`
+- 字重全部 `300`（细体），字号：书名 `0.8rem`，作者 `0.65rem`，日期 `0.45rem`
+- 日期下移 `margin-top: 4px`
 
 **涉及文件：**
 - `index.html` — 输入区独立 `.card-ins` + 按钮移入封面行 + 作者占位符
 - `css/diary.css` — `.book-card` 毛玻璃重写 + 文字排版 + `.book-author-placeholder` + 进度条隐藏
 - `css/responsive.css` — ≥1200px 三列网格
 - `js/audio.js` — `renderBooks()` 重写（进度条移除、日期格式化、作者空值处理、占位符）+ `addReadingRecord()` 作者"无/未知"判空
+
+---
+
+## 2026-07-08 修改：今日能量文案卡片填色不满 + 居左 bug
+
+**为什么这样改：**
+> 文案较短时，能量卡片底色不铺满整个宽度，文字居左显示。原因是 `.energy-bar-card` 缺少 `width: 100%`。
+
+**决策要点：**
+- 给 `.energy-bar-card` 加 `width: 100%`，底色铺满、文字居中
+
+**涉及文件：**
+- `css/energy.css` — `.energy-bar-card` 加 `width: 100%`
+
+---
+
+## 2026-07-08 修改：能量文案精准换行控制
+
+**为什么这样改：**
+> 长文案在逗号中间断句不自然，希望像诗歌一样在最合适的停顿处分行。采用用户提出的「方案二」：CSS `white-space: pre-line` + JS 文案库直接加 `\n`。
+
+**决策要点：**
+- CSS 加 `white-space: pre-line`，识别文本中的 `\n` 换行符
+- 每条文案只保留 1 个 `\n`，最多两行
+- 删除 `getRandomMessage` 里的零宽字符正则替换
+- 清理了之前的 `word-break`/`line-break` 方案
+
+**涉及文件：**
+- `css/energy.css` — `white-space: pre-line` 替换之前的 `word-break`/`line-break`
+- `js/energy.js` — 33 条文案全部加 `\n` + `getRandomMessage` 简化
 
 ---
 
