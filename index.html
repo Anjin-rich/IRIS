@@ -48,19 +48,15 @@
         <main class="app-body" id="appBody">
             <!-- 清单页 -->
             <section id="tab-todo" class="tab-panel active">
-                <div class="card-ins">
                     <!-- 今日能量 (紧凑栏) -->
                     <div class="energy-bar-compact" id="energyBar">
                         <!-- 选择状态 -->
                         <div class="energy-bar-select" id="energySelect">
                             <span class="energy-bar-label">今日能量</span>
                             <div class="energy-bar-pills">
-                                <button class="energy-pill-btn" data-mode="high" onclick="selectEnergy('high')">⚡
-                                    满电</button>
-                                <button class="energy-pill-btn" data-mode="low" onclick="selectEnergy('low')">🌿
-                                    低电量</button>
-                                <button class="energy-pill-btn" data-mode="rest" onclick="selectEnergy('rest')">🛌
-                                    休整</button>
+                                <button class="energy-pill-btn high-default" data-mode="high" onclick="selectEnergy('high')">充沛</button>
+                                <button class="energy-pill-btn low-default" data-mode="low" onclick="selectEnergy('low')">温和</button>
+                                <button class="energy-pill-btn rest-default" data-mode="rest" onclick="selectEnergy('rest')">休息</button>
                             </div>
                             <div class="energy-streak-display" id="energyStreakDisplay">🔥 连续 0 天</div>
                         </div>
@@ -93,7 +89,6 @@
                             <div class="routine-list" id="routineList"></div>
                         </div>
                     </div>
-                </div>
             </section>
 
             <!-- 沉淀页 -->

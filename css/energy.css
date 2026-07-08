@@ -1,4 +1,6 @@
-/* ----- 今日能量紧凑栏 (清单页顶部) ----- */
+/* ⚡ 能量栏样式总集 - 优化版 */
+
+/* 紧凑栏容器 */
 .energy-bar-compact {
     display: flex;
     align-items: center;
@@ -7,138 +9,205 @@
     border-radius: 16px;
     margin-bottom: 10px;
     border: 1px solid var(--border-light);
-    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    overflow: hidden;
     min-height: 52px;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
-    touch-action: manipulation;
-    cursor: default;
+    overflow: hidden;
 }
-/* 选择状态 (默认) */
+
+/* 选择状态 */
 .energy-bar-select {
     display: flex;
     align-items: center;
-    gap: 8px;
-    flex: 1;
+    gap: 6px;
+    width: 100%;
     flex-wrap: nowrap;
-    transition: opacity 0.3s ease;
 }
-.energy-bar-select.hidden {
-    display: none;
-}
+
 .energy-bar-label {
-    font-size: 0.7rem;
-    color: var(--text-sub);
-    white-space: nowrap;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-purple);
+    flex-shrink: 0;
 }
+
 .energy-bar-pills {
     display: flex;
     gap: 6px;
     flex: 1;
 }
+
+/* 能量按钮 */
 .energy-pill-btn {
-    flex: 1;
-    padding: 5px 0;
+    padding: 6px 16px;
     border-radius: 20px;
-    border: 1.5px solid transparent;
-    background: var(--input-bg);
     font-size: 0.72rem;
-    color: var(--text-sub);
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    white-space: nowrap;
-    font-weight: 500;
-    line-height: 1.4;
+    flex: 1;
     text-align: center;
+    border: 1px solid var(--border-light);
+    color: var(--text-sub);
 }
-.energy-pill-btn[data-mode="high"].active-high {
-    background: rgba(255, 210, 80, 0.18);
-    border-color: rgba(255, 185, 30, 0.55);
-    color: #a07800;
-    font-weight: 600;
+
+.energy-pill-btn:active {
+    transform: scale(0.95);
 }
-.energy-pill-btn[data-mode="low"].active-low {
-    background: rgba(130, 190, 220, 0.18);
-    border-color: rgba(80, 160, 200, 0.5);
-    color: #2a7a9a;
-    font-weight: 600;
+
+/* 默认就有颜色（区分三个按钮） */
+.energy-pill-btn.high-default {
+    background: rgba(245, 217, 142, 0.25);
+    border-color: rgba(232, 201, 106, 0.3);
+    color: #92783a;
 }
-.energy-pill-btn[data-mode="rest"].active-rest {
-    background: rgba(168, 148, 200, 0.18);
-    border-color: rgba(140, 110, 190, 0.5);
-    color: #6a4a9a;
-    font-weight: 600;
+.energy-pill-btn.low-default {
+    background: rgba(168, 212, 230, 0.25);
+    border-color: rgba(139, 191, 214, 0.3);
+    color: #4a7a8c;
 }
+.energy-pill-btn.rest-default {
+    background: rgba(212, 192, 222, 0.25);
+    border-color: rgba(196, 170, 210, 0.3);
+    color: #7a6588;
+}
+
+/* 选中态 — 颜色加深加饱和 */
+.energy-pill-btn.active-high,
+.high-active {
+    background: #f5d98e !important;
+    border-color: #e8c96a !important;
+    color: #6b5a2e !important;
+}
+
+.energy-pill-btn.active-low,
+.low-active {
+    background: #a8d4e6 !important;
+    border-color: #8bbfd6 !important;
+    color: #3a6073 !important;
+}
+
+.energy-pill-btn.active-rest,
+.rest-active {
+    background: #d4c0de !important;
+    border-color: #c4aad2 !important;
+    color: #5c4e6c !important;
+}
+
 .energy-streak-display {
     font-size: 0.68rem;
     color: var(--text-sub);
     white-space: nowrap;
+    flex-shrink: 0;
+    transition: var(--transition);
 }
 
-/* 卡片状态 (展示) — 纯色背景 + 文案 */
+/* ========================================
+   能量卡片 - 玻璃态 + 莫兰迪三色渐变
+   ======================================== */
+
 .energy-bar-card {
     display: none;
     width: 100%;
-    padding: 10px 16px;
-    border-radius: 14px;
+    padding: 12px 18px;
+    border-radius: 16px;
     text-align: center;
-    color: var(--energy-card-text);
-    font-size: 0.85rem;
-    font-weight: 500;
-    line-height: 1.4;
+    font-size: 0.88rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
     white-space: pre-line;
-    transition: all 0.3s ease;
     cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-touch-callout: none;
-    touch-action: manipulation;
-    min-height: 52px;
+    min-height: 0;
     align-items: center;
     justify-content: center;
-    background: var(--energy-card-bg);
-    transform: scale(1);
-    transition: background 0.4s, transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 12px;
     position: relative;
+    overflow: hidden;
+
+    /* 玻璃态 */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        0 8px 32px rgba(0, 0, 0, 0.08);
+
+    transition: all 0.3s ease;
 }
+
 .energy-bar-card.show {
     display: flex;
 }
-/* 不同能量模式的背景色 */
-.energy-bar-card.mode-high {
-    background: var(--energy-high-bg);
-    color: var(--energy-high-text);
+
+/* 充沛 — 莫兰迪黄 左上→右下 */
+.energy-bar-card.show.state-high {
+    background: linear-gradient(
+        135deg,
+        rgba(253, 241, 208, 0.95) 0%,
+        rgba(245, 217, 142, 0.6) 50%,
+        rgba(213, 186, 108, 0.35) 100%
+    );
+    color: #6b5a2e;
 }
-.energy-bar-card.mode-low {
-    background: var(--energy-low-bg);
-    color: var(--energy-low-text);
+
+/* 温和 — 莫兰迪蓝 左上→右下 */
+.energy-bar-card.show.state-low {
+    background: linear-gradient(
+        135deg,
+        rgba(219, 237, 245, 0.95) 0%,
+        rgba(134, 187, 216, 0.6) 50%,
+        rgba(107, 160, 190, 0.35) 100%
+    );
+    color: #3a6073;
 }
-.energy-bar-card.mode-rest {
-    background: var(--energy-rest-bg);
-    color: var(--energy-rest-text);
+
+/* 休息 — 莫兰迪紫 左上→右下 */
+.energy-bar-card.show.state-rest {
+    background: linear-gradient(
+        135deg,
+        rgba(237, 230, 243, 0.95) 0%,
+        rgba(201, 177, 208, 0.6) 50%,
+        rgba(170, 145, 185, 0.35) 100%
+    );
+    color: #5c4e6c;
 }
-/* 长按按下时的缩放反馈 */
+
+/* 光影层 */
+.energy-bar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    border-radius: 16px;
+}
+
+/* 文案内容层级 */
+.card-content {
+    position: relative;
+    z-index: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* 按下缩放反馈 */
 .energy-bar-card.pressing {
-    transform: scale(0.97);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transform: scale(0.98);
 }
-.energy-bar-card .card-content {
-    width: 100%;
-}
+
 /* 长按进度条 */
 .energy-bar-card .press-progress {
     position: absolute;
     bottom: 0;
     left: 0;
     height: 3px;
-    background: var(--press-progress-color);
-    width: 0%;
-    border-radius: 0 2px 2px 0;
-    transition: width 0.05s linear;
-    opacity: 0.6;
+    background: rgba(156, 142, 185, 0.4);
+    border-radius: 0 0 16px 16px;
+    width: 0;
+    transition: width 0.01s linear;
+    z-index: 2;
+}
+
+/* 选择状态隐藏 */
+.energy-bar-select.hidden {
+    display: none;
 }

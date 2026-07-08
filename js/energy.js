@@ -35,10 +35,9 @@ function spendEnergy(amount) {
 }
 
 // ============================================================
-//  Energy Selection + Long Press Interaction
+//  Energy Messages (original set)
 // ============================================================
 
-// Energy messages
 const ENERGY_MESSAGES = {
   high: [
     '你身上有光，\n去把今天点亮吧。',
@@ -51,7 +50,7 @@ const ENERGY_MESSAGES = {
     '像一棵树一样，向上向着光，\n把根扎得更深。',
     '把今天的干劲拧成一股绳，\n去拉动你想搬的山。',
     '别浪费这股劲儿，\n它攒了一整个深睡眠才赶来见你。',
-    '奔跑吧，风会接住你。'
+    '奔跑吧，\n风会接住你。'
   ],
   low: [
     '缓慢也是速度的一种，\n温柔也是力量的一种。',
@@ -82,13 +81,15 @@ const ENERGY_MESSAGES = {
   ]
 };
 
-// Get random message for energy mode
 function getRandomMessage(mode) {
   const msgs = ENERGY_MESSAGES[mode] || ENERGY_MESSAGES.rest;
   return msgs[Math.floor(Math.random() * msgs.length)];
 }
 
-// Cross-day reset check
+// ============================================================
+//  Energy Selection
+// ============================================================
+
 function checkEnergySelectionReset() {
   const today = getTodayDateKey();
   if (state.energySelectionDate !== today) {
@@ -101,7 +102,10 @@ function checkEnergySelectionReset() {
       const selectEl = document.getElementById('energySelect');
       const cardEl = document.getElementById('energyCard');
       if (selectEl) selectEl.classList.remove('hidden');
-      if (cardEl) cardEl.classList.remove('show');
+      if (cardEl) {
+        cardEl.classList.remove('show');
+        cardEl.className = 'energy-bar-card';
+      }
     }
     saveState();
     renderTodos();
@@ -109,7 +113,6 @@ function checkEnergySelectionReset() {
   }
 }
 
-// Select energy mode
 function selectEnergy(mode) {
   checkEnergySelectionReset();
 
@@ -174,11 +177,22 @@ function selectEnergy(mode) {
   const contentEl = document.getElementById('energyCardContent');
 
   selectEl.classList.add('hidden');
-  cardEl2.classList.add('show');
   cardEl2.className = 'energy-bar-card show';
-  cardEl2.classList.add(`mode-${mode}`);
+  cardEl2.classList.add(`state-${mode}`);
   const msg = getRandomMessage(mode);
   contentEl.textContent = msg;
+
+  // Streak display with first-time friendly message
+  const streakDisplay = document.getElementById('energyStreakDisplay');
+  const currentStreak = state.energyStreak || 0;
+  if (currentStreak === 0) {
+    streakDisplay.innerHTML = `✨ 好的，从现在开始`;
+    setTimeout(() => {
+      streakDisplay.innerHTML = `🔥 连续 1 天`;
+    }, 1000);
+  } else {
+    streakDisplay.innerHTML = `🔥 连续 ${currentStreak + 1} 天`;
+  }
 }
 
 // Reset energy selection (long press trigger)
@@ -311,7 +325,7 @@ function setupEnergyCardLongPress() {
 }
 
 // ============================================================
-//  Update Energy UI
+//  Update Energy UI (fixes refresh bug)
 // ============================================================
 
 function updateEnergyUI() {
@@ -327,7 +341,24 @@ function updateEnergyUI() {
   });
 
   const streakDisplay = document.getElementById('energyStreakDisplay');
-  if (streakDisplay) {
-    streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
+  const cardEl = document.getElementById('energyCard');
+  const contentEl = document.getElementById('energyCardContent');
+  const selectEl = document.getElementById('energySelect');
+
+  if (currentMode && cardEl && contentEl && selectEl) {
+    // Restore card state on refresh
+    selectEl.classList.add('hidden');
+    cardEl.className = 'energy-bar-card show';
+    cardEl.classList.add(`state-${currentMode}`);
+    if (!contentEl.textContent) {
+      contentEl.textContent = getRandomMessage(currentMode);
+    }
+    if (streakDisplay) {
+      streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
+    }
+  } else {
+    if (streakDisplay) {
+      streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
+    }
   }
 }

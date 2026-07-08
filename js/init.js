@@ -32,7 +32,7 @@ function init() {
     if (cardEl) {
       cardEl.classList.add('show');
       cardEl.className = 'energy-bar-card show';
-      cardEl.classList.add(`mode-${currentMode}`);
+      cardEl.classList.add(`state-${currentMode}`);
     }
     if (contentEl) {
       const msg = getRandomMessage(currentMode);
