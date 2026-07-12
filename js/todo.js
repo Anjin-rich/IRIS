@@ -216,8 +216,7 @@ function renderTodos() {
     const visibleTodos = state.todos.filter(t => !state.hiddenTodoIds.includes(t.id));
 
     if (visibleTodos.length === 0) {
-        list.innerHTML =
-            `<div class="empty-state"><i class="fa-regular fa-folder-open"></i>暂无待办，去添加一条吧</div>`;
+        list.innerHTML = '';
         return;
     }
 

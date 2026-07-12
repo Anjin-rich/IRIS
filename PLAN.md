@@ -49,6 +49,98 @@ D:\中转\IRIS\
 
 ---
 
+## 2026-07-12 修改：全局玻璃质感统一 + 背景图调优 + 仪式 UI 重设计
+
+**为什么这样改：**
+> 加入背景图后发现 header/导航栏挡住了背景，且各组件质感不统一。沉淀室卡片、成长仪式卡片、日记按钮等需要统一为玻璃质感。成长仪式需要从紫色系改为奶油黄+金边风格。
+
+### 1. 背景图调优
+- `.app-phone::after` 覆盖层：去掉 `backdrop-filter: blur`，白色透明度 0.15（清透不模糊）
+- `.app-header`：去掉 blur，背景 `rgba(255,255,255,0.45)`（半透明，背景可透出）
+- `.app-navbar`：同步 header 风格，去掉 blur
+- `background-position: center 18%`（花朵顶部对齐内容区）
+
+### 2. 沉淀室卡片 → 玻璃质感
+- `.meditation-center`：`rgba(242,238,250,0.35)` + `blur(12px)` + 白色高光边框
+
+### 3. 成长仪式卡片 → 奶油黄玻璃 + 金边
+- 背景：`rgba(250,247,240,0.55)`（奶油白微透）
+- 边框：`1.5px solid #d4a830`（金色实线勾边）
+- 毛玻璃：`backdrop-filter: blur(12px)`
+- 高光：`inset 0 1px 0 rgba(255,255,255,0.8)`
+- 创建按钮：同步奶油黄玻璃风格，hover 变深金 `rgba(212,168,48,0.45)`
+
+### 4. 仪式输入框 → [输入框][+] 布局
+- 和待办输入框统一：左侧输入框 + 右侧 [+] 按钮
+- 输入框描边：金色（`rgba(212,168,48,0.35)`，聚焦 `rgba(212,168,48,0.6)`）
+- [+] 按钮：金色玻璃（`rgba(218,175,52,0.45)` + 金色边框）
+- 去掉 `padding-left: 34px`
+
+### 5. 仪式奖励胶囊
+- 去掉 ⚡ emoji，只保留 "+10 能量"
+
+### 6. 「查看全部日记」按钮 → 玻璃质感
+- 内联样式改为 `rgba(255,255,255,0.45)` + `blur(10px)` + 白色高光边框
+
+### 7. 手机端今日能量位置
+- `.energy-bar-compact` 加 `margin-top: 8px`（不贴着 header）
+
+### 8. 空状态提示删除
+- 待办"暂无待办，去添加一条吧" → 移除
+- 仪式"还没有成长仪式，创建一条吧" → 移除
+
+**涉及文件：**
+- `css/base.css` — `::after` 去 blur、header/navbar 透明度调整、`background-position`
+- `css/diary.css` — `.meditation-center` 玻璃质感 + 「查看全部日记」按钮
+- `css/routine.css` — 卡片奶油黄玻璃 + 金边 + 创建按钮 + 输入框布局 + [+] 按钮金色 + 奖励胶囊去 ⚡
+- `css/sidebar.css` — 导航栏去 blur
+- `css/responsive.css` — 手机端能量栏 margin-top
+- `css/todo.css` — [+] 按钮加深
+- `js/routines.js` — 输入框顺序 [input][+] + 奖励胶囊去 ⚡
+- `js/todo.js` — 空状态移除
+
+---
+
+**为什么这样改：**
+> 选择能量后只有文案和按钮变色，缺乏沉浸感。新增全屏天气动画特效，让每个能量状态有独特的视觉氛围。同时加入鸢尾花背景图提升整体质感。
+
+**背景图：**
+- `assets/IRIS.jpg`（Procreate 导出 JPG，860px 宽 Retina）
+- `.app-phone` 添加 `background-size: cover; background-position: center`
+
+**天气特效设计：**
+
+| 能量 | 天气 | 动画效果 |
+|------|------|---------|
+| 充沛 | 朝阳 | 左上角 45° 金黄色径向渐变光晕，4s 周期脉动闪动（scale 1→1.05，opacity 0.7→1） |
+| 温和 | 多云 | 2 朵主云 + 1 朵小云，蓝灰色椭圆 + blur(8-12px)，12-18s 周期水平漂移 |
+| 休息 | 夜雨 | 双层雨丝（疏+密），`repeating-linear-gradient` 生成细线，0.8s/1.1s 不同速度下落 |
+
+**技术实现：**
+- `.weather-effects` 容器：`position: absolute; inset: 0; z-index: 0; pointer-events: none`
+- 效果层在所有组件之下，毛玻璃组件透出天气若隐若现
+- 纯 CSS 动画（`@keyframes`），零 JS 开销
+- 三套 class：`.weather-sunrise` / `.weather-cloudy` / `.weather-rain`
+- 多云额外用 JS 插入 `.cloud-extra` 元素（CSS 伪元素只有 2 个不够用）
+
+**JS 逻辑：**
+- 新增 `updateWeatherEffect(mode)` 辅助函数
+- `selectEnergy()` → 选中时显示对应天气
+- `resetEnergySelection()` → 重置时清除天气
+- `updateEnergyUI()` → 刷新页面时恢复天气
+- `checkEnergySelectionReset()` → 跨天重置时清除天气
+- `init.js` → 初始化时恢复/清除天气
+
+**涉及文件：**
+- `assets/IRIS.jpg` — 鸢尾花背景图（新增）
+- `index.html` — `.app-phone` 内新增 `<div class="weather-effects">` 容器
+- `css/base.css` — `.app-phone` 添加 `background-image` + `background-size`
+- `css/energy.css` — 新增 `.weather-effects` 基础样式 + `.weather-sunrise` / `.weather-cloudy` / `.weather-rain` 三套动画 + `@keyframes`
+- `js/energy.js` — 新增 `updateWeatherEffect()` 函数 + 在 `selectEnergy` / `resetEnergySelection` / `updateEnergyUI` / `checkEnergySelectionReset` 中调用
+- `js/init.js` — 初始化时调用 `updateWeatherEffect()`
+
+---
+
 ## 2026-07-12 修改：能量长按星星 — 布局修复 + 颜色跟随状态
 
 **为什么这样改：**

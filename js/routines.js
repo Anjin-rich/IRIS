@@ -81,8 +81,7 @@ function renderRoutines() {
   if (needsSave) saveState();
 
   if (state.routines.length === 0) {
-    container.innerHTML =
-      `<div class="routine-empty-hint"><i class="fa-regular fa-star"></i>还没有成长仪式，创建一条吧</div>`;
+    container.innerHTML = '';
     return;
   }
 
@@ -155,12 +154,12 @@ function renderRoutines() {
                                 </div>
                                 ${completedDisplay}
                                 <div class="routine-step-add">
-                                    <button class="add-btn" onclick="addStep(${idx})">+</button>
                                     <input type="text" id="stepInput_${idx}" placeholder="添加步骤...">
+                                    <button class="add-btn" onclick="addStep(${idx})">+</button>
                                 </div>
                             </div>
                             <div class="routine-footer">
-                                <span class="routine-reward-capsule"><span class="icon">⚡</span> +10 能量</span>
+                                <span class="routine-reward-capsule">+10 能量</span>
                                 <span class="routine-progress-text">进度 <strong>${progressText}</strong></span>
                             </div>
                         </div>

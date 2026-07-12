@@ -168,6 +168,7 @@
     /* 能量栏 — 强制一行不换行 */
     .energy-bar-compact {
         padding: 6px 8px;
+        margin-top: 8px;
     }
 
     .energy-bar-select {

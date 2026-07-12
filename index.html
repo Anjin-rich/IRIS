@@ -28,6 +28,8 @@
 
 <body>
     <div class="app-phone" id="appPhone">
+        <!-- 天气特效层 -->
+        <div class="weather-effects" id="weatherEffects"></div>
 
         <header class="app-header">
             <div class="header-left">
@@ -178,7 +180,7 @@
                 <div class="history-timeline" id="diaryList"></div>
                 <div style="margin-top:2px;">
                     <button onclick="openAllDiaries()"
-                        style="width:100%;padding:9px;background:transparent;border:1px dashed var(--border-light);border-radius:16px;color:var(--text-sub);font-size:0.78rem;cursor:pointer;transition:all 0.2s;"
+                        style="width:100%;padding:9px;background:rgba(255,255,255,0.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.6);border-radius:16px;color:var(--text-sub);font-size:0.78rem;cursor:pointer;transition:all 0.2s;box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)"
                         onmouseover="this.style.borderColor='var(--main-purple)';this.style.color='var(--main-purple)'"
                         onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-sub)'">
                         <i class="fa-regular fa-calendar-days"></i> 查看全部日记

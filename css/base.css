@@ -45,7 +45,6 @@ body.dark-theme {
     max-width: 430px;
     height: 100vh;
     max-height: 880px;
-    background-color: var(--bg-color);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -53,7 +52,25 @@ body.dark-theme {
     box-shadow: 0 20px 50px rgba(78, 64, 91, 0.15);
     border-radius: 40px;
     border: 8px solid #ece8f2;
-    transition: background-color 0.3s, border-color 0.3s;
+    transition: border-color 0.3s;
+}
+
+.app-phone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('../assets/IRIS.jpg');
+    background-size: cover;
+    background-position: center 18%;
+    z-index: 0;
+}
+
+.app-phone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.15);
+    z-index: 0;
 }
 
 body.dark-theme .app-phone {
@@ -75,7 +92,7 @@ body.dark-theme .app-phone {
 
 .app-header {
     padding: 18px 20px 12px;
-    background: linear-gradient(to bottom, var(--card-bg), var(--bg-color));
+    background: rgba(255, 255, 255, 0.45);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -83,6 +100,10 @@ body.dark-theme .app-phone {
     flex-shrink: 0;
     transition: background 0.3s;
     position: relative;
+}
+
+body.dark-theme .app-header {
+    background: rgba(26, 26, 36, 0.45);
 }
 
 .app-title {

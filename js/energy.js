@@ -2,6 +2,23 @@
 //  Core Energy Functions
 // ============================================================
 
+function updateWeatherEffect(mode) {
+  const el = document.getElementById('weatherEffects');
+  if (!el) return;
+  el.classList.remove('weather-sunrise', 'weather-cloudy', 'weather-rain');
+  el.innerHTML = '';
+  if (mode === 'high') {
+    el.classList.add('weather-sunrise');
+  } else if (mode === 'low') {
+    el.classList.add('weather-cloudy');
+    const extra = document.createElement('div');
+    extra.className = 'cloud-extra';
+    el.appendChild(extra);
+  } else if (mode === 'rest') {
+    el.classList.add('weather-rain');
+  }
+}
+
 function getEnergyBalance() {
   return (state.stats.achievementExp || 0) + (state.stats.signinExp || 0);
 }
@@ -110,6 +127,7 @@ function checkEnergySelectionReset() {
           barEl.classList.remove('state-high', 'state-low', 'state-rest');
         }
       }
+      updateWeatherEffect(null);
     }
     saveState();
     renderTodos();
@@ -190,6 +208,7 @@ function selectEnergy(mode) {
   }
   const msg = getRandomMessage(mode);
   contentEl.textContent = msg;
+  updateWeatherEffect(mode);
 
   // Streak display with first-time friendly message
   const streakDisplay = document.getElementById('energyStreakDisplay');
@@ -226,6 +245,7 @@ function resetEnergySelection() {
     }
   }
 
+  updateWeatherEffect(null);
   saveState();
   renderTodos();
   updateEnergyUI();
@@ -394,10 +414,12 @@ function updateEnergyUI() {
     if (!contentEl.textContent) {
       contentEl.textContent = getRandomMessage(currentMode);
     }
+    updateWeatherEffect(currentMode);
     if (streakDisplay) {
       streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
     }
   } else {
+    updateWeatherEffect(null);
     if (streakDisplay) {
       streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
     }

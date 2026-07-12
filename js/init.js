@@ -43,6 +43,7 @@ function init() {
       const msg = getRandomMessage(currentMode);
       contentEl.textContent = msg;
     }
+    updateWeatherEffect(currentMode);
   } else {
     const selectEl = document.getElementById('energySelect');
     const cardEl = document.getElementById('energyCard');
@@ -55,6 +56,7 @@ function init() {
         barEl.classList.remove('state-high', 'state-low', 'state-rest');
       }
     }
+    updateWeatherEffect(null);
   }
 
   setupEnergyCardLongPress();
