@@ -105,6 +105,10 @@ function checkEnergySelectionReset() {
       if (cardEl) {
         cardEl.classList.remove('show');
         cardEl.className = 'energy-bar-card';
+        const barEl = cardEl.closest('.energy-bar-compact');
+        if (barEl) {
+          barEl.classList.remove('state-high', 'state-low', 'state-rest');
+        }
       }
     }
     saveState();
@@ -179,6 +183,11 @@ function selectEnergy(mode) {
   selectEl.classList.add('hidden');
   cardEl2.className = 'energy-bar-card show';
   cardEl2.classList.add(`state-${mode}`);
+  const barEl = cardEl2.closest('.energy-bar-compact');
+  if (barEl) {
+    barEl.classList.remove('state-high', 'state-low', 'state-rest');
+    barEl.classList.add(`state-${mode}`);
+  }
   const msg = getRandomMessage(mode);
   contentEl.textContent = msg;
 
@@ -211,6 +220,10 @@ function resetEnergySelection() {
   if (cardEl) {
     cardEl.classList.remove('show');
     cardEl.className = 'energy-bar-card';
+    const barEl = cardEl.closest('.energy-bar-compact');
+    if (barEl) {
+      barEl.classList.remove('state-high', 'state-low', 'state-rest');
+    }
   }
 
   saveState();
@@ -232,9 +245,33 @@ function setupEnergyCardLongPress() {
   let pressTimer = null;
   let isLongPress = false;
   let startX, startY;
-  let pressProgress = 0;
-  let progressInterval = null;
-  const progressEl = cardEl.querySelector('.press-progress');
+  let starIndex = 0;
+  let starInterval = null;
+  const stars = cardEl.parentElement.querySelectorAll('.press-star');
+
+  const fillStar = (idx) => {
+    if (stars[idx]) {
+      stars[idx].textContent = '✦';
+      stars[idx].classList.add('filled');
+    }
+  };
+
+  const resetStars = () => {
+    stars.forEach(s => {
+      s.textContent = '✧';
+      s.classList.remove('filled', 'vanish');
+    });
+    starIndex = 0;
+  };
+
+  const vanishStars = () => {
+    stars.forEach((s, i) => {
+      setTimeout(() => {
+        s.classList.add('vanish');
+      }, i * 60);
+    });
+    setTimeout(resetStars, 400);
+  };
 
   const startPress = (e) => {
     if (!cardEl.classList.contains('show')) return;
@@ -245,45 +282,44 @@ function setupEnergyCardLongPress() {
     startX = touch.clientX;
     startY = touch.clientY;
     isLongPress = false;
-    pressProgress = 0;
-    if (progressEl) progressEl.style.width = '0%';
+    starIndex = 0;
+    resetStars();
 
     cardEl.classList.add('pressing');
     if (pressTimer) clearTimeout(pressTimer);
 
     pressTimer = setTimeout(() => {
       isLongPress = true;
-      resetEnergySelection();
-      cardEl.classList.remove('pressing');
-      if (progressEl) progressEl.style.width = '0%';
-    }, 600);
+      fillStar(3);
+      if (starInterval) { clearInterval(starInterval); starInterval = null; }
+      setTimeout(() => {
+        vanishStars();
+        resetEnergySelection();
+        cardEl.classList.remove('pressing');
+      }, 150);
+    }, 550);
 
-    if (progressInterval) clearInterval(progressInterval);
-    progressInterval = setInterval(() => {
+    if (starInterval) clearInterval(starInterval);
+    starInterval = setInterval(() => {
       if (!cardEl.classList.contains('pressing') || isLongPress) {
-        clearInterval(progressInterval);
-        progressInterval = null;
+        clearInterval(starInterval);
+        starInterval = null;
         return;
       }
-      pressProgress += 2;
-      if (pressProgress <= 100) {
-        if (progressEl) progressEl.style.width = pressProgress + '%';
+      if (starIndex < 3) {
+        fillStar(starIndex);
+        starIndex++;
       }
-    }, 10);
+    }, 150);
   };
 
   const endPress = (e) => {
-    if (isLongPress) {
-      cardEl.classList.remove('pressing');
-      if (progressEl) progressEl.style.width = '0%';
-      if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
-      return;
-    }
+    if (isLongPress) return;
     clearTimeout(pressTimer);
     pressTimer = null;
+    if (starInterval) { clearInterval(starInterval); starInterval = null; }
+    vanishStars();
     cardEl.classList.remove('pressing');
-    if (progressEl) progressEl.style.width = '0%';
-    if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
   };
 
   const movePress = (e) => {
@@ -295,9 +331,9 @@ function setupEnergyCardLongPress() {
       if (Math.sqrt(dx * dx + dy * dy) > 10) {
         clearTimeout(pressTimer);
         pressTimer = null;
+        if (starInterval) { clearInterval(starInterval); starInterval = null; }
+        vanishStars();
         cardEl.classList.remove('pressing');
-        if (progressEl) progressEl.style.width = '0%';
-        if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
         startX = undefined;
         startY = undefined;
       }
@@ -350,6 +386,11 @@ function updateEnergyUI() {
     selectEl.classList.add('hidden');
     cardEl.className = 'energy-bar-card show';
     cardEl.classList.add(`state-${currentMode}`);
+    const barEl = cardEl.closest('.energy-bar-compact');
+    if (barEl) {
+      barEl.classList.remove('state-high', 'state-low', 'state-rest');
+      barEl.classList.add(`state-${currentMode}`);
+    }
     if (!contentEl.textContent) {
       contentEl.textContent = getRandomMessage(currentMode);
     }

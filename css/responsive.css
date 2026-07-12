@@ -225,6 +225,15 @@
         font-size: 0.56rem;
     }
 
+    .press-stars {
+        gap: 16px;
+        padding: 6px 0 0;
+    }
+
+    .press-star {
+        font-size: 0.9rem;
+    }
+
     .energy-streak-display {
         font-size: 0.52rem;
     }

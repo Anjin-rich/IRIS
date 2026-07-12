@@ -1,7 +1,7 @@
 # Iris v4.2 开发日志
 
 > 活文档：记录每一次修改的决策、原因和结果
-> 最后更新：2026-07-09
+> 最后更新：2026-07-12
 
 ---
 
@@ -49,27 +49,43 @@ D:\中转\IRIS\
 
 ---
 
-## 2026-07-09 修改：能量按钮始终带色（区分三个状态）
+## 2026-07-12 修改：能量长按星星 — 布局修复 + 颜色跟随状态
 
 **为什么这样改：**
-> 三个能量按钮（充沛/温和/休息）去掉了 emoji，如果默认都是白色背景，用户无法一眼区分。需要让每个按钮**始终有代表色**，未选中时浅色、选中时深色。
+> 长按能量卡片时星星不出来（被 `overflow: hidden` 裁掉），且星星颜色固定为紫色，不随能量状态变化。
 
-**设计：**
-| 状态 | 未选中（浅色底） | 选中（实心底） |
-|------|------------------|----------------|
-| 充沛 | `rgba(245,217,142,0.25)` 黄底 + `#92783a` 文字 | `#f5d98e` + `#6b5a2e` |
-| 温和 | `rgba(168,212,230,0.25)` 蓝底 + `#4a7a8c` 文字 | `#a8d4e6` + `#3a6073` |
-| 休息 | `rgba(212,192,222,0.25)` 紫底 + `#7a6588` 文字 | `#d4c0de` + `#5c4e6c` |
+**修复内容：**
 
-**决策要点：**
-1. 未选中态：低饱和度彩色底（0.25 透明度）+ 对比色文字
-2. 选中态：纯色实心背景 + 深色文字（保持原有 active 样式）
-3. HTML 按钮加 `high-default` / `low-default` / `rest-default` class
-4. 选中时 JS 会加 `active-*` class，颜色覆盖默认浅色
+### 1. 容器布局重构
+- `.energy-bar-compact` 改为 `flex-direction: column`（纵向排列卡片+星星）
+- 去掉 `overflow: hidden`（之前裁掉了 `.press-stars`）
+- `.energy-bar-card` 的 `margin-bottom` 从 12px 收到 4px（卡片和星星间距收紧）
+
+### 2. CSS 选择器精简
+- 删除冗余的 `.pressing + .press-stars`（不匹配 DOM 结构）
+- 只保留 `.energy-bar-card.pressing ~ .press-stars`（兄弟选择器，正确匹配）
+
+### 3. 星星颜色跟随能量状态
+| 能量 | filled 颜色 | 光晕 |
+|------|------------|------|
+| 充沛 | `#d4a017`（金色） | `rgba(212,160,23,0.5)` |
+| 温和 | `#5a9bb5`（蓝色） | `rgba(90,155,181,0.5)` |
+| 休息 | `#9a7cb8`（紫色） | `rgba(154,124,184,0.5)` |
+
+通过 `.energy-bar-card.show.state-high/low/rest .press-star.filled` 父级状态选择器实现。
+
+### 4. 手机端响应式
+- `≤480px`：星星间距 16px（原 24px），字号 0.9rem（原 1.1rem）
+
+**动画流程（不变）：**
+1. 按下 → 星星容器出现（四颗空心 ✧）
+2. 每 150ms 亮一颗：✧ → ✦（放大 1.2x + 状态色光晕）
+3. 550ms 后第四颗亮起，触发重置
+4. 星星依次缩小淡出（每颗间隔 60ms），然后复位
 
 **涉及文件：**
-- `index.html` — 三个按钮加 default class（high-default / low-default / rest-default）
-- `css/energy.css` — 新增 `.high-default` `.low-default` `.rest-default` 浅色背景；保留 `.active-*` 纯色
+- `css/energy.css` — `.energy-bar-compact` 改 column + 去 overflow；`.press-star.filled` 按状态分色；选择器精简
+- `css/responsive.css` — `≤480px` 星星间距/字号缩小
 
 ---
 

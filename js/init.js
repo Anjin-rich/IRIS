@@ -33,6 +33,11 @@ function init() {
       cardEl.classList.add('show');
       cardEl.className = 'energy-bar-card show';
       cardEl.classList.add(`state-${currentMode}`);
+      const barEl = cardEl.closest('.energy-bar-compact');
+      if (barEl) {
+        barEl.classList.remove('state-high', 'state-low', 'state-rest');
+        barEl.classList.add(`state-${currentMode}`);
+      }
     }
     if (contentEl) {
       const msg = getRandomMessage(currentMode);
@@ -45,6 +50,10 @@ function init() {
     if (cardEl) {
       cardEl.classList.remove('show');
       cardEl.className = 'energy-bar-card';
+      const barEl = cardEl.closest('.energy-bar-compact');
+      if (barEl) {
+        barEl.classList.remove('state-high', 'state-low', 'state-rest');
+      }
     }
   }
 
