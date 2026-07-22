@@ -57,123 +57,9 @@ function addTodo() {
 
 let todoDragSrc = null;
 
-// 长按状态管理（使用 ID 作为键）
-const longPressState = new Map();
-
-// 事件委托：长按 + 拖拽（桌面端使用 HTML5 draggable，移动端使用自定义 touch 拖拽）
+// 只保留拖拽逻辑（桌面 HTML5 draggable + 移动端 touch），长按已完成功能已移除
 function setupTodoListDelegation() {
-    const list = document.getElementById('todoList');
-    if (!list) return;
-
-    // 移除旧的监听器以避免重复
-    if (list._longPressListener) {
-        list.removeEventListener('pointerdown', list._longPressListener);
-        list.removeEventListener('pointerup', list._longPressUpListener);
-        list.removeEventListener('pointercancel', list._longPressCancelListener);
-    }
-
-    // ----- 长按逻辑 (Pointer Events) 增加移动检测 -----
-    const pointerDownHandler = (e) => {
-        // 只处理左键 / 触摸
-        if (e.button !== undefined && e.button !== 0) return;
-
-        const item = e.target.closest('.todo-item');
-        if (!item) return;
-        // 排除拖拽手柄、删除按钮、星星（星星用点击处理）
-        if (e.target.closest('.todo-drag-handle') || e.target.closest('.todo-delete') || e.target
-            .closest('.todo-star-check')) {
-            return;
-        }
-        const id = item.dataset.id;
-        if (!id) return;
-
-        // 检查冷却状态
-        if (longPressState.has(id)) {
-            const st = longPressState.get(id);
-            if (st.cooldown) return;
-            if (st.timer) {
-                clearTimeout(st.timer);
-                st.timer = null;
-            }
-        }
-
-        // 记录起始位置
-        const startX = e.clientX;
-        const startY = e.clientY;
-        let moved = false;
-
-        // 设置状态
-        const st = longPressState.get(id) || { cooldown: false, done: false, timer: null };
-        if (st.cooldown) return;
-
-        // 添加活跃类
-        item.classList.add('long-press-active');
-
-        // 移动检测
-        const moveHandler = (ev) => {
-            const dx = ev.clientX - startX;
-            const dy = ev.clientY - startY;
-            if (Math.sqrt(dx * dx + dy * dy) > 10) {
-                moved = true;
-                if (st.timer) {
-                    clearTimeout(st.timer);
-                    st.timer = null;
-                    item.classList.remove('long-press-active');
-                }
-                document.removeEventListener('pointermove', moveHandler);
-            }
-        };
-        document.addEventListener('pointermove', moveHandler);
-
-        // 设置计时器 (600ms)
-        st.timer = setTimeout(() => {
-            document.removeEventListener('pointermove', moveHandler);
-            if (moved) {
-                item.classList.remove('long-press-active');
-                return;
-            }
-            // 执行长按操作
-            triggerLoveEffect(item, id);
-            item.classList.remove('long-press-active');
-            item.classList.add('long-press-done');
-            st.done = true;
-            st.timer = null;
-
-            // 500ms 后移除完成类并进入冷却
-            setTimeout(() => {
-                item.classList.remove('long-press-done');
-                st.done = false;
-                st.cooldown = true;
-                setTimeout(() => {
-                    st.cooldown = false;
-                }, 500);
-            }, 500);
-        }, 600);
-
-        longPressState.set(id, st);
-
-        // 取消事件 (pointerup / pointercancel)
-        const cancelHandler = (ev) => {
-            document.removeEventListener('pointermove', moveHandler);
-            const currentSt = longPressState.get(id);
-            if (currentSt && currentSt.timer) {
-                clearTimeout(currentSt.timer);
-                currentSt.timer = null;
-                item.classList.remove('long-press-active');
-            }
-            document.removeEventListener('pointerup', cancelHandler);
-            document.removeEventListener('pointercancel', cancelHandler);
-        };
-        document.addEventListener('pointerup', cancelHandler);
-        document.addEventListener('pointercancel', cancelHandler);
-    };
-
-    list.addEventListener('pointerdown', pointerDownHandler);
-    list._longPressListener = pointerDownHandler;
-
-    // ----- 保留原有的拖拽逻辑 (桌面 HTML5 draggable + 移动端 touch) -----
-    // 桌面端 draggable 事件已在 renderTodos 中绑定，此处不再重复
-    // 移动端 touch 事件也在 renderTodos 中绑定
+    // 拖拽事件已在 renderTodos 中绑定，此处不再重复
 }
 
 // ============================================================
@@ -364,22 +250,6 @@ function renderTodos() {
     });
 }
 
-function triggerLoveEffect(element, todoId) {
-    playGentleSound('longPress');
-    const todo = state.todos.find(t => t.id === todoId);
-    spawnHeartParticles(element);
-    if (todo && !todo.done) {
-        todo.done = true;
-        state.stats.todoCount++;
-        addEnergy(1);
-        showToast('❤️ 长按完成 +1');
-        checkUnlock('first_todo', true);
-        saveState();
-        renderTodos();
-        renderAchievements();
-    }
-}
-
 function spawnHeartParticles(element) {
     const container = document.getElementById('particleContainer');
     const rect = element.getBoundingClientRect();
@@ -443,29 +313,6 @@ function playGentleSound(type) {
             osc.stop(now + 0.15);
         }
     } catch (e) { }
-}
-
-function toggleTodo(idx) {
-    const todo = state.todos[idx];
-    if (!todo) return;
-    todo.done = !todo.done;
-    if (todo.done) {
-        state.stats.todoCount++;
-        addEnergy(1);
-        showToast('✅ 待办完成 +1');
-        checkUnlock('first_todo', true);
-        checkUnlock('todo_3', state.stats.todoCount >= 3);
-        checkUnlock('todo_5', state.stats.todoCount >= 5);
-        checkUnlock('todo_10', state.stats.todoCount >= 10);
-        checkUnlock('todo_20', state.stats.todoCount >= 20);
-        checkUnlock('todo_50', state.stats.todoCount >= 50);
-        checkUnlock('todo_100', state.stats.todoCount >= 100);
-        checkAllRounder();
-        checkGenAchievements();
-    }
-    saveState();
-    renderTodos();
-    renderAchievements();
 }
 
 function deleteTodo(idx) {

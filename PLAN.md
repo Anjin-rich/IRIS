@@ -49,7 +49,62 @@ D:\中转\IRIS\
 
 ---
 
-## 2026-07-12 修改：全局玻璃质感统一 + 背景图调优 + 仪式 UI 重设计
+## 2026-07-22 修改：Bug 修复 + 代码清理（6项）
+
+**为什么这样改：**
+> 根据代码审查结果修复真实 bug，删除废弃功能，优化存储安全和移动端显示。
+
+### 1. 删除待办长按完成功能
+- 删除 `triggerLoveEffect()` 函数及 `longPressState` 状态管理
+- `setupTodoListDelegation()` 清空为占位函数（拖拽事件已在 `renderTodos` 中绑定，无需额外委托）
+- 同时删除无引用的 `toggleTodo()` 函数
+
+**涉及文件：**
+- `js/todo.js` — 删除 `triggerLoveEffect`、`toggleTodo`、`longPressState` 及 pointer events 长按逻辑（L60-L177, L367-L381, L448-L469）
+
+### 2. AFK 静心完成弹窗改用 toast
+- `alert()` → `showToast()`，保持产品内一致风格，避免破坏毛玻璃 UI 体验
+- `endAfk()` 去重：`reached` 和 `!reached` 分支共享逻辑提取为 `recordAfkSession(seconds)` 独立函数
+- 新增函数内对 DOM 元素访问增加空值保护（`if (timerEl)` / `if (circle)`）
+
+**涉及文件：**
+- `js/afk.js` — `endAfk` 重写 + 新增 `recordAfkSession`
+
+### 3. saveState 加预检容量检测
+- 保存前先 `JSON.stringify(state)` 估算大小，超过 4MB 主动弹出存储警告并 `return`，避免 `setItem` 中途失败导致数据丢失
+- 保留原有 `QuotaExceededError` catch 作为兜底
+
+**涉及文件：**
+- `js/sidebar.js` — `saveState()` 加预检逻辑
+
+### 4. 删除冗余 baseMoods
+- `baseMoods` 中 `🤤` 与 `😴` 语义重复，保留 `😴`
+
+**涉及文件：**
+- `js/state.js` — `baseMoods` 去重
+
+### 5. 修复手机端能量栏文字偏上不居中
+- 移动端 `.energy-bar-compact` 增加 `min-height: 36px` + `justify-content: center`，限制高度使内容自然垂直居中
+- 移动端 `.energy-bar-select` 增加 `height: 100%` + `min-height: 36px`，确保内部元素填满可用空间
+
+**涉及文件：**
+- `css/responsive.css` — `@media (max-width: 480px)` 段
+
+### 6. 清理 saveState 注释
+- 移除"即使存储失败也更新UI"过时注释（逻辑已改为失败时 return，UI 更新不再执行）
+
+**涉及文件：**
+- `js/sidebar.js`
+
+---
+
+## 2026-07-12 修改：> 加入背景图后发现 header/导航栏挡住了背景，且各组件质感不统一。沉淀室卡片、成长仪式卡片、日记按钮等需要统一为玻璃质感。成长仪式需要从紫色系改为奶油黄+金边风格。
+
+### 1. 背景图调优
+- `.app-phone::after` 覆盖层：去掉 `backdrop-filter: blur`，白色透明度 0.15（清透不模糊）
+- `.app-header`：去掉 blur，背景 `rgba(255,255,255,0.45)`（半透明，背景可透出）
+- `.app-navbar`：同步 header 风格，去掉 blur
+- `background-position: center 18%`（花朵顶部对齐内容区）
 
 **为什么这样改：**
 > 加入背景图后发现 header/导航栏挡住了背景，且各组件质感不统一。沉淀室卡片、成长仪式卡片、日记按钮等需要统一为玻璃质感。成长仪式需要从紫色系改为奶油黄+金边风格。

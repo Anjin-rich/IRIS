@@ -1,6 +1,13 @@
 function saveState() {
+  // 预检：在保存前估算 JSON 大小，超过 4MB 主动警告，避免存入一半失败
   try {
-    localStorage.setItem('IrisState', JSON.stringify(state));
+    const json = JSON.stringify(state);
+    const size = json.length * 2; // UTF-16: 中文字符约 2 bytes/char
+    if (size > 4 * 1024 * 1024) {
+      showStorageFullModal();
+      return;
+    }
+    localStorage.setItem('IrisState', json);
   } catch (e) {
     const isQuota = e.name === 'QuotaExceededError' ||
       e.code === 22 ||
@@ -9,7 +16,6 @@ function saveState() {
     if (isQuota) {
       showStorageFullModal();
     }
-    // 即使存储失败也更新UI，避免界面卡死
   }
   updateEnergyDisplay();
   updateSidebarInfo();

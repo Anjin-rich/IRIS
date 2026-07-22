@@ -89,78 +89,61 @@ function endAfk() {
     const reached = seconds >= afkTargetSeconds && afkTargetSeconds > 0;
 
     if (reached) {
-        try {
-            if (navigator.vibrate) navigator.vibrate(200);
-        } catch (e) { }
-        alert('🧘 静心时间到！你已完成预定时间。');
+        try { if (navigator.vibrate) navigator.vibrate(200); } catch (e) { }
+        showToast('🧘 静心时间到！你已完成预定时间');
+    }
 
-        const session = {
-            duration: seconds, date: new Date().toLocaleString('zh-CN', {
-                month: '2-digit',
-                day: '2-digit', hour: '2-digit', minute: '2-digit'
-            }), timestamp: new Date()
-                .toISOString()
-        };
-        state.afkSessions.unshift(session);
-        state.stats.afkCount += seconds;
-        state.totalMeditationSecs = (state.totalMeditationSecs || 0) + seconds;
-        const totalSecs = state.afkSessions.reduce((sum, s) => sum + s.duration, 0);
-        checkUnlock('afk_1m', totalSecs >= 60);
-        checkUnlock('afk_3m', totalSecs >= 180);
-        checkUnlock('afk_5m', totalSecs >= 300);
-        checkUnlock('afk_10m', totalSecs >= 600);
-        checkUnlock('afk_30m', totalSecs >= 1800);
-        checkUnlock('afk_60m', totalSecs >= 3600);
-        checkAllRounder();
-
-        clearInterval(afkInterval);
-        afkInterval = null;
-        state.currentAfk = null;
-        state.afkTimerSeconds = 0;
-        document.getElementById('afkTimer').textContent = '00:00:00';
-        document.getElementById('meditationCircle').classList.remove('breathing');
-        saveState();
-        renderAchievements();
-        updateAfkUI();
-        showToast(`✅ 静心结束，沉淀了 ${formatDuration(seconds)}`);
-    } else {
+    // 未达成目标时额外处理小时级能量奖励
+    if (!reached) {
         const hours = Math.floor(seconds / 3600);
         if (hours > 0) {
             const expBonus = hours * 5;
             addEnergy(expBonus);
             showToast(`🧘 静心${hours}小时，获得 ${expBonus} 能量`);
         }
-        const session = {
-            duration: seconds, date: new Date().toLocaleString('zh-CN', {
-                month: '2-digit',
-                day: '2-digit', hour: '2-digit', minute: '2-digit'
-            }), timestamp: new Date()
-                .toISOString()
-        };
-        state.afkSessions.unshift(session);
-        state.stats.afkCount += seconds;
-        state.totalMeditationSecs = (state.totalMeditationSecs || 0) + seconds;
-        const totalSecs = state.afkSessions.reduce((sum, s) => sum + s.duration, 0);
-        checkUnlock('afk_1m', totalSecs >= 60);
-        checkUnlock('afk_3m', totalSecs >= 180);
-        checkUnlock('afk_5m', totalSecs >= 300);
-        checkUnlock('afk_10m', totalSecs >= 600);
-        checkUnlock('afk_30m', totalSecs >= 1800);
-        checkUnlock('afk_60m', totalSecs >= 3600);
-        checkAllRounder();
-
-        clearInterval(afkInterval);
-        afkInterval = null;
-        state.currentAfk = null;
-        state.afkTimerSeconds = 0;
-        document.getElementById('afkTimer').textContent = '00:00:00';
-        document.getElementById('meditationCircle').classList.remove('breathing');
-        saveState();
-        renderAchievements();
-        updateAfkUI();
-        showToast(`✅ 静心结束，沉淀了 ${formatDuration(seconds)}`);
     }
+
+    // 记录本次 session + 更新统计 + 触发成就
+    recordAfkSession(seconds);
+
     isAfkEnding = false;
+}
+
+// 提取为独立函数，供 endAfk 调用
+function recordAfkSession(seconds) {
+    const session = {
+        duration: seconds,
+        date: new Date().toLocaleString('zh-CN', {
+            month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+        }),
+        timestamp: new Date().toISOString()
+    };
+    state.afkSessions.unshift(session);
+    state.stats.afkCount += seconds;
+    state.totalMeditationSecs = (state.totalMeditationSecs || 0) + seconds;
+
+    const totalSecs = state.afkSessions.reduce((sum, s) => sum + s.duration, 0);
+    checkUnlock('afk_1m', totalSecs >= 60);
+    checkUnlock('afk_3m', totalSecs >= 180);
+    checkUnlock('afk_5m', totalSecs >= 300);
+    checkUnlock('afk_10m', totalSecs >= 600);
+    checkUnlock('afk_30m', totalSecs >= 1800);
+    checkUnlock('afk_60m', totalSecs >= 3600);
+    checkAllRounder();
+
+    // 统一 UI 收尾
+    clearInterval(afkInterval);
+    afkInterval = null;
+    state.currentAfk = null;
+    state.afkTimerSeconds = 0;
+    const timerEl = document.getElementById('afkTimer');
+    if (timerEl) timerEl.textContent = '00:00:00';
+    const circle = document.getElementById('meditationCircle');
+    if (circle) circle.classList.remove('breathing');
+    saveState();
+    renderAchievements();
+    updateAfkUI();
+    showToast(`✅ 静心结束，沉淀了 ${formatDuration(seconds)}`);
 }
 
 function startAfkTimer() {
