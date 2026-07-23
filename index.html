@@ -266,9 +266,34 @@
                     <input type="file" id="editDiaryImageInput" accept="image/*" multiple style="display:none;"
                         onchange="handleEditDiaryImageUpload(event)">
                     <div class="modal-actions">
-                        <button class="btn-danger" onclick="deleteDiary()">🗑️ 删除日记</button>
+                        <button class="btn-danger" onclick="deleteDiary()">删除日记</button>
                         <button class="btn-cancel" onclick="closeEditDiary()">取消</button>
                         <button class="btn-save" onclick="saveEditDiary()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 日记浏览卡片 -->
+        <div class="modal-overlay" id="diaryViewerModal">
+            <div class="modal-box diary-viewer-box">
+                <div class="modal-header">
+                    <h3 id="diaryViewerDate">日记</h3>
+                    <button class="modal-close" onclick="closeDiaryViewer()">×</button>
+                </div>
+                <div class="modal-body diary-viewer-body">
+                    <div class="diary-viewer-nav">
+                        <button class="diary-nav-btn" onclick="navigateDiary(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <div class="diary-viewer-card" id="diaryViewerCard">
+                            <div class="diary-viewer-mood" id="diaryViewerMood"></div>
+                            <div class="diary-viewer-text" id="diaryViewerText"></div>
+                            <div class="diary-viewer-pics" id="diaryViewerPics"></div>
+                        </div>
+                        <button class="diary-nav-btn" onclick="navigateDiary(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="diary-viewer-counter" id="diaryViewerCounter"></div>
+                    <div class="diary-viewer-actions">
+                        <button class="diary-viewer-edit-btn" onclick="openEditFromViewer()"><i class="fa-regular fa-pen-to-square"></i> 编辑</button>
                     </div>
                 </div>
             </div>

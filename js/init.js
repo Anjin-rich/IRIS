@@ -77,6 +77,9 @@ function init() {
   document.getElementById('editDiaryModal').addEventListener('click', function (e) {
     if (e.target === this) closeEditDiary();
   });
+  document.getElementById('diaryViewerModal').addEventListener('click', function (e) {
+    if (e.target === this) closeDiaryViewer();
+  });
   checkGenAchievements();
   if (state.isFirstLaunch) {
     setTimeout(startGuide, 500);

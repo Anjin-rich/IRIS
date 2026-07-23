@@ -39,8 +39,15 @@ function showToastOnce(key, msg, duration) {
   }
 }
 
+function getBeijingDateKey(date) {
+  const d = date || new Date();
+  const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+  const beijing = new Date(utc + 8 * 3600000);
+  return beijing.toISOString().slice(0, 10);
+}
+
 function getTodayDateKey() {
-  return new Date().toISOString().slice(0, 10);
+  return getBeijingDateKey();
 }
 
 function triggerVibrate() {

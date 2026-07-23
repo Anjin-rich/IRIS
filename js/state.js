@@ -204,7 +204,7 @@ if (!state.petData || state.petData.length === 0) {
 if (state.isFirstLaunch === undefined) state.isFirstLaunch = true;
 if (state.afkPresetMinutes === undefined) state.afkPresetMinutes = 25;
 
-const baseMoods = ['☺️', '😥', '🙄', '😋', '🤕', '😎', '😭', '😴', '🥰', '🥺'];
+const baseMoods = ['☺️', '😥', '🙄', '😋', '🤤', '🤕', '😎', '😭', '😴', '🥰', '🥺'];
 
 function getMoodEmojis() {
     return [...baseMoods, ...state.customMoods];

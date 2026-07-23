@@ -4,6 +4,8 @@
 let tempImages = [];
 let selectedMood = null;
 let diarySortDesc = true; // 默认倒序（最新在前）
+let viewerDiaries = [];
+let viewerIndex = 0;
 
 function toggleDiarySort() {
     diarySortDesc = !diarySortDesc;
@@ -32,8 +34,8 @@ function updateSortBtnStyle() {
 }
 
 function updateDiaryRemain() {
-    const todayStr = getTodayDateKey();
-    const todayCount = state.diaries.filter(d => d.createdAt && d.createdAt.slice(0, 10) === todayStr).length;
+    const todayStr = getBeijingDateKey();
+    const todayCount = state.diaries.filter(d => d.createdAt && getBeijingDateKey(new Date(d.createdAt)) === todayStr).length;
     const remain = Math.max(0, 3 - todayCount);
     document.getElementById('diaryRemain').textContent = `📝 今日剩余 ${remain}/3 篇`;
 }
@@ -134,7 +136,14 @@ function compressImage(file, maxSizeKB = 200) {
 
 async function handleImageUpload(e) {
     const files = Array.from(e.target.files);
-    const remaining = 5 - tempImages.length;
+    const remaining = 3 - tempImages.length;
+    if (files.length > remaining && remaining > 0) {
+        showToast(`最多添加 3 张图片，已自动选取前 ${remaining} 张`);
+    } else if (remaining <= 0) {
+        showToast('最多添加 3 张图片');
+        e.target.value = '';
+        return;
+    }
     const allowed = files.slice(0, remaining);
     for (const file of allowed) {
         try {
@@ -166,14 +175,14 @@ function renderPreviews() {
             <span class="media-delete-badge" onclick="removeTempImage(${idx})"><i class="fa-solid fa-xmark"></i></span>
         </div>
     `).join('');
-    document.getElementById('uploadLabel').style.display = tempImages.length >= 5 ? 'none' : 'flex';
+    document.getElementById('uploadLabel').style.display = tempImages.length >= 3 ? 'none' : 'flex';
 }
 
 function saveDiary() {
     const text = document.getElementById('diaryInput').value.trim();
     if (!text && tempImages.length === 0) { showToast('📝 写点什么吧'); return; }
-    const todayStr = getTodayDateKey();
-    const todayCount = state.diaries.filter(d => d.createdAt && d.createdAt.slice(0, 10) === todayStr).length;
+    const todayStr = getBeijingDateKey();
+    const todayCount = state.diaries.filter(d => d.createdAt && getBeijingDateKey(new Date(d.createdAt)) === todayStr).length;
     if (todayCount >= 3) { showToast('📔 今天已写了3篇日记，明天再来吧！'); return; }
     const entry = {
         id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
@@ -232,14 +241,14 @@ function renderCalendar() {
     const firstDay = new Date(diaryCalendarYear, diaryCalendarMonth, 1).getDay();
     const daysInMonth = new Date(diaryCalendarYear, diaryCalendarMonth + 1, 0).getDate();
     const today = new Date();
-    const todayStr = today.toISOString().slice(0, 10);
+    const todayStr = getBeijingDateKey(today);
     let html = '';
     const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
     weekdays.forEach(d => html += `<div class="calendar-weekday">${d}</div>`);
     for (let i = 0; i < firstDay; i++) html += `<div class="calendar-day other-month"></div>`;
     for (let d = 1; d <= daysInMonth; d++) {
         const dateObj = new Date(diaryCalendarYear, diaryCalendarMonth, d);
-        const dateStr = dateObj.toISOString().slice(0, 10);
+        const dateStr = getBeijingDateKey(dateObj);
         const isToday = dateStr === todayStr;
         const diary = state.diaries.find(di => {
             const diDate = new Date(di.createdAt);
@@ -262,40 +271,48 @@ function renderCalendar() {
 }
 
 function viewDiaryByDate(year, month, day) {
+    const targetKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const diary = state.diaries.find(di => {
-        const diDate = new Date(di.createdAt);
-        return diDate.getFullYear() === year && diDate.getMonth() === month && diDate.getDate() ===
-            day;
+        return getBeijingDateKey(new Date(di.createdAt)) === targetKey;
     });
     if (diary) {
         const text = diary.text || '(无文字)';
         const mood = diary.mood || '';
-        const dateStr =
-            `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        showToast(`📅 ${dateStr} ${mood}\n${text.slice(0, 50)}${text.length > 50 ? '...' : ''}`);
+        showToast(`📅 ${targetKey} ${mood}\n${text.slice(0, 50)}${text.length > 50 ? '...' : ''}`);
     } else {
-        showToast(`📅 ${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')} 没有日记`);
+        showToast(`📅 ${targetKey} 没有日记`);
     }
 }
 
 function renderDiaries() {
     const list = document.getElementById('diaryList');
-    const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-    const recent = state.diaries.filter(d => new Date(d.createdAt) >= twoDaysAgo);
-    if (recent.length === 0) {
+    const todayKey = getBeijingDateKey();
+    const todayDiaries = state.diaries.filter(d => {
+        const diaryKey = getBeijingDateKey(new Date(d.createdAt));
+        return diaryKey === todayKey;
+    });
+    if (todayDiaries.length === 0) {
         list.innerHTML =
-            `<div style="text-align:center;padding:12px 0;font-size:0.9rem;color:var(--text-sub);">最近两天没有日记，去写一篇吧</div>`;
+            `<div style="text-align:center;padding:12px 0;font-size:0.9rem;color:var(--text-sub);">今天还没有日记，去写一篇吧</div>`;
         return;
     }
-    list.innerHTML = recent.map(d => `
-        <div class="history-diary-card">
+    list.innerHTML = todayDiaries.map(d => `
+        <div class="history-diary-card" data-imgs="${(d.images || []).join('|')}">
             <button class="diary-edit-btn" onclick="openEditDiary('${d.id}')"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="history-diary-date">${d.date}${d.mood ? `<span class="mood-emoji">${d.mood}</span>` : ''}</div>
             <div class="history-diary-text">${escapeHtml(d.text)}</div>
-            ${d.images && d.images.length ? `<div class="history-diary-pics">${d.images.map(img => `<img src="${img}" onclick="viewFullImage('${img}')">`).join('')}</div>` : ''}
+            <div class="history-diary-pics lazy-images"></div>
         </div>
     `).join('');
+    list.querySelectorAll('.history-diary-card').forEach(card => {
+        const ids = (card.dataset.imgs || '').split('|').filter(Boolean);
+        if (ids.length === 0) return;
+        const container = card.querySelector('.history-diary-pics');
+        Promise.all(ids.map(id => ImageDB.get(id))).then(urls => {
+            container.innerHTML = urls.filter(Boolean).map(url =>
+                `<img src="${url}" onclick="viewFullImage('${url.replace(/'/g, "\\'")}')" />`);
+        });
+    });
 }
 
 function openAllDiaries() {
@@ -332,16 +349,24 @@ function openAllDiaries() {
                 </div>
                 <div class="diary-month-body">
                     ${entries.map(d => `
-                    <div class="history-diary-card" style="margin-bottom:8px;">
-                        <button class="diary-edit-btn" onclick="openEditDiary('${d.id}')"><i class="fa-regular fa-pen-to-square"></i></button>
+                    <div class="history-diary-card" style="margin-bottom:8px;cursor:pointer;" onclick="closeAllDiaries();setTimeout(()=>openDiaryViewer('${d.id}'),300)" data-imgs="${(d.images || []).join('|')}">
                         <div class="history-diary-date">${d.date}${d.mood ? `<span class="mood-emoji">${d.mood}</span>` : ''}</div>
                         <div class="history-diary-text">${escapeHtml(d.text)}</div>
-                        ${d.images && d.images.length ? `<div class="history-diary-pics">${d.images.map(img => `<img src="${img}" onclick="viewFullImage('${img}')">`).join('')}</div>` : ''}
+                        <div class="history-diary-pics lazy-images"></div>
                     </div>`).join('')}
                 </div>
             </div>`;
     }).join('');
     document.getElementById('allDiariesModal').classList.add('open');
+    body.querySelectorAll('.history-diary-card').forEach(card => {
+        const ids = (card.dataset.imgs || '').split('|').filter(Boolean);
+        if (ids.length === 0) return;
+        const container = card.querySelector('.history-diary-pics');
+        Promise.all(ids.map(id => ImageDB.get(id))).then(urls => {
+            container.innerHTML = urls.filter(Boolean).map(url =>
+                `<img src="${url}" onclick="viewFullImage('${url.replace(/'/g, "\\'")}')" />`);
+        });
+    });
 }
 
 function closeAllDiaries() { document.getElementById('allDiariesModal').classList.remove('open'); }
@@ -387,7 +412,14 @@ function removeEditImage(idx) {
 
 async function handleEditDiaryImageUpload(e) {
     const files = Array.from(e.target.files);
-    const remaining = 5 - editDiaryImages.length;
+    const remaining = 3 - editDiaryImages.length;
+    if (files.length > remaining && remaining > 0) {
+        showToast(`最多添加 3 张图片，已自动选取前 ${remaining} 张`);
+    } else if (remaining <= 0) {
+        showToast('最多添加 3 张图片');
+        e.target.value = '';
+        return;
+    }
     const allowed = files.slice(0, remaining);
     for (const file of allowed) {
         try {
@@ -414,17 +446,16 @@ function closeEditDiary() {
 
 function saveEditDiary() {
     const text = document.getElementById('editDiaryText').value.trim();
-    if (!text) { showToast('日记内容不能为空'); return; }
+    if (!text && editDiaryImages.length === 0) { showToast('写点什么吧'); return; }
     const entry = state.diaries.find(d => d.id === editDiaryId);
     if (entry) {
         entry.text = text;
         entry.images = [...editDiaryImages];
-        entry.date = new Date().toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) + ' ' +
-            new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' (已编辑)';
+        entry.updatedAt = new Date().toISOString();
         saveState();
         renderDiaries();
         renderCalendar();
-        }
+    }
     closeEditDiary();
 }
 
@@ -450,4 +481,60 @@ function viewFullImage(src) {
         `<img src="${src}" style="max-width:92%;max-height:85%;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.5);">`;
     overlay.onclick = () => overlay.remove();
     document.body.appendChild(overlay);
+}
+
+// ============================================================
+//  日记浏览卡片
+// ============================================================
+function openDiaryViewer(id) {
+    const sorted = [...state.diaries].sort((a, b) =>
+        diarySortDesc ? b.createdAt.localeCompare(a.createdAt) : a.createdAt.localeCompare(b.createdAt)
+    );
+    viewerDiaries = sorted;
+    viewerIndex = sorted.findIndex(d => d.id === id);
+    if (viewerIndex === -1) viewerIndex = 0;
+    renderDiaryViewer();
+    document.getElementById('diaryViewerModal').classList.add('open');
+}
+
+function closeDiaryViewer() {
+    document.getElementById('diaryViewerModal').classList.remove('open');
+}
+
+function navigateDiary(dir) {
+    viewerIndex += dir;
+    if (viewerIndex < 0) viewerIndex = 0;
+    if (viewerIndex >= viewerDiaries.length) viewerIndex = viewerDiaries.length - 1;
+    renderDiaryViewer();
+}
+
+async function renderDiaryViewer() {
+    const d = viewerDiaries[viewerIndex];
+    if (!d) return;
+    document.getElementById('diaryViewerDate').textContent = d.date || '日记';
+    const moodEl = document.getElementById('diaryViewerMood');
+    moodEl.textContent = d.mood || '';
+    moodEl.style.display = d.mood ? 'block' : 'none';
+    document.getElementById('diaryViewerText').textContent = d.text || '(无文字)';
+    const picsEl = document.getElementById('diaryViewerPics');
+    picsEl.innerHTML = '';
+    if (d.images && d.images.length > 0) {
+        const urls = await Promise.all(d.images.map(id => ImageDB.get(id)));
+        picsEl.innerHTML = urls.filter(Boolean).map(url =>
+            `<img src="${url}" onclick="viewFullImage('${url.replace(/'/g, "\\'")}')" />`
+        ).join('');
+    }
+    document.getElementById('diaryViewerCounter').textContent =
+        `${viewerIndex + 1} / ${viewerDiaries.length}`;
+    const prevBtn = document.querySelector('.diary-nav-btn');
+    const nextBtn = document.querySelectorAll('.diary-nav-btn')[1];
+    if (prevBtn) prevBtn.disabled = viewerIndex === 0;
+    if (nextBtn) nextBtn.disabled = viewerIndex === viewerDiaries.length - 1;
+}
+
+function openEditFromViewer() {
+    const d = viewerDiaries[viewerIndex];
+    if (!d) return;
+    closeDiaryViewer();
+    setTimeout(() => openEditDiary(d.id), 300);
 }

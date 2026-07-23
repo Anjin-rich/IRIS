@@ -49,6 +49,124 @@ D:\中转\IRIS\
 
 ---
 
+## 2026-07-23 修改：日记编辑 Bug 修复 + 图片上传优化 + 卡片质感统一
+
+**为什么这样改：**
+> 编辑日记时只添加图片不写文字会因空内容校验而无法保存。手机端多选图片超限时无提示，用户不知道为什么保存不了。全部日记卡片太小气，需要加大并统一为毛玻璃质感。
+
+### 1. 编辑日记空内容保存修复
+- `saveEditDiary()` 校验从 `if (!text)` 改为 `if (!text && editDiaryImages.length === 0)`，允许只含图片的日记保存
+
+**涉及文件：**
+- `js/diary.js` — `saveEditDiary()`
+
+### 2. 图片上传超限提示
+- 新建和编辑日记的图片上传函数中，当用户选择的文件数超过剩余可添加数量时，显示 toast 提示
+- 已达 3 张上限时直接拦截并提示
+
+**涉及文件：**
+- `js/diary.js` — `handleImageUpload()` + `handleEditDiaryImageUpload()`
+
+### 3. 全部日记卡片 + 浏览卡片质感统一
+- `.history-diary-card` 从 `var(--item-bg)` + 左边框改为毛玻璃质感（半透明白 + backdrop-filter blur + 白色高光边框 + 阴影）
+- 全部日记弹窗内的卡片 padding 加大（14px→18px）、字号加大
+- 日记浏览卡片（`.diary-viewer-card`）同步改为毛玻璃质感，min-height 加大（120px→180px）
+
+**涉及文件：**
+- `css/diary.css` — `.history-diary-card` + `#allDiariesBody .history-diary-card` + `.diary-viewer-card` 样式重写
+
+---
+
+**为什么这样改：**
+> 日记提示框和保存按钮的视觉质感与「闪念待办」按钮不统一，需要改为玻璃质感。图片限制从 5 张改为 3 张以控制存储压力。表情列表少了一个 🤤，补回至 11 个基础表情 + 1 个添加按钮 = 12 个。
+
+### 1. 日记提示框 + 保存按钮 UI 统一
+- `.diary-prompt-box` 从 `var(--light-purple)` + 左边框改为玻璃质感（半透明紫 + backdrop-filter blur + 白色高光边框 + 阴影）
+- `.btn-submit-diary` 从 `var(--main-purple)` 实色改为淡色玻璃质感（与 `.btn-add` 同风格）
+
+**涉及文件：**
+- `css/diary.css` — `.diary-prompt-box` + `.btn-submit-diary` 样式重写
+
+### 2. 日记图片限制 5→3
+- `handleImageUpload()` 和 `handleEditDiaryImageUpload()` 的 `remaining` 计算从 5 改为 3
+- 上传标签显隐判断同步修改
+
+**涉及文件：**
+- `js/diary.js` — 两处 `remaining` 计算 + `renderPreviews()` 显隐判断
+
+### 3. 表情列表补回 🤤
+- `baseMoods` 数组中补回 `🤤`（之前在 07-22 修改中误删，因与 😴 语义重复，但用户要求保留）
+
+**涉及文件：**
+- `js/state.js` — `baseMoods` 数组
+
+---
+
+**为什么这样改：**
+> 在「查看全部日记」中点击编辑按钮，编辑弹窗被全部日记弹窗遮挡，需要手动关闭才能编辑。用户希望先浏览日记再决定是否编辑，而非点击即进入编辑。同时删除按钮的 emoji 需要清理。
+
+### 1. 全部日记弹窗编辑按钮交互修复
+- 编辑按钮点击时先关闭全部日记弹窗，300ms 延迟后打开编辑弹窗
+- 修复全部日记弹窗中图片未使用 IndexedDB 异步加载的问题
+
+**涉及文件：**
+- `js/diary.js` — `openAllDiaries()` 编辑按钮 onclick 改为 `closeAllDiaries();setTimeout(()=>openEditDiary(...),300)` + 新增图片懒加载
+
+### 2. 日记浏览卡片模式（新增功能）
+- 新增「日记浏览卡片」弹窗，用户点击全部日记中的条目时，先打开浏览卡片
+- 浏览卡片包含：日期标题、心情 emoji、日记正文、图片（IndexedDB 异步加载）
+- 左右箭头按钮切换前一篇/后一篇日记，底部显示当前页码（1/N）
+- 底部有「编辑」按钮，点击关闭浏览卡片后打开编辑弹窗
+- 点击弹窗外部关闭浏览卡片
+
+**涉及文件：**
+- `index.html` — 新增 `diaryViewerModal` 弹窗 HTML
+- `js/diary.js` — 新增 `viewerDiaries`/`viewerIndex` 状态 + `openDiaryViewer()`/`closeDiaryViewer()`/`navigateDiary()`/`renderDiaryViewer()`/`openEditFromViewer()` 函数
+- `css/diary.css` — 新增 `.diary-viewer-*` 样式（卡片、导航按钮、编辑按钮等）
+- `js/init.js` — 新增 `diaryViewerModal` 点击外部关闭事件
+
+### 3. 删除日记按钮去掉 emoji
+- 编辑日记弹窗中的删除按钮从「🗑️ 删除日记」改为「删除日记」
+
+**涉及文件：**
+- `index.html` — 删除按钮文案
+
+---
+
+**为什么这样改：**
+> 日记主页时间线显示了最近两天的日记（含昨天），用户希望只显示今天的日记。编辑日记后显示时间被覆盖为编辑时间，导致排序和显示混乱。所有日期判断需统一为北京时间（UTC+8）。
+
+### 1. 全站日期统一为北京时间
+- 新增 `getBeijingDateKey(date)` 工具函数（`utils.js`），将任意 Date 转换为北京时间日期 key（YYYY-MM-DD）
+- 修改 `getTodayDateKey()` 使用北京时间，影响能量系统跨天重置、自定义表情重置等
+
+**涉及文件：**
+- `js/utils.js` — 新增 `getBeijingDateKey()`，修改 `getTodayDateKey()`
+
+### 2. 日记主页时间线只显示今天
+- `renderDiaries()` 从"最近2天"改为"今天"（北京时间 0:00 为分界）
+- 提示文案从"最近两天没有日记"改为"今天还没有日记，去写一篇吧"
+- 图片加载改为 IndexedDB 异步加载（与 openAllDiaries 一致）
+- 日历组件、日期查看函数同步改为北京时间比较
+
+**涉及文件：**
+- `js/diary.js` — 重写 `renderDiaries()` + 修改 `renderCalendar()` + 修改 `viewDiaryByDate()`
+
+### 3. 日记每日篇数限制改用北京时间
+- `saveDiary()` 和 `updateDiaryRemain()` 的今日计数改用 `getBeijingDateKey()` 判断
+
+**涉及文件：**
+- `js/diary.js` — `saveDiary()` + `updateDiaryRemain()`
+
+### 4. 日记编辑时间戳修复
+- 编辑保存时不再覆盖 `entry.date`（原显示时间），改为新增 `entry.updatedAt` 字段记录编辑时间
+- 解决编辑后日记在列表里显示时间变化但排序位置不变的混乱问题
+
+**涉及文件：**
+- `js/diary.js` — `saveEditDiary()` 不再修改 `entry.date`
+
+---
+
 ## 2026-07-23 修改：Toast 大规模精简 + 能量 streak 删除
 
 **为什么这样改：**
