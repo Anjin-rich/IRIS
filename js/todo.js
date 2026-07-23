@@ -46,7 +46,6 @@ function addTodo() {
     input.value = '';
     saveState();
     renderTodos();
-    showToast('✅ 待办已添加');
     if (state.todos.length === 1 && state.isFirstLaunch) {
         setTimeout(() => {
             if (document.getElementById('guideOverlay').classList.contains('open'))
@@ -78,7 +77,6 @@ function handleStarClick(idx, element) {
         try { if (navigator.vibrate) navigator.vibrate(30); } catch (e) { }
         state.stats.todoCount++;
         addEnergy(1);
-        showToast('❤️ 完成 +1');
         checkUnlock('first_todo', true);
         checkUnlock('todo_3', state.stats.todoCount >= 3);
         checkUnlock('todo_5', state.stats.todoCount >= 5);
@@ -90,7 +88,6 @@ function handleStarClick(idx, element) {
         checkGenAchievements();
     } else {
         // 从完成变为未完成
-        showToast('↩️ 已取消完成');
     }
     saveState();
     renderTodos();
@@ -230,11 +227,10 @@ function renderTodos() {
             if (targetEl) {
                 const targetIdx = parseInt(targetEl.dataset.idx);
                 if (todoDragSrc !== null && todoDragSrc !== targetIdx) {
-                    const moved = state.todos.splice(todoDragSrc, 1)[0];
+                    const moved =                     state.todos.splice(todoDragSrc, 1)[0];
                     state.todos.splice(targetIdx, 0, moved);
                     saveState();
                     renderTodos();
-                    showToast('📌 已重新排序');
                 }
             }
             todoDragSrc = null;
@@ -319,5 +315,4 @@ function deleteTodo(idx) {
     state.todos.splice(idx, 1);
     saveState();
     renderTodos();
-    showToast('🗑️ 已删除');
 }

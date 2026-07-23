@@ -52,7 +52,7 @@ function handleAvatarUpload(e) {
     state.avatar = ev.target.result;
     saveState();
     updateSidebarInfo();
-    showToast('✅ 头像已更新');
+    showToastOnce('avatar_update', '✅ 头像已更新');
   };
   reader.readAsDataURL(file);
   e.target.value = '';
@@ -81,7 +81,7 @@ function saveUserName() {
   if (!name) { showToast('名字不能为空'); return; }
   state.userName = name;
   saveState();
-  showToast('✅ 名字已更新');
+  showToastOnce('name_update', '✅ 名字已更新');
   closeEditNameModal();
 }
 

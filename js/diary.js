@@ -424,8 +424,7 @@ function saveEditDiary() {
         saveState();
         renderDiaries();
         renderCalendar();
-        showToast('✅ 日记已更新');
-    }
+        }
     closeEditDiary();
 }
 
@@ -439,7 +438,6 @@ function deleteDiary() {
         renderDiaries();
         renderCalendar();
         updateDiaryRemain();
-        showToast('🗑️ 日记已删除');
     }
     closeEditDiary();
 }

@@ -22,12 +22,21 @@ else applyTheme('light');
 
 let toastTimer = null;
 
-function showToast(msg) {
+function showToast(msg, duration) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  toastTimer = setTimeout(() => el.classList.remove('show'), duration || 2200);
+}
+
+function showToastOnce(key, msg, duration) {
+  if (state.shownToasts && state.shownToasts.includes(key)) return;
+  showToast(msg, duration);
+  if (state.shownToasts) {
+    state.shownToasts.push(key);
+    saveState();
+  }
 }
 
 function getTodayDateKey() {

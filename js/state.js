@@ -52,7 +52,8 @@ let state = JSON.parse(localStorage.getItem('IrisState')) || {
     energySwitchDate: null,
     routineFoldState: {},
     energySelectionCount: 0,
-    energySelectionDate: null
+    energySelectionDate: null,
+    shownToasts: []
 };
 
 const DEFAULT_SHOP_ITEMS = [
@@ -133,6 +134,7 @@ if (!state.customMoodsDate) state.customMoodsDate = null;
 if (!state.routineFoldState) state.routineFoldState = {};
 if (state.energySelectionCount === undefined) state.energySelectionCount = 0;
 if (!state.energySelectionDate) state.energySelectionDate = null;
+if (!state.shownToasts) state.shownToasts = [];
 
 const defaultPetData = [
     { emoji: '🐱', name: '小猫', rarity: 'common', requiredExp: 0, requiredAchievements: [] },

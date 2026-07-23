@@ -69,7 +69,6 @@ function pauseAfk() {
     afkInterval = null;
     saveState();
     updateAfkUI();
-    showToast('⏸️ 静心已暂停');
 }
 
 function endAfk() {

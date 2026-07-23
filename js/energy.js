@@ -148,7 +148,6 @@ function selectEnergy(mode) {
 
   const cardEl = document.getElementById('energyCard');
   if (cardEl && cardEl.classList.contains('show')) {
-    showToast('长按卡片可重置选择');
     return;
   }
 
@@ -172,8 +171,6 @@ function selectEnergy(mode) {
       return;
     }
     showToast(`消耗 ${cost} 能量切换能量模式`);
-  } else {
-    showToast(`✨ 免费选择（第 ${state.energySelectionCount} 次）`);
   }
 
   state.energyHistory[today] = mode;
@@ -209,18 +206,6 @@ function selectEnergy(mode) {
   const msg = getRandomMessage(mode);
   contentEl.textContent = msg;
   updateWeatherEffect(mode);
-
-  // Streak display with first-time friendly message
-  const streakDisplay = document.getElementById('energyStreakDisplay');
-  const currentStreak = state.energyStreak || 0;
-  if (currentStreak === 0) {
-    streakDisplay.innerHTML = `✨ 好的，从现在开始`;
-    setTimeout(() => {
-      streakDisplay.innerHTML = `🔥 连续 1 天`;
-    }, 1000);
-  } else {
-    streakDisplay.innerHTML = `🔥 连续 ${currentStreak + 1} 天`;
-  }
 }
 
 // Reset energy selection (long press trigger)
@@ -396,7 +381,6 @@ function updateEnergyUI() {
     }
   });
 
-  const streakDisplay = document.getElementById('energyStreakDisplay');
   const cardEl = document.getElementById('energyCard');
   const contentEl = document.getElementById('energyCardContent');
   const selectEl = document.getElementById('energySelect');
@@ -415,13 +399,7 @@ function updateEnergyUI() {
       contentEl.textContent = getRandomMessage(currentMode);
     }
     updateWeatherEffect(currentMode);
-    if (streakDisplay) {
-      streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
-    }
   } else {
     updateWeatherEffect(null);
-    if (streakDisplay) {
-      streakDisplay.textContent = `🔥 连续 ${state.energyStreak || 0} 天`;
-    }
   }
 }

@@ -21,7 +21,6 @@ function confirmEditRoutineName() {
     state.routines[editingRoutineIdx].name = newName;
     saveState();
     renderRoutines();
-    showToast('✅ 仪式名称已更新');
   }
   closeEditRoutineNameModal();
 }
@@ -42,7 +41,6 @@ function deleteRoutine(idx, event) {
     state.routines.splice(idx, 1);
     saveState();
     renderRoutines();
-    showToast('🗑️ 已删除');
   }
 }
 
@@ -189,7 +187,6 @@ function toggleStep(routineIdx, stepIdx) {
   steps[stepIdx].done = true;
   saveState();
   renderRoutines();
-  showToast(`✅ 步骤完成！继续前行 ✦`);
 }
 
 // 添加步骤
@@ -211,7 +208,6 @@ function addStep(routineIdx) {
   input.value = '';
   saveState();
   renderRoutines();
-  showToast('✅ 步骤已添加');
 }
 
 function deleteStep(routineIdx, stepIdx) {
@@ -226,7 +222,6 @@ function deleteStep(routineIdx, stepIdx) {
   steps.splice(stepIdx, 1);
   saveState();
   renderRoutines();
-  showToast('🗑️ 步骤已删除');
 }
 
 function showAddRoutineModal() {
@@ -250,7 +245,6 @@ function confirmAddRoutine() {
   saveState();
   renderRoutines();
   closeAddRoutineModal();
-  showToast('🌱 仪式已创建，添加步骤吧！');
 }
 
 // 粒子特效

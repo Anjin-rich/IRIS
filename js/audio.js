@@ -145,7 +145,6 @@ function saveBookDetail() {
   book.excerpt = excerpt;
   saveState();
   renderBooks();
-  showToast('💾 已保存');
   closeBookDetail();
 }
 
@@ -157,7 +156,6 @@ function deleteBook() {
   saveState();
   renderBooks();
   closeBookDetail();
-  showToast('🗑️ 已删除');
 }
 
 document.getElementById('bookDetailProgress')?.addEventListener('input', function () {

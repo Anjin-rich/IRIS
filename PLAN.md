@@ -1,7 +1,7 @@
 # Iris v4.2 开发日志
 
 > 活文档：记录每一次修改的决策、原因和结果
-> 最后更新：2026-07-12
+> 最后更新：2026-07-23
 
 ---
 
@@ -46,6 +46,44 @@ D:\中转\IRIS\
 ---
 
 ## 修改历史
+
+---
+
+## 2026-07-23 修改：Toast 大规模精简 + 能量 streak 删除
+
+**为什么这样改：**
+> 用户反馈提示过多过杂，大部分 toast 用户看不到变化（如"已取消完成""已重新排序"），造成视觉噪音。能量 streak 在卡片上制造焦虑感，与产品"温柔陪伴"定位冲突。决定除错误提示和重要系统反馈外，所有操作反馈 toast 全部删除。
+
+### 1. Toast 提示系统清理
+- **删除全部操作反馈 toast**（共 17 个）：
+  - 能量：`已处于该能量模式`保留、`长按卡片可重置选择`删除、`✨ 免费选择（第N次）`删除
+  - 待办：`✅ 待办已添加`删除、`❤️ 完成 +1`删除、`↩️ 已取消完成`删除、`📌 已重新排序`删除、`🗑️ 已删除`删除
+  - 日记：`✅ 日记已更新`删除、`🗑️ 日记已删除`删除
+  - 仪式：`✅ 仪式名称已更新`删除、`✅ 步骤完成！继续前行 ✦`删除、`✅ 步骤已添加`删除、`🗑️ 步骤已删除`删除、`🗑️ 已删除`删除、`🌱 仪式已创建`删除
+  - 书架：`💾 已保存`删除、`🗑️ 已删除`删除
+  - 静心：`⏸️ 静心已暂停`删除
+- **保留的 toast**：错误提示（名称不能为空等）、重要状态反馈（静心进行中/时间到/继续、已重置、解锁成功等）、系统消息（反馈已发送、备份导入导出等）
+- 新增 `showToastOnce(key, msg)` 工具函数（`utils.js`），用 `state.shownToasts` 数组追踪已引导的 toast（备用，当前未使用）
+- `showToast()` 支持自定义时长参数
+
+**涉及文件：**
+- `js/state.js` — 新增 `shownToasts: []` 字段 + 兼容性初始化
+- `js/utils.js` — 新增 `showToastOnce()` 函数，`showToast()` 支持自定义时长
+- `js/energy.js` — 删除 2 个 toast
+- `js/todo.js` — 删除 4 个 toast
+- `js/routines.js` — 删除 6 个 toast
+- `js/diary.js` — 删除 2 个 toast
+- `js/audio.js` — 删除 2 个 toast
+- `js/afk.js` — 删除 1 个 toast
+
+### 2. 能量 streak 显示删除
+- 从 `index.html` 移除 `energyStreakDisplay` div
+- 从 `energy.js` 的 `selectEnergy()` 和 `updateEnergyUI()` 中移除 streak 更新逻辑
+- 用户明确表示要删除此显示，减少焦虑感
+
+**涉及文件：**
+- `index.html` — 删除 `<div class="energy-streak-display">` 元素
+- `js/energy.js` — 删除 `selectEnergy()` 中 streak 动画逻辑 + `updateEnergyUI()` 中 streak 更新
 
 ---
 
