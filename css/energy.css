@@ -55,41 +55,41 @@
 
 /* 默认就有颜色（区分三个按钮） */
 .energy-pill-btn.high-default {
-    background: rgba(245, 217, 142, 0.25);
-    border-color: rgba(232, 201, 106, 0.3);
-    color: #92783a;
+    background: rgba(252, 175, 150, 0.25);
+    border-color: rgba(240, 155, 130, 0.3);
+    color: #9a5a4a;
 }
 .energy-pill-btn.low-default {
-    background: rgba(168, 212, 230, 0.25);
-    border-color: rgba(139, 191, 214, 0.3);
-    color: #4a7a8c;
+    background: rgba(140, 205, 233, 0.25);
+    border-color: rgba(120, 185, 215, 0.3);
+    color: #4a6a7a;
 }
 .energy-pill-btn.rest-default {
-    background: rgba(212, 192, 222, 0.25);
-    border-color: rgba(196, 170, 210, 0.3);
-    color: #7a6588;
+    background: rgba(238, 193, 221, 0.25);
+    border-color: rgba(220, 170, 200, 0.3);
+    color: #7a5a7a;
 }
 
 /* 选中态 — 颜色加深加饱和 */
 .energy-pill-btn.active-high,
 .high-active {
-    background: #f5d98e !important;
-    border-color: #e8c96a !important;
-    color: #6b5a2e !important;
+    background: #FCAF96 !important;
+    border-color: #F09B82 !important;
+    color: #7a3a2a !important;
 }
 
 .energy-pill-btn.active-low,
 .low-active {
-    background: #a8d4e6 !important;
-    border-color: #8bbfd6 !important;
-    color: #3a6073 !important;
+    background: #8CCDE9 !important;
+    border-color: #78B9D7 !important;
+    color: #2a4a5a !important;
 }
 
 .energy-pill-btn.active-rest,
 .rest-active {
-    background: #d4c0de !important;
-    border-color: #c4aad2 !important;
-    color: #5c4e6c !important;
+    background: #EEC1DD !important;
+    border-color: #DCA7C8 !important;
+    color: #5a3a5a !important;
 }
 
 .energy-streak-display {
@@ -138,37 +138,40 @@
     display: flex;
 }
 
-/* 充沛 — 莫兰迪黄 左上→右下 */
+/* 充沛 — 橘红暖调，亮色集中在末端 */
 .energy-bar-card.show.state-high {
     background: linear-gradient(
         135deg,
-        rgba(253, 241, 208, 0.95) 0%,
-        rgba(245, 217, 142, 0.6) 50%,
-        rgba(213, 186, 108, 0.35) 100%
+        rgba(252, 248, 245, 0.92) 0%,
+        rgba(252, 235, 225, 0.85) 40%,
+        rgba(252, 175, 150, 0.7) 75%,
+        rgba(240, 140, 110, 0.5) 100%
     );
-    color: #6b5a2e;
+    color: #7a3a2a;
 }
 
-/* 温和 — 莫兰迪蓝 左上→右下 */
+/* 温和 — 柔和蓝，亮色集中在末端 */
 .energy-bar-card.show.state-low {
     background: linear-gradient(
         135deg,
-        rgba(219, 237, 245, 0.95) 0%,
-        rgba(134, 187, 216, 0.6) 50%,
-        rgba(107, 160, 190, 0.35) 100%
+        rgba(252, 251, 250, 0.92) 0%,
+        rgba(240, 248, 252, 0.85) 40%,
+        rgba(140, 205, 233, 0.7) 75%,
+        rgba(110, 180, 215, 0.5) 100%
     );
-    color: #3a6073;
+    color: #2a4a5a;
 }
 
-/* 休息 — 莫兰迪紫 左上→右下 */
+/* 休息 — 柔和紫粉，亮色集中在末端 */
 .energy-bar-card.show.state-rest {
     background: linear-gradient(
         135deg,
-        rgba(237, 230, 243, 0.95) 0%,
-        rgba(201, 177, 208, 0.6) 50%,
-        rgba(170, 145, 185, 0.35) 100%
+        rgba(252, 251, 252, 0.92) 0%,
+        rgba(248, 240, 248, 0.85) 40%,
+        rgba(238, 193, 221, 0.7) 75%,
+        rgba(220, 170, 200, 0.5) 100%
     );
-    color: #5c4e6c;
+    color: #5a3a5a;
 }
 
 /* 光影层 */

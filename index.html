@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/modals.css">
     <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/soul.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 
@@ -99,58 +100,201 @@
                     </div>
             </section>
 
-            <!-- 沉淀页 -->
+            <!-- 心灵卡牌页 (原沉淀页) -->
             <section id="tab-afk" class="tab-panel">
-                <div class="card-ins meditation-center">
-                    <div style="font-size:0.68rem;color:var(--text-sub);letter-spacing:0.5px;margin-bottom:6px;"
-                        id="totalMeditationDisplay">⏱累计沉淀 0h 0m</div>
-                    <div class="meditation-circle" id="meditationCircle">
-                        <div class="timer-display" id="afkTimer">00:00:00</div>
+                <div class="soul-container">
+                    <!-- 顶部 Sub-Tab -->
+                    <div class="soul-tabs">
+                        <button class="soul-tab active" data-soul-tab="inspire">灵感<span
+                                class="soul-tab-sub">Inspire</span></button>
+                        <button class="soul-tab" data-soul-tab="listen">聆听<span
+                                class="soul-tab-sub">Listen</span></button>
+                        <button class="soul-tab" data-soul-tab="breathe">心流<span
+                                class="soul-tab-sub">Flow</span></button>
                     </div>
-                    <h3 style="color:var(--dark-purple);margin-bottom:4px;">沉淀室</h3>
-                    <p class="meditation-tip">给精神松松土。在纷扰的世界里，<br>静心沉思，让心率和时间一同慢下来。</p>
-                    <div class="afk-presets">
-                        <button class="afk-preset-btn" data-minutes="25" onclick="setAfkPreset(25, this)">25分钟</button>
-                        <button class="afk-preset-btn" data-minutes="45" onclick="setAfkPreset(45, this)">45分钟</button>
-                        <button class="afk-preset-btn" data-minutes="custom"
-                            onclick="setAfkPreset('custom', this)">自定义</button>
-                        <input type="number" class="afk-custom-input" id="afkCustomMinutes" placeholder="分" min="1"
-                            max="120" value="30" style="display:none;">
-                    </div>
-                    <div class="afk-controls">
-                        <button class="btn-primary" id="afkStartBtn" onclick="startAfk()"><i
-                                class="fa-regular fa-circle-play"></i> 开始静心</button>
-                        <button id="afkPauseBtn" onclick="pauseAfk()" disabled><i
-                                class="fa-regular fa-circle-pause"></i> 暂停</button>
-                        <button class="btn-danger" id="afkEndBtn" onclick="endAfk()" disabled><i
-                                class="fa-regular fa-circle-stop"></i> 结束</button>
-                    </div>
-                    <div class="fold-section">
-                        <div class="fold-header" onclick="toggleFold('soundFold')">
-                            <span>🎵 白噪音</span>
-                            <span class="fold-chevron" id="soundFoldChevron"><i
-                                    class="fa-solid fa-chevron-down"></i></span>
-                        </div>
-                        <div class="fold-body" id="soundFold">
-                            <div class="sound-grid">
-                                <div class="sound-btn" data-sound="bird" onclick="toggleSound('bird')">鸟鸣<input
-                                        type="range" class="sound-volume" min="0" max="1" step="0.05" value="0.5"
-                                        onchange="setSoundVolume('bird', this.value)"></div>
-                                <div class="sound-btn" data-sound="street" onclick="toggleSound('street')">街道<input
-                                        type="range" class="sound-volume" min="0" max="1" step="0.05" value="0.5"
-                                        onchange="setSoundVolume('street', this.value)"></div>
-                                <div class="sound-btn" data-sound="cat" onclick="toggleSound('cat')">猫呼<input
-                                        type="range" class="sound-volume" min="0" max="1" step="0.05" value="0.5"
-                                        onchange="setSoundVolume('cat', this.value)"></div>
-                                <div class="sound-btn" data-sound="thunder" onclick="toggleSound('thunder')">雷雨<input
-                                        type="range" class="sound-volume" min="0" max="1" step="0.05" value="0.5"
-                                        onchange="setSoundVolume('thunder', this.value)"></div>
-                                <div class="sound-btn" data-sound="stream" onclick="toggleSound('stream')">溪流<input
-                                        type="range" class="sound-volume" min="0" max="1" step="0.05" value="0.5"
-                                        onchange="setSoundVolume('stream', this.value)"></div>
+
+                    <!-- 灵感卡牌 -->
+                    <div class="soul-card inspire active">
+                        <div class="soul-card-inner">
+                            <!-- 抽牌前 -->
+                            <div class="inspire-before" style="display:flex; flex-direction:column; flex:1;">
+                                <div class="card-title-zh">灵感</div>
+                                <div class="card-title-en">INSPIRE</div>
+
+                                <div class="orbit-stage" data-orbit="7,0,56,320,-32">
+                                    <div class="orbit-ring"></div>
+                                </div>
+
+                                <div class="card-spacer"></div>
+                                <div class="card-quote">"静水流深，今日宜沉淀"</div>
+
+                                <button class="inspire-draw-btn"><i
+                                        class="fa-solid fa-wand-magic-sparkles"></i> 今日抽牌</button>
                             </div>
-                            <div style="font-size:0.6rem;color:var(--text-sub);margin-top:6px;text-align:center;">💡
-                                音频文件需放在 assets/ 目录下</div>
+
+                            <!-- 抽牌后 -->
+                            <div class="inspire-after"
+                                style="display:none; flex-direction:column; flex:1;">
+                                <div class="inspire-card-face" style="margin-top:8px;">
+                                    <div class="inspire-card-name">· 星桥 ·</div>
+                                    <div class="inspire-card-sub">STAR BRIDGE</div>
+                                    <div style="height:12px;"></div>
+                                    <div class="inspire-card-meaning">有人正在远方想念你，<br>试着联系那个重要的TA。</div>
+                                    <div class="inspire-card-action">给一个久未联系的朋友发消息</div>
+                                </div>
+
+                                <div style="flex:1;"></div>
+
+                                <div class="inspire-after-actions">
+                                    <div class="inspire-after-tip">将今日牌面写入日记？</div>
+                                    <div class="inspire-after-btns">
+                                        <button class="btn-skip">跳过</button>
+                                        <button class="btn-write">写入日记</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 聆听卡牌 -->
+                    <div class="soul-card listen">
+                        <div class="soul-card-inner">
+                            <div class="card-title-zh">聆听</div>
+                            <div class="card-title-en">LISTEN</div>
+
+                            <div class="card-center">
+                                <div class="listen-icon">
+                                    <svg viewBox="0 0 48 48" fill="none">
+                                        <path d="M14 28 Q11 24, 14 19 Q17 14, 24 12 Q31 14, 34 19 Q37 24, 34 28"
+                                            stroke="#5aafa0" stroke-width="1.5" fill="none" />
+                                        <path d="M17 26 Q15 23, 17 19 Q19 15, 24 13 Q29 15, 31 19 Q33 23, 31 26"
+                                            stroke="#6ac0b0" stroke-width="1" fill="none" />
+                                        <circle cx="24" cy="19" r="3" fill="rgba(109,242,221,0.5)" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="card-quote">"柔软的时间，绕过了语言"</div>
+
+                            <div class="listen-grid">
+                                <div class="listen-item active">
+                                    <div class="listen-item-icon"><svg viewBox="0 0 24 24" width="22" height="22"
+                                            fill="none" stroke="#5aafa0" stroke-width="1.5">
+                                            <path d="M2 12 C4 8, 8 8, 12 12 C16 16, 20 16, 22 12" />
+                                            <path d="M2 16 C4 12, 8 12, 12 16 C16 20, 20 20, 22 16" />
+                                        </svg></div>
+                                    <div class="listen-item-name">海浪</div>
+                                </div>
+                                <div class="listen-item">
+                                    <div class="listen-item-icon"><svg viewBox="0 0 24 24" width="22" height="22"
+                                            fill="none" stroke="#6ac0b0" stroke-width="1.5">
+                                            <path d="M4 14 Q8 6, 12 14 Q16 6, 20 14" />
+                                            <line x1="6" y1="18" x2="6" y2="22" />
+                                            <line x1="10" y1="18" x2="10" y2="22" />
+                                            <line x1="14" y1="18" x2="14" y2="22" />
+                                            <line x1="18" y1="18" x2="18" y2="22" />
+                                        </svg></div>
+                                    <div class="listen-item-name">雨声</div>
+                                </div>
+                                <div class="listen-item">
+                                    <div class="listen-item-icon"><svg viewBox="0 0 24 24" width="22" height="22"
+                                            fill="none" stroke="#4a9a8a" stroke-width="1.5">
+                                            <path d="M12 4 L8 12 L4 20 L20 20 L16 12 Z" />
+                                            <line x1="12" y1="12" x2="12" y2="20" />
+                                        </svg></div>
+                                    <div class="listen-item-name">森林</div>
+                                </div>
+                                <div class="listen-item">
+                                    <div class="listen-item-icon"><svg viewBox="0 0 24 24" width="22" height="22"
+                                            fill="none" stroke="#e8a060" stroke-width="1.5">
+                                            <path d="M8 20 L12 8 L16 20" />
+                                            <path d="M10 16 Q12 12, 14 16" fill="rgba(232,160,96,0.3)" />
+                                            <line x1="8" y1="20" x2="16" y2="20" />
+                                        </svg></div>
+                                    <div class="listen-item-name">壁炉</div>
+                                </div>
+                                <div class="listen-item">
+                                    <div class="listen-item-icon"><svg viewBox="0 0 24 24" width="22" height="22"
+                                            fill="none" stroke="#6a8a7a" stroke-width="1.5">
+                                            <path d="M4 12 Q4 6, 12 6 Q20 6, 20 12" />
+                                            <circle cx="12" cy="14" r="4" />
+                                            <circle cx="9" cy="13" r="1" fill="#6a8a7a" />
+                                            <circle cx="15" cy="13" r="1" fill="#6a8a7a" />
+                                            <path d="M8 10 L6 8" />
+                                            <path d="M16 10 L18 8" />
+                                        </svg></div>
+                                    <div class="listen-item-name">鸟鸣</div>
+                                </div>
+                                <div class="listen-item">
+                                    <div class="listen-item-icon"><svg viewBox="0 0 24 24" width="22" height="22"
+                                            fill="none" stroke="#8a7a6a" stroke-width="1.5">
+                                            <path d="M6 16 L6 10 Q6 6, 12 6 Q18 6, 18 10 L18 16" />
+                                            <line x1="4" y1="16" x2="20" y2="16" />
+                                            <path d="M8 16 L8 18 M16 16 L16 18" />
+                                            <path d="M10 10 Q12 8, 14 10" stroke-width="1" />
+                                        </svg></div>
+                                    <div class="listen-item-name">咖啡馆</div>
+                                </div>
+                            </div>
+
+                            <div class="listen-progress">
+                                <div class="listen-play"><i class="fa-solid fa-play"
+                                        style="margin-left:2px;"></i></div>
+                                <div class="listen-bar">
+                                    <div class="listen-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 心流卡牌 -->
+                    <div class="soul-card breathe">
+                        <div class="soul-card-inner">
+                            <div class="card-title-zh">心流</div>
+                            <div class="card-title-en">FLOW</div>
+
+                            <div class="card-center">
+                                <div class="breathe-icon">
+                                    <div class="breathe-ring"></div>
+                                </div>
+                            </div>
+
+                            <div class="breathe-mode-grid">
+                                <div class="breathe-mode active">
+                                    <div class="breathe-mode-name">平静</div>
+                                    <div class="breathe-mode-ratio">4-4-4-4</div>
+                                </div>
+                                <div class="breathe-mode">
+                                    <div class="breathe-mode-name">放松</div>
+                                    <div class="breathe-mode-ratio">4-7-8</div>
+                                </div>
+                                <div class="breathe-mode">
+                                    <div class="breathe-mode-name">专注</div>
+                                    <div class="breathe-mode-ratio">4-4-4-4</div>
+                                </div>
+                                <div class="breathe-mode">
+                                    <div class="breathe-mode-name">能量</div>
+                                    <div class="breathe-mode-ratio">2-2-4</div>
+                                </div>
+                            </div>
+
+                            <div class="breathe-stats">
+                                <div class="breathe-stat">
+                                    <div class="breathe-stat-val">3</div>
+                                    <div class="breathe-stat-label">轮次</div>
+                                </div>
+                                <div class="breathe-stat">
+                                    <div class="breathe-stat-val">2:30</div>
+                                    <div class="breathe-stat-label">时长</div>
+                                </div>
+                                <div class="breathe-stat">
+                                    <div class="breathe-stat-val">42</div>
+                                    <div class="breathe-stat-label">累计分钟</div>
+                                </div>
+                            </div>
+
+                            <button class="breathe-start-btn" style="margin-top:auto;"><i
+                                    class="fa-solid fa-circle-play"></i> 开始心流</button>
                         </div>
                     </div>
                 </div>
@@ -166,12 +310,12 @@
                             <div class="fan-card"></div>
                             <div class="fan-card"></div>
                             <div class="fan-card">
-                                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
-                                    <circle cx="20" cy="20" r="14" fill="#FCFBFB"/>
-                                    <path d="M11 20 Q11 14 20 14 Q29 14 29 20" stroke="#969BE7" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                                    <circle cx="16" cy="19" r="2" fill="#5c4e6c"/>
-                                    <circle cx="24" cy="19" r="2" fill="#5c4e6c"/>
-                                    <path d="M15 25 Q20 30 25 25" stroke="#5c4e6c" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
+                                    <path d="M10 18 Q10 12 14 12 Q18 12 18 18" stroke="#5c4e6c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    <path d="M22 18 Q22 12 26 12 Q30 12 30 18" stroke="#5c4e6c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    <path d="M12 28 Q20 36 28 28" stroke="#5c4e6c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    <ellipse cx="8" cy="22" rx="3" ry="2.5" fill="#EEC1DD" opacity="0.7"/>
+                                    <ellipse cx="32" cy="22" rx="3" ry="2.5" fill="#EEC1DD" opacity="0.7"/>
                                 </svg>
                             </div>
                         </div>
@@ -287,7 +431,7 @@
             <button class="nav-item active" onclick="switchTab('tab-todo', this)"><i
                     class="fa-solid fa-list-check"></i></button>
             <button class="nav-item" onclick="switchTab('tab-afk', this)"><i
-                    class="fa-solid fa-mug-saucer"></i></button>
+                    class="fa-solid fa-star"></i></button>
             <button class="nav-item" onclick="switchTab('tab-diary', this)"><i
                     class="fa-solid fa-book-bookmark"></i></button>
             <button class="nav-item" onclick="switchTab('tab-achieve', this)"><i
@@ -917,6 +1061,7 @@
         <script src="js/diary.js" defer></script>
         <script src="js/afk.js" defer></script>
         <script src="js/audio.js" defer></script>
+        <script src="js/soul.js" defer></script>
         <script src="js/shop.js" defer></script>
         <script src="js/pet.js" defer></script>
         <script src="js/gallery.js" defer></script>

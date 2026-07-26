@@ -1,0 +1,587 @@
+/* ===== 心灵卡牌样式 =====
+   替代原沉淀页 - 三合一(灵感/聆听/心流)
+   照抄自 实验田/心灵卡牌/心灵卡牌-副本.html
+*/
+
+.content-padding {
+    padding: 0 10px;
+}
+
+/* 顶部Tab栏 */
+.soul-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 14px;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.soul-tab {
+    flex: 1;
+    padding: 7px 4px;
+    border: none;
+    border-radius: 11px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.soul-tab.active {
+    color: var(--dark-purple);
+    background: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 2px 8px rgba(156, 142, 185, 0.08);
+}
+
+.soul-tab-sub {
+    display: block;
+    font-size: 0.5rem;
+    color: inherit;
+    opacity: 0.6;
+    margin-top: 1px;
+    font-weight: 400;
+}
+
+/* 卡片主体 - 宝石形 + 统一高度 */
+.soul-card {
+    border-radius: 22px;
+    overflow: visible;
+    position: relative;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    transition: all 0.4s;
+    box-shadow: 0 4px 24px rgba(156, 142, 185, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    height: 460px;
+    display: flex;
+    flex-direction: column;
+    display: none;
+}
+
+.soul-card.active {
+    display: flex;
+}
+
+/* 灵感 - 粉紫弥散 #E8A6B3 #F7C9D3 #B5ABCC #B8D7EE */
+.soul-card.inspire {
+    background: linear-gradient(160deg,
+            rgba(232, 166, 179, 0.3) 0%,
+            rgba(247, 201, 211, 0.22) 30%,
+            rgba(181, 171, 204, 0.2) 55%,
+            rgba(184, 215, 238, 0.25) 80%,
+            rgba(232, 200, 220, 0.28) 100%);
+}
+
+/* 聆听 - 薄荷绿弥散 #6DF2DD #EAF8A0 #FCC8BA #F4F7DC */
+.soul-card.listen {
+    background: linear-gradient(160deg,
+            rgba(109, 242, 221, 0.22) 0%,
+            rgba(234, 248, 160, 0.18) 30%,
+            rgba(252, 200, 186, 0.2) 55%,
+            rgba(244, 247, 220, 0.22) 80%,
+            rgba(200, 235, 220, 0.25) 100%);
+}
+
+/* 心流 - 雾蓝弥散 #8BEADD #5688C9 #8CCDE9 #EBFBFA */
+.soul-card.breathe {
+    background: linear-gradient(160deg,
+            rgba(139, 234, 221, 0.22) 0%,
+            rgba(86, 136, 201, 0.18) 30%,
+            rgba(140, 205, 233, 0.2) 55%,
+            rgba(235, 251, 250, 0.25) 80%,
+            rgba(180, 225, 235, 0.28) 100%);
+}
+
+.soul-card-inner {
+    padding: 20px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-spacer {
+    flex: 1;
+    min-height: 24px;
+}
+
+/* 卡片标题 */
+.card-title-zh {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #4a3d5c;
+    margin-bottom: 2px;
+}
+
+.card-title-en {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+/* 右上角箭头 */
+.card-arrow-btn {
+    position: absolute;
+    top: 18px;
+    right: 16px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sub);
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.card-arrow-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* 中心图标区 */
+.card-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0 8px;
+}
+
+/* 灵感 - 星芒 */
+.inspire-icon {
+    width: 56px;
+    height: 56px;
+}
+
+@keyframes pulse-soft {
+    0%, 100% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+.inspire-icon {
+    animation: pulse-soft 3s ease-in-out infinite;
+}
+
+/* 聆听 - 蝴蝶 */
+.listen-icon {
+    width: 48px;
+    height: 48px;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+.listen-icon {
+    animation: float 2.5s ease-in-out infinite;
+}
+
+/* 心流 - 圆环 */
+.breathe-icon {
+    width: 64px;
+    height: 64px;
+}
+
+.breathe-ring {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid rgba(86, 136, 201, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.breathe-ring::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(86, 136, 201, 0.2);
+}
+
+@keyframes breathe {
+    0%, 100% {
+        transform: scale(0.88);
+        border-color: rgba(86, 136, 201, 0.25);
+    }
+    50% {
+        transform: scale(1.12);
+        border-color: rgba(86, 136, 201, 0.5);
+    }
+}
+
+.breathe-ring {
+    animation: breathe 4s ease-in-out infinite;
+}
+
+.breathe-text {
+    font-size: 0.65rem;
+    color: var(--dark-purple);
+    font-weight: 500;
+}
+
+/* 疗愈短句 */
+.card-quote {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #6a5a7a;
+    line-height: 1.6;
+    margin: 6px 0 14px;
+    font-style: italic;
+}
+
+/* ===== 灵感内容 ===== */
+.inspire-card-face {
+    text-align: center;
+    padding: 28px 14px;
+    background: #fff;
+    clip-path: polygon(50% 0%, 100% 15%, 100% 85%, 50% 100%, 0% 85%, 0% 15%);
+    margin: 0 auto;
+    width: 140px;
+    min-height: 230px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(156, 142, 185, 0.12);
+}
+
+.inspire-card-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #4a3d5c;
+    margin-bottom: 3px;
+}
+
+.inspire-card-sub {
+    font-size: 0.55rem;
+    color: var(--text-sub);
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.inspire-card-meaning {
+    font-size: 0.78rem;
+    color: var(--dark-purple);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.inspire-card-action {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(181, 171, 204, 0.15);
+    border: 1px solid rgba(181, 171, 204, 0.3);
+    font-size: 0.65rem;
+    color: var(--dark-purple);
+    margin-top: 4px;
+}
+
+.inspire-draw-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: var(--dark-purple);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: all 0.3s;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 2px 12px rgba(156, 142, 185, 0.08);
+}
+
+.inspire-draw-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.01);
+}
+
+/* 卡牌牌阵 - 3D环绕轨道 */
+.orbit-stage {
+    position: relative;
+    width: 100%;
+    height: 130px;
+    perspective: 320px;
+    margin: 4px 0 8px;
+}
+
+.orbit-ring {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 0;
+    height: 0;
+    transform-style: preserve-3d;
+}
+
+.orbit-card {
+    position: absolute;
+    width: 46px;
+    height: 84px;
+    margin-left: -23px;
+    margin-top: -42px;
+    clip-path: polygon(50% 0%, 100% 15%, 100% 85%, 50% 100%, 0% 85%, 0% 15%);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 12px rgba(120, 100, 160, 0.25);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+/* ===== 聆听内容 ===== */
+.listen-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin: 6px 0;
+}
+
+.listen-item {
+    padding: 8px 4px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.listen-item:hover,
+.listen-item.active {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.listen-item-icon {
+    width: 22px;
+    height: 22px;
+    margin: 0 auto 2px;
+}
+
+.listen-item-name {
+    font-size: 0.55rem;
+    color: var(--dark-purple);
+}
+
+.listen-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.listen-play {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark-purple);
+    font-size: 0.6rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.listen-bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.listen-bar-fill {
+    width: 35%;
+    height: 100%;
+    background: rgba(109, 242, 221, 0.5);
+    border-radius: 2px;
+}
+
+.listen-time {
+    font-size: 0.55rem;
+    color: var(--text-sub);
+}
+
+/* ===== 心流内容 ===== */
+.breathe-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin: 8px 0;
+}
+
+.breathe-mode {
+    padding: 8px 2px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.breathe-mode.active {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.55);
+}
+
+.breathe-mode-name {
+    font-size: 0.62rem;
+    color: #4a3d5c;
+    font-weight: 600;
+}
+
+.breathe-mode-ratio {
+    font-size: 0.45rem;
+    color: var(--text-sub);
+    margin-top: 2px;
+}
+
+.breathe-stats {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 10px;
+}
+
+.breathe-stat {
+    text-align: center;
+}
+
+.breathe-stat-val {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #4a3d5c;
+}
+
+.breathe-stat-label {
+    font-size: 0.45rem;
+    color: var(--text-sub);
+}
+
+.breathe-start-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: var(--dark-purple);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.breathe-start-btn:hover {
+    background: rgba(255, 255, 255, 0.45);
+}
+
+/* 共享 */
+.energy-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: #7a6a2a;
+    margin-top: 8px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.section-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 14px 0;
+}
+
+/* 抽牌后的写入日记提示 */
+.inspire-after-actions {
+    text-align: center;
+    padding: 4px 0 8px;
+}
+
+.inspire-after-tip {
+    font-size: 0.65rem;
+    color: var(--text-sub);
+    margin-bottom: 6px;
+}
+
+.inspire-after-btns {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.inspire-after-btns .btn-skip {
+    padding: 6px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: var(--text-sub);
+    font-size: 0.62rem;
+    cursor: pointer;
+}
+
+.inspire-after-btns .btn-write {
+    padding: 6px 14px;
+    border-radius: 10px;
+    background: rgba(181, 171, 204, 0.25);
+    border: 1px solid rgba(181, 171, 204, 0.3);
+    color: var(--dark-purple);
+    font-size: 0.62rem;
+    font-weight: 600;
+    cursor: pointer;
+}

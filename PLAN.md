@@ -10,7 +10,7 @@
 ```
 D:\中转\IRIS\
 ├── index.html          # 主入口，所有页面结构
-├── css/                # 11 个样式模块
+├── css/                # 12 个样式模块
 │   ├── variables.css   # 颜色、间距、字体变量
 │   ├── base.css        # 全局重置、布局、导航
 │   ├── todo.css        # 待办清单
@@ -21,8 +21,9 @@ D:\中转\IRIS\
 │   ├── sidebar.css     # 侧边抽屉
 │   ├── modals.css      # 弹窗
 │   ├── shop.css        # 商店
+│   ├── soul.css        # 心灵卡牌（灵感/聆听/心流三合一）
 │   └── responsive.css  # 媒体查询（4档适配）
-├── js/                 # 17 个功能模块
+├── js/                 # 18 个功能模块
 │   ├── state.js        # 全局状态 + 存储
 │   ├── utils.js        # 工具函数
 │   ├── sidebar.js      # 侧边栏控制
@@ -32,8 +33,9 @@ D:\中转\IRIS\
 │   ├── energy.js       # 能量系统
 │   ├── achievements.js # 成就墙
 │   ├── diary.js        # 日记系统
-│   ├── afk.js          # 离开模式
+│   ├── afk.js          # 离开模式（沉淀页已替换为心灵卡牌，函数保留但未被调用）
 │   ├── audio.js        # 音频管理
+│   ├── soul.js         # 心灵卡牌（3D 轨道 + sub-tab 切换 + 抽牌交互）
 │   ├── shop.js         # 商店系统
 │   ├── pet.js          # 小狗系统
 │   ├── gallery.js      # 时光画廊
@@ -46,6 +48,56 @@ D:\中转\IRIS\
 ---
 
 ## 修改历史
+
+---
+
+## 2026-07-26 修改：沉淀页替换为心灵卡牌三合一模块
+
+**为什么这样改：**
+> 用户提供了 `实验田/心灵卡牌/心灵卡牌 - 副本.html` 原型稿，要求把原"沉淀页"直接顶替为心灵卡牌模块。心灵卡牌整合了原沉淀页的功能（白噪音 → 聆听 Tab，计时器 → 心流 Tab），新增了灵感抽牌功能，统一为柔和弥散渐变玻璃质感，与 Iris 主题对齐。
+
+### 1. 新增 `css/soul.css`
+- 从原型 HTML 中提取所有心灵卡牌相关样式（去掉 `body`、`*`、`.page-title`、`.phone-frame` 等全局/原型展示样式，避免污染主体）
+- `.soul-card` 高度从原型的 `350px` 调整为 `460px`，适配主体应用更大的可视区域
+- 字号 rem 值按主体 rem 基准适当放大（如 `.soul-tab` 由 `0.55rem` → `0.72rem`，`.card-quote` 由 `0.62rem` → `0.78rem`）
+- 新增 `.soul-card.active` 切换类（display:flex），支持三个 sub-tab 互相切换
+- 新增 `.inspire-before` / `.inspire-after` 灵感卡抽牌前后两态切换样式
+- 配色与原型完全一致：
+  - 灵感：粉紫弥散（#E8A6B3 #F7C9D3 #B5ABCC #B8D7EE）
+  - 聆听：薄荷绿弥散（#6DF2DD #EAF8A0 #FCC8BA #F4F7DC）
+  - 心流：雾蓝弥散（#8BEADD #5688C9 #8CCDE9 #EBFBFA）
+
+### 2. 新增 `js/soul.js`
+- `initOrbit()` — 7 张宝石形卡牌 3D 环绕旋转动画，基于原型脚本移植：
+  - 使用 `transform-style: preserve-3d` + `backface-visibility: hidden`
+  - 每张卡牌用 `rotateY(angle) translateZ(radius)` 定位
+  - 7 张卡牌使用彩虹色（低饱和度）SVG 图标
+  - 通过 `IntersectionObserver` 监测 stage 可见性，不可见时暂停 RAF 节省 CPU
+- `initSubTabs()` — 三个 sub-tab（灵感/聆听/心流）切换逻辑，通过 `data-soul-tab` 属性定位
+- `initItemPickers()` — 聆听声音网格 / 心流模式网格的 active 互斥切换
+- `initDrawButtons()` — 灵感抽牌交互：点击"今日抽牌"切换到抽牌后状态；"跳过"返回抽牌前
+- 暴露 `window.initSoulCards` 入口函数，DOM Ready 自动调用
+
+### 3. 替换 `index.html` 沉淀页
+- `#tab-afk` 整段（原累计沉淀时长 / 静心计时器 / 白噪音折叠面板）被心灵卡牌组件替换
+- 心灵卡牌结构：`.soul-container` 包裹 `.soul-tabs` + 三个 `.soul-card`（inspire / listen / breathe）
+- 灵感卡牌包含抽牌前后两态（`.inspire-before` / `.inspire-after`，默认显示抽牌前）
+- 聆听卡牌包含 6 个声音项（海浪/雨声/森林/壁炉/鸟鸣/咖啡馆，均为 SVG 图标，不使用 emoji）
+- 心流卡牌包含呼吸圆环动画 + 4 种模式（平静/放松/专注/能量）+ 3 项统计 + "开始心流"按钮（`margin-top:auto` 贴底）
+- 引入 `css/soul.css` 和 `js/soul.js`
+
+### 4. 导航栏图标更新
+- 第二个导航按钮图标由 `fa-mug-saucer` 改为 `fa-star`（与原型"心灵"tab 一致）
+- 导航顺序保持：清单 → 心灵 → 日记 → 成就
+
+### 5. 兼容性处理
+- `js/afk.js` 保留未删除（防止其它地方有调用），但其中 `getElementById('afkCustomMinutes')?.addEventListener` 使用了可选链，DOM 不存在时不会抛错
+- 原沉淀页相关的 `startAfk` / `pauseAfk` / `endAfk` / `setAfkPreset` / `toggleSound` / `setSoundVolume` / `toggleFold` 等函数仍保留在 `afk.js` 中，但不再被任何 DOM 调用
+
+**涉及文件：**
+- 新增 `css/soul.css`
+- 新增 `js/soul.js`
+- 修改 `index.html` — head 引入 soul.css、沉淀页整段替换为心灵卡牌、导航 `fa-mug-saucer` → `fa-star`、底部引入 soul.js
 
 ---
 
