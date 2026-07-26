@@ -387,4 +387,5 @@ function updateEnergyUI() {
   } else {
     updateWeatherEffect(null);
   }
+  setupEnergyCardLongPress();
 }

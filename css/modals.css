@@ -568,6 +568,140 @@ body.dark-theme .lock-recovery-title {
     border-color: var(--main-purple);
 }
 
+.fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 0;
+}
+
+.fullscreen-overlay.open {
+    display: flex;
+}
+
+.fullscreen-box {
+    background: var(--modal-bg);
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background 0.3s, color 0.3s;
+    color: var(--text-main);
+}
+
+.fullscreen-header {
+    flex-shrink: 0;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--modal-bg);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.fullscreen-header h3 {
+    color: var(--dark-purple);
+    font-size: 1.1rem;
+    margin: 0;
+    padding-right: 10px;
+}
+
+.fullscreen-back {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 4px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fullscreen-back:hover {
+    color: var(--dark-purple);
+}
+
+.fullscreen-close {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.fullscreen-close:hover {
+    color: var(--dark-purple);
+}
+
+.fullscreen-body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen-body .diary-input-area {
+    height: 200px;
+}
+
+.fullscreen-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.fullscreen-actions button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.fullscreen-actions .btn-danger {
+    background: rgba(230, 80, 80, 0.15);
+    color: #e65050;
+}
+
+.fullscreen-actions .btn-danger:hover {
+    background: rgba(230, 80, 80, 0.25);
+}
+
+.fullscreen-actions .btn-save {
+    background: var(--main-purple);
+    color: white;
+}
+
+.fullscreen-actions .btn-save:hover {
+    opacity: 0.9;
+}
+
 .modal-body input[type="number"] {
     width: 60px;
     padding: 6px;

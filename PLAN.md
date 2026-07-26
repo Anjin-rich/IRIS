@@ -1,7 +1,7 @@
 # Iris v4.2 开发日志
 
 > 活文档：记录每一次修改的决策、原因和结果
-> 最后更新：2026-07-23
+> 最后更新：2026-07-26
 
 ---
 
@@ -46,6 +46,129 @@ D:\中转\IRIS\
 ---
 
 ## 修改历史
+
+---
+
+## 2026-07-26 修改：UI 原型图复刻 + 日记功能优化
+
+**为什么这样改：**
+> 用户提供了 app 原型图，需要按原型图修改日记页心情选择器、日记/书架入口卡片、背景渐变、导航栏等多处 UI。同时修复了多个 bug：日记浏览弹窗过小、删除日记后不自动关闭、长按能量卡片重置功能失效等。
+
+### 1. 日记页今日心情选择器重设计
+- 将表情选择器从列表式改为卡片式设计，5个心情按钮 + 1个图片按钮共6个并排
+- 按钮采用卡片样式，包含圆角、阴影、悬停上浮效果
+- 选中色改为 `#969BE7`（与表情2一致），图标背景改为 `#f2f2f7`
+- 删除编辑日记标题中的 `✏️` emoji
+
+**涉及文件：**
+- `css/diary.css` — `.mood-btn` / `.mood-icon` / `.mood-section-title` 样式
+- `js/diary.js` — `renderMoodSelector()` / `selectMood()` 函数更新
+- `index.html` — 添加心情标题 + 调整按钮结构
+
+### 2. 日记浏览改为弹窗模式（取消全屏）
+- 将日记浏览弹窗从全屏覆盖层改回弹窗模式，与"查看全部日记"弹窗大小一致
+- 使用标准的 `.modal-overlay` 和 `.modal-box` 类
+
+**涉及文件：**
+- `index.html` — `diaryViewerModal` 结构调整
+
+### 3. 删除日记后自动关闭窗口
+- 在 `deleteDiary()` 函数末尾添加 `closeDiaryViewer()` 调用
+- 删除后自动返回主页面，无需手动关闭
+
+**涉及文件：**
+- `js/diary.js` — `deleteDiary()` 函数
+
+### 4. 查看全部日记按钮样式重设计
+- 改为毛玻璃效果的实心背景按钮（`rgba(255,255,255,0.6)` + blur + 书本图标）
+- 与当天日记卡片形成区分（当天卡片渐变背景，按钮毛玻璃）
+
+**涉及文件：**
+- `css/diary.css` — `.view-all-diary-btn` 样式
+
+### 5. 日记和书架入口按原型图修改
+- 日记卡片：在扇形卡牌组中间添加微笑表情 SVG
+- 书架卡片：优化书本 SVG 图标，添加紫色三角形装饰
+
+**涉及文件：**
+- `index.html` — 日记/书架入口卡片 SVG 更新
+
+### 6. 背景白紫色渐变优化
+- 从纯色改为清透的白紫渐变：`linear-gradient(180deg, #ffffff 0%, #f8f4fa 25%, #f2e9f5 50%, #ebe0f0 75%, #e5d5eb 100%)`
+- 降低 `.app-phone::after` 覆盖层透明度，让渐变更通透
+
+**涉及文件：**
+- `css/base.css` — `body` 渐变 + `.app-phone::after` 透明度
+
+### 7. 底部导航栏优化
+- 改为浮动设计：距底部 8px、左右各 16px 的悬浮状态
+- 圆角 24px，毛玻璃效果（0.75透明度 + blur 16px）
+- 移除导航按钮文字，只保留图标
+
+**涉及文件：**
+- `css/sidebar.css` — `.app-navbar` / `.nav-item` 样式
+- `index.html` — 删除导航按钮 `<span>` 文字
+
+### 8. 清单页去分界
+- `.app-header` 背景改为 `transparent`，移除顶部与内容区的分界线
+- `.energy-bar-compact` 背景改为 `transparent`，移除白底边框
+- `.todo-tabs` 移除 `border-bottom` 分隔线
+- 输入框和待办项改为毛玻璃效果（半透明白色 + blur）
+
+**涉及文件：**
+- `css/base.css` — `.app-header` 背景
+- `css/energy.css` — `.energy-bar-compact` 背景和边框
+- `css/todo.css` — `.todo-tabs` / `.todo-input-group input` / `.todo-item` 样式
+
+### 9. 能量长按重置功能修复
+- 在 `updateEnergyUI()` 函数末尾添加 `setupEnergyCardLongPress()` 调用
+- 之前选择能量后长按事件未重新绑定，导致长按失效
+
+**涉及文件：**
+- `js/energy.js` — `updateEnergyUI()` 函数
+
+---
+
+## 2026-07-26 修改：锁屏密码设置功能优化
+
+**为什么这样改：**
+> 用户希望增强应用的隐私保护，为应用添加锁屏密码功能，支持4位数字密码设置和备用秘钥解锁。
+
+### 1. 锁屏密码设置模块
+- 新增 `showLockSetupModal()` 打开密码设置弹窗
+- 新增 `closeLockSetup()` 关闭密码设置弹窗
+- 新增 `initLockSetupInputs()` 初始化密码输入框（支持已有密码回显）
+- 新增 `setupDigitInputs()` 统一处理4位数字输入框交互：
+  - 只允许输入数字（`/[^0-9]/g` 过滤）
+  - 输入完成后自动跳转下一个输入框
+  - 支持退格键返回上一个输入框
+  - 聚焦时自动选中内容
+- 新增 `saveLockPassword()` 保存密码和备用秘钥：
+  - 支持清除密码（密码和秘钥都为空时）
+  - 校验密码必须为4位数字
+  - 校验备用秘钥必须为4位数字（可选）
+
+### 2. 锁屏解锁功能
+- 新增 `showLockScreen()` 显示锁屏界面
+- 新增 `lockInput()` 输入数字
+- 新增 `lockDelete()` 删除最后一位
+- 新增 `lockConfirm()` 验证密码
+- 新增 `updatePinDisplay()` 更新密码点显示
+
+### 3. 备用秘钥解锁
+- 新增 `openRecoveryScreen()` 打开备用秘钥验证界面
+- 新增 `closeRecoveryScreen()` 关闭备用秘钥验证界面
+- 新增 `verifyRecoveryKey()` 验证备用秘钥（生日日期4位数字）
+
+### 4. 状态管理
+- `js/state.js` 新增 `lockRecoveryKey` 字段存储备用秘钥
+
+**涉及文件：**
+- `index.html` — 新增锁屏密码设置弹窗 + 锁屏界面 + 备用秘钥验证界面
+- `js/lock.js` — 新增锁屏密码相关所有函数
+- `js/state.js` — 新增 `lockRecoveryKey` 字段
+- `css/modals.css` — 锁屏相关样式
+- `css/responsive.css` — 锁屏响应式样式
 
 ---
 

@@ -56,6 +56,32 @@
     background: var(--card-bg);
 }
 
+.view-all-diary-btn {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 16px;
+    color: var(--text-sub);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.view-all-diary-btn:hover {
+    background: rgba(255,255,255,0.8);
+    color: var(--dark-purple);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
 .diary-remain {
     font-size: 0.7rem;
     color: var(--text-sub);
@@ -130,41 +156,68 @@
     font-weight: bold;
 }
 
+.mood-section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-purple);
+    margin-bottom: 8px;
+    text-align: center;
+}
+
 .mood-selector {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .mood-btn {
+    appearance: none;
+    border: 1px solid #eceef3;
+    background: #ffffff;
+    border-radius: 18px;
+    width: 56px;
+    height: 64px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.3);
-    border: 1.5px solid transparent;
+    gap: 4px;
     cursor: pointer;
-    transition: all 0.25s ease;
-    width: 48px;
-    height: 48px;
+    box-shadow: 0 10px 24px rgba(30,35,60,.08);
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease, border-color .25s ease;
+    font-family: inherit;
 }
 
 .mood-btn:hover {
-    transform: scale(1.1);
+    transform: translateY(-4px);
 }
 
 .mood-btn.selected {
-    background: rgba(150,155,231,0.2);
+    background: #969BE7;
     border-color: #969BE7;
-    box-shadow: 0 2px 8px rgba(150,155,231,0.3);
-    transform: scale(1.1);
+    box-shadow: 0 16px 32px rgba(150,155,231,.4);
+    transform: translateY(-6px) scale(1.03);
+}
+
+.mood-btn .mood-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: #f2f2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .25s ease;
+}
+
+.mood-btn.selected .mood-icon {
+    background: #FCFBFB;
 }
 
 .mood-btn svg {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
 }
 
 .mood-svg-icon {

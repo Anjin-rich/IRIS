@@ -6,10 +6,10 @@
     flex-direction: column;
     align-items: center;
     padding: 8px 12px;
-    background: var(--card-bg);
+    background: transparent;
     border-radius: 16px;
     margin-bottom: 10px;
-    border: 1px solid var(--border-light);
+    border: none;
     min-height: 52px;
 }
 

@@ -165,7 +165,15 @@
                             <div class="fan-card"></div>
                             <div class="fan-card"></div>
                             <div class="fan-card"></div>
-                            <div class="fan-card"></div>
+                            <div class="fan-card">
+                                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+                                    <circle cx="20" cy="20" r="14" fill="#FCFBFB"/>
+                                    <path d="M11 20 Q11 14 20 14 Q29 14 29 20" stroke="#969BE7" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                    <circle cx="16" cy="19" r="2" fill="#5c4e6c"/>
+                                    <circle cx="24" cy="19" r="2" fill="#5c4e6c"/>
+                                    <path d="M15 25 Q20 30 25 25" stroke="#5c4e6c" stroke-width="2" stroke-linecap="round" fill="none"/>
+                                </svg>
+                            </div>
                         </div>
                         <div class="entry-card-title">进入日记</div>
                         <div class="entry-card-subtitle">记录今天的心情和故事</div>
@@ -174,32 +182,27 @@
                     <!-- 进入书架卡片 -->
                     <div class="entry-card book-card" onclick="showBookContent()">
                         <div class="book-icon-container">
-                            <svg class="book-icon-svg" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15 72 L60 65 L105 72 L105 78 L60 85 L15 78 Z" fill="rgba(160,130,180,0.35)" stroke="#9c8eb9" stroke-width="1.2"/>
-                                <path d="M18 70 L60 63 L102 70 L102 73 L60 66 L18 73 Z" fill="rgba(240,235,245,0.6)" stroke="#c5b8d5" stroke-width="0.8"/>
-                                <path d="M58 63 L58 40" stroke="#8a7a9a" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M62 63 L62 40" stroke="#8a7a9a" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M58 40 C40 38, 16 36, 12 35 L12 68 C16 69, 40 70, 58 63" fill="rgba(255,255,255,0.85)" stroke="#b5a5cc" stroke-width="1.2"/>
+                            <svg class="book-icon-svg" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 80 L60 72 L105 80 L105 87 L60 95 L15 87 Z" fill="rgba(160,130,180,0.35)" stroke="#9c8eb9" stroke-width="1.2"/>
+                                <path d="M18 77 L60 70 L102 77 L102 81 L60 74 L18 81 Z" fill="rgba(240,235,245,0.6)" stroke="#c5b8d5" stroke-width="0.8"/>
+                                <path d="M58 70 L58 35" stroke="#8a7a9a" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M62 70 L62 35" stroke="#8a7a9a" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M58 35 C40 33, 16 31, 12 30 L12 72 C16 73, 40 74, 58 70" fill="rgba(255,255,255,0.85)" stroke="#b5a5cc" stroke-width="1.2"/>
                                 <line x1="20" y1="42" x2="50" y2="41" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="20" y1="47" x2="48" y2="46" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="20" y1="52" x2="50" y2="51" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="20" y1="57" x2="46" y2="56" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="20" y1="62" x2="48" y2="61" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <path d="M62 40 C80 38, 104 36, 108 35 L108 68 C104 69, 80 70, 62 63" fill="rgba(255,255,255,0.9)" stroke="#b5a5cc" stroke-width="1.2"/>
+                                <line x1="20" y1="48" x2="48" y2="47" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="20" y1="54" x2="50" y2="53" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="20" y1="60" x2="46" y2="59" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
+                                <path d="M62 35 C80 33, 104 31, 108 30 L108 72 C104 73, 80 74, 62 70" fill="rgba(255,255,255,0.9)" stroke="#b5a5cc" stroke-width="1.2"/>
                                 <line x1="70" y1="41" x2="100" y2="42" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="72" y1="46" x2="100" y2="47" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="70" y1="51" x2="100" y2="52" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="72" y1="56" x2="100" y2="57" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="70" y1="61" x2="100" y2="62" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <path d="M58 40 C42 30, 20 22, 10 20 L14 55 C22 56, 44 58, 58 55" fill="rgba(255,255,255,0.75)" stroke="#c5b8d5" stroke-width="1" opacity="0.9"/>
-                                <line x1="22" y1="28" x2="48" y2="34" stroke="#ddd0e8" stroke-width="0.8" stroke-linecap="round"/>
-                                <line x1="22" y1="33" x2="46" y2="38" stroke="#ddd0e8" stroke-width="0.8" stroke-linecap="round"/>
-                                <line x1="22" y1="38" x2="48" y2="43" stroke="#ddd0e8" stroke-width="0.8" stroke-linecap="round"/>
-                                <path d="M62 40 C78 30, 100 22, 110 20 L106 55 C98 56, 76 58, 62 55" fill="rgba(255,255,255,0.8)" stroke="#c5b8d5" stroke-width="1" opacity="0.9"/>
-                                <line x1="72" y1="34" x2="98" y2="28" stroke="#ddd0e8" stroke-width="0.8" stroke-linecap="round"/>
-                                <line x1="74" y1="38" x2="98" y2="33" stroke="#ddd0e8" stroke-width="0.8" stroke-linecap="round"/>
-                                <line x1="72" y1="43" x2="98" y2="38" stroke="#ddd0e8" stroke-width="0.8" stroke-linecap="round"/>
-                                <path d="M58 40 C48 24, 38 12, 35 8 L65 8 C62 12, 52 24, 62 40" fill="rgba(255,255,255,0.7)" stroke="#d5c8e5" stroke-width="0.8" opacity="0.8"/>
+                                <line x1="72" y1="47" x2="100" y2="48" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="70" y1="53" x2="100" y2="54" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
+                                <line x1="72" y1="59" x2="100" y2="60" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
+                                <path d="M58 35 C42 25, 20 18, 10 16 L14 58 C22 59, 44 61, 58 58" fill="rgba(255,255,255,0.75)" stroke="#c5b8d5" stroke-width="1" opacity="0.9"/>
+                                <path d="M62 35 C78 25, 100 18, 110 16 L106 58 C98 59, 76 61, 62 58" fill="rgba(255,255,255,0.8)" stroke="#c5b8d5" stroke-width="1" opacity="0.9"/>
+                                <path d="M60 28 L60 10 L75 18 L60 26 Z" fill="#969BE7" opacity="0.8"/>
+                                <path d="M60 10 L75 18" stroke="#7a70b0" stroke-width="1"/>
+                                <path d="M75 18 L60 26" stroke="#7a70b0" stroke-width="1"/>
+                                <path d="M60 26 L60 10" stroke="#7a70b0" stroke-width="1"/>
                             </svg>
                         </div>
                         <div class="entry-card-title">进入书架</div>
@@ -219,14 +222,18 @@
                     </div>
                     <textarea id="diaryInput" class="diary-input-area" placeholder="捕捉生活流光…"></textarea>
                     <div class="diary-remain" id="diaryRemain">今日剩余 3/3 篇</div>
-                    <div class="mood-selector" id="moodSelector"></div>
-                    <div class="diary-media-row" id="diaryMediaRow">
-                        <div id="previewContainer" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
-                        <label class="diary-upload-btn" id="uploadLabel">
-                            <i class="fa-solid fa-camera"></i><span>图片</span>
+                    <div class="mood-section-title">选择今日心情</div>
+                    <div class="mood-selector" id="moodSelector">
+                        <label class="mood-btn mood-upload-btn" id="uploadLabel">
+                            <div class="mood-icon">
+                                <i class="fa-solid fa-camera" style="font-size: 16px; color: #867993;"></i>
+                            </div>
                             <input type="file" id="diaryImages" accept="image/*" multiple style="display:none;"
                                 onchange="handleImageUpload(event)">
                         </label>
+                    </div>
+                    <div class="diary-media-row" id="diaryMediaRow">
+                        <div id="previewContainer" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
                     </div>
                     <button class="btn-submit-diary" onclick="saveDiary()"><i class="fa-regular fa-pen-to-square"></i>
                         保存此刻</button>
@@ -234,9 +241,8 @@
                 <div class="history-timeline" id="diaryList"></div>
 
                 <div style="margin-top:2px;">
-                    <button onclick="openAllDiaries()"
-                        style="width:100%;padding:9px;background:rgba(255,255,255,0.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.6);border-radius:16px;color:var(--text-sub);font-size:0.78rem;cursor:pointer;transition:all 0.2s;box-shadow:inset 0 1px 0 rgba(255,255,255,0.8)">
-                        <i class="fa-regular fa-calendar-days"></i> 查看全部日记
+                    <button onclick="openAllDiaries()" class="view-all-diary-btn">
+                        <i class="fa-solid fa-book-open"></i> 查看全部日记
                     </button>
                 </div>
             </section>
@@ -279,13 +285,13 @@
         <!-- 底部导航 -->
         <nav class="app-navbar">
             <button class="nav-item active" onclick="switchTab('tab-todo', this)"><i
-                    class="fa-solid fa-list-check"></i><span>清单</span></button>
+                    class="fa-solid fa-list-check"></i></button>
             <button class="nav-item" onclick="switchTab('tab-afk', this)"><i
-                    class="fa-solid fa-mug-saucer"></i><span>沉淀</span></button>
+                    class="fa-solid fa-mug-saucer"></i></button>
             <button class="nav-item" onclick="switchTab('tab-diary', this)"><i
-                    class="fa-solid fa-book-bookmark"></i><span>日记</span></button>
+                    class="fa-solid fa-book-bookmark"></i></button>
             <button class="nav-item" onclick="switchTab('tab-achieve', this)"><i
-                    class="fa-solid fa-trophy"></i><span>成就</span></button>
+                    class="fa-solid fa-trophy"></i></button>
         </nav>
 
         <!-- Toast -->
@@ -305,21 +311,24 @@
         </div>
 
         <!-- 编辑日记模态框 -->
-        <div class="modal-overlay" id="editDiaryModal">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <h3>✏️ 编辑日记</h3><button class="modal-close" onclick="closeEditDiary()">×</button>
+        <div class="fullscreen-overlay" id="editDiaryModal">
+            <div class="fullscreen-box">
+                <div class="fullscreen-header">
+                    <button class="fullscreen-back" onclick="closeEditDiary()">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <h3>编辑日记</h3>
+                    <button class="fullscreen-close" onclick="closeEditDiary()">×</button>
                 </div>
-                <div class="modal-body">
-                    <textarea id="editDiaryText" placeholder="修改你的日记…"></textarea>
+                <div class="fullscreen-body">
+                    <textarea id="editDiaryText" class="diary-input-area" placeholder="修改你的日记…"></textarea>
                     <div class="edit-diary-images" id="editDiaryImages"></div>
                     <label class="edit-diary-upload" for="editDiaryImageInput"><i class="fa-regular fa-image"></i>
                         添加图片</label>
                     <input type="file" id="editDiaryImageInput" accept="image/*" multiple style="display:none;"
                         onchange="handleEditDiaryImageUpload(event)">
-                    <div class="modal-actions">
+                    <div class="fullscreen-actions">
                         <button class="btn-danger" onclick="deleteDiary()">删除日记</button>
-                        <button class="btn-cancel" onclick="closeEditDiary()">取消</button>
                         <button class="btn-save" onclick="saveEditDiary()">保存</button>
                     </div>
                 </div>
@@ -757,7 +766,7 @@
             <div class="modal-box" style="max-height:92vh;">
                 <div class="modal-header">
                     <div style="display:flex;align-items:center;gap:10px;">
-                        <h3>📅 全部日记</h3>
+                        <h3>全部日记</h3>
                         <div id="diarySortBtn" onclick="toggleDiarySort()"
                             style="display:flex;border:1px solid var(--main-purple);border-radius:20px;overflow:hidden;font-size:0.7rem;cursor:pointer;user-select:none;">
                             <span id="sortAsc" style="padding:3px 10px;transition:all 0.2s;">正序</span>

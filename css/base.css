@@ -26,18 +26,18 @@ textarea,
 }
 
 body {
-    background-color: #ded9e5;
+    background: linear-gradient(180deg, #ffffff 0%, #f8f4fa 25%, #f2e9f5 50%, #ebe0f0 75%, #e5d5eb 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     color: var(--text-main);
-    transition: background-color 0.3s, color 0.3s;
+    transition: color 0.3s;
     overflow: hidden;
 }
 
 body.dark-theme {
-    background-color: #12121c;
+    background: #12121c;
 }
 
 .app-phone {
@@ -66,7 +66,7 @@ body.dark-theme {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.02);
     z-index: 0;
 }
 
@@ -89,7 +89,7 @@ body.dark-theme .app-phone {
 
 .app-header {
     padding: 14px 18px 10px;
-    background: rgba(255, 255, 255, 0.45);
+    background: transparent;
     display: flex;
     justify-content: space-between;
     align-items: center;

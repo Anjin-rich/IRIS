@@ -98,13 +98,23 @@ function renderMoodSelector() {
     const container = document.getElementById('moodSelector');
     
     let html = MOOD_KEYS.map(key => 
-        `<span class="mood-option" data-mood="${key}" onclick="selectMood(this)">${MOOD_SVGS[key]}</span>`
+        `<button class="mood-btn" data-mood="${key}" onclick="selectMood(this)">
+            <div class="mood-icon">${MOOD_SVGS[key]}</div>
+        </button>`
     ).join('');
+    
+    html += `<label class="mood-btn mood-upload-btn" id="uploadLabel">
+        <div class="mood-icon">
+            <i class="fa-solid fa-camera" style="font-size: 16px; color: #867993;"></i>
+        </div>
+        <input type="file" id="diaryImages" accept="image/*" multiple style="display:none;"
+            onchange="handleImageUpload(event)">
+    </label>`;
     
     container.innerHTML = html;
     
     if (selectedMood) {
-        container.querySelectorAll('.mood-option').forEach(el => {
+        container.querySelectorAll('.mood-btn[data-mood]').forEach(el => {
             if (el.dataset.mood === selectedMood) el.classList.add('selected');
         });
     }
@@ -125,7 +135,7 @@ function confirmAddEmoji() {
 }
 
 function selectMood(el) {
-    document.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('.mood-btn[data-mood]').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
     selectedMood = el.dataset.mood;
 }
@@ -237,7 +247,7 @@ function saveDiary() {
     document.getElementById('diaryInput').value = '';
     tempImages = [];
     selectedMood = null;
-    document.querySelectorAll('.mood-option').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('.mood-btn[data-mood]').forEach(o => o.classList.remove('selected'));
     renderPreviews();
     saveState();
     renderDiaries();
@@ -511,6 +521,7 @@ function deleteDiary() {
         updateDiaryRemain();
     }
     closeEditDiary();
+    closeDiaryViewer();
 }
 
 function viewFullImage(src) {
