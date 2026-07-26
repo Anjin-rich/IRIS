@@ -4,8 +4,23 @@ function switchTab(tabId, el) {
     el.classList.add('active');
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
+    
+    // 重置日记/书架子页面显示
+    document.getElementById('diary-content').style.display = 'none';
+    document.getElementById('books-content').style.display = 'none';
+    document.getElementById('tab-diary').style.display = tabId === 'tab-diary' ? 'block' : 'none';
+    
+    // 控制顶部导航栏显示：只在清单页显示
+    const header = document.getElementById('appHeader');
+    if (tabId === 'tab-todo') {
+        header.style.display = 'flex';
+    } else {
+        header.style.display = 'none';
+    }
+    
     if (tabId === 'tab-achieve') renderAchievements();
     if (tabId === 'tab-diary') {
+        showEntryCards();
         renderDiaries();
         renderCalendar();
         updateDiaryRemain();

@@ -6,6 +6,9 @@ function init() {
     saveState();
   }
   resetCustomMoods();
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
   updateSidebarInfo();
   updatePetUI();
   updateLockBadge();
@@ -16,6 +19,7 @@ function init() {
   renderDiaries();
   renderCalendar();
   renderBooks();
+  updateBookCountSubtitle();
   updateEnergyDisplay();
   updateAfkUI();
   updateTotalMeditationDisplay();

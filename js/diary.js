@@ -7,6 +7,35 @@ let diarySortDesc = true; // 默认倒序（最新在前）
 let viewerDiaries = [];
 let viewerIndex = 0;
 
+// ===== 日记+书架入口切换 =====
+function showDiaryContent() {
+    document.getElementById('tab-diary').style.display = 'none';
+    document.getElementById('diary-content').style.display = 'block';
+    document.getElementById('books-content').style.display = 'none';
+    document.getElementById('appHeader').style.display = 'none';
+}
+
+function showBookContent() {
+    document.getElementById('tab-diary').style.display = 'none';
+    document.getElementById('diary-content').style.display = 'none';
+    document.getElementById('books-content').style.display = 'block';
+    document.getElementById('appHeader').style.display = 'none';
+}
+
+function showEntryCards() {
+    document.getElementById('tab-diary').style.display = 'block';
+    document.getElementById('diary-content').style.display = 'none';
+    document.getElementById('books-content').style.display = 'none';
+}
+
+function updateBookCountSubtitle() {
+    const count = state.books ? state.books.length : 0;
+    const subtitle = document.getElementById('bookCountSubtitle');
+    if (subtitle) {
+        subtitle.textContent = `${count}本书 · 记录读书笔记`;
+    }
+}
+
 function toggleDiarySort() {
     diarySortDesc = !diarySortDesc;
     updateSortBtnStyle();
@@ -37,12 +66,12 @@ function updateDiaryRemain() {
     const todayStr = getBeijingDateKey();
     const todayCount = state.diaries.filter(d => d.createdAt && getBeijingDateKey(new Date(d.createdAt)) === todayStr).length;
     const remain = Math.max(0, 3 - todayCount);
-    document.getElementById('diaryRemain').textContent = `📝 今日剩余 ${remain}/3 篇`;
+    document.getElementById('diaryRemain').textContent = `今日剩余 ${remain}/3 篇`;
 }
 
 function getRandomPrompt() { return WARM_PROMPTS[Math.floor(Math.random() * WARM_PROMPTS.length)]; }
 
-function refreshPrompt() { document.getElementById('diaryPrompt').textContent = '💭 ' + getRandomPrompt(); }
+function refreshPrompt() { document.getElementById('diaryPrompt').textContent = getRandomPrompt(); }
 
 function resetCustomMoods() {
     const today = getTodayDateKey();
@@ -53,23 +82,27 @@ function resetCustomMoods() {
     }
 }
 
+// SVG表情图标
+const MOOD_SVGS = {
+    love: `<svg viewBox="0 0 40 40"><path d="M20 8.6 C14.8 4.7 17.4 2.1 20 4.7 C22.6 2.1 25.2 4.7 20 8.6 Z" fill="#ff8fa3"/><path d="M7 16.8 C3.4 14.1 5.2 12.3 7 14.1 C8.8 12.3 10.6 14.1 7 16.8 Z" fill="#ff8fa3"/><path d="M33 16.8 C29.4 14.1 31.2 12.3 33 14.1 C34.8 12.3 36.6 14.1 33 16.8 Z" fill="#ff8fa3"/><ellipse cx="9" cy="23.5" rx="5.5" ry="4" fill="#f5a97f"/><ellipse cx="31" cy="23.5" rx="5.5" ry="4" fill="#f5a97f"/><path d="M9 19 q4 -5 8 0" fill="none" stroke="#1c2340" stroke-width="2.4" stroke-linecap="round"/><path d="M23 19 q4 -5 8 0" fill="none" stroke="#1c2340" stroke-width="2.4" stroke-linecap="round"/><path d="M16 27.5 q4 3 8 0" fill="none" stroke="#1c2340" stroke-width="2.2" stroke-linecap="round"/></svg>`,
+    happy: `<svg viewBox="0 0 40 40"><ellipse cx="8.5" cy="20" rx="5.5" ry="4" fill="#f5a97f"/><ellipse cx="31.5" cy="20" rx="5.5" ry="4" fill="#f5a97f"/><path d="M10 15 q4 -6 8 0" fill="none" stroke="#1c2340" stroke-width="2.4" stroke-linecap="round"/><path d="M22 15 q4 -6 8 0" fill="none" stroke="#1c2340" stroke-width="2.4" stroke-linecap="round"/><path d="M11 23 q9 11 18 0 q-9 -3 -18 0" fill="#1c2340" stroke="none"/></svg>`,
+    sad: `<svg viewBox="0 0 40 40"><ellipse cx="9" cy="21" rx="5.5" ry="4" fill="#f5a97f"/><ellipse cx="31" cy="21" rx="5.5" ry="4" fill="#f5a97f"/><path d="M10 17 q4 1.5 8 0" fill="none" stroke="#1c2340" stroke-width="2.2" stroke-linecap="round"/><path d="M22 17 q4 1.5 8 0" fill="none" stroke="#1c2340" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="21" cy="27" rx="3" ry="2.6" fill="#1c2340"/><path d="M23 30 q-1 3 0.5 5 q2 -1 1 -4 q-0.7 -1.3 -1.5 -1z" fill="#8fc9f0"/></svg>`,
+    depress: `<svg viewBox="0 0 40 40"><ellipse cx="9" cy="21" rx="5.5" ry="4" fill="#f5a97f"/><ellipse cx="31" cy="21" rx="5.5" ry="4" fill="#f5a97f"/><circle cx="14" cy="17" r="2" fill="#1c2340"/><circle cx="26" cy="17" r="2" fill="#1c2340"/><path d="M14 27 L26 27" fill="none" stroke="#1c2340" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+    worried: `<svg viewBox="0 0 40 40"><ellipse cx="9" cy="21" rx="5.5" ry="4" fill="#f5a97f"/><ellipse cx="31" cy="21" rx="5.5" ry="4" fill="#f5a97f"/><path d="M10 12 L16 10.5" fill="none" stroke="#1c2340" stroke-width="1.8" stroke-linecap="round"/><path d="M24 10.5 L30 12" fill="none" stroke="#1c2340" stroke-width="1.8" stroke-linecap="round"/><circle cx="14" cy="17" r="2" fill="#1c2340"/><circle cx="26" cy="17" r="2" fill="#1c2340"/><path d="M13 27 q7 -6 14 0" fill="none" stroke="#1c2340" stroke-width="2.4" stroke-linecap="round"/></svg>`
+};
+
+const MOOD_KEYS = ['love', 'happy', 'sad', 'depress', 'worried'];
+
 function renderMoodSelector() {
     resetCustomMoods();
     const container = document.getElementById('moodSelector');
-    const moods = getMoodEmojis();
-    container.innerHTML = moods.map(emoji =>
-        `<span class="mood-option" data-mood="${emoji}" onclick="selectMood(this)">${emoji}</span>`
+    
+    let html = MOOD_KEYS.map(key => 
+        `<span class="mood-option" data-mood="${key}" onclick="selectMood(this)">${MOOD_SVGS[key]}</span>`
     ).join('');
-    const addBtn = document.createElement('span');
-    addBtn.className = 'mood-add-btn';
-    addBtn.textContent = '＋';
-    addBtn.onclick = function (e) {
-        e.stopPropagation();
-        document.getElementById('addEmojiModal').classList.add('open');
-        document.getElementById('emojiInput').value = '';
-        document.getElementById('emojiInput').focus();
-    };
-    container.appendChild(addBtn);
+    
+    container.innerHTML = html;
+    
     if (selectedMood) {
         container.querySelectorAll('.mood-option').forEach(el => {
             if (el.dataset.mood === selectedMood) el.classList.add('selected');
@@ -284,6 +317,13 @@ function viewDiaryByDate(year, month, day) {
     }
 }
 
+function getMoodSvg(mood) {
+    if (MOOD_SVGS[mood]) {
+        return `<span class="mood-svg-icon">${MOOD_SVGS[mood]}</span>`;
+    }
+    return `<span class="mood-emoji">${mood}</span>`;
+}
+
 function renderDiaries() {
     const list = document.getElementById('diaryList');
     const todayKey = getBeijingDateKey();
@@ -293,13 +333,13 @@ function renderDiaries() {
     });
     if (todayDiaries.length === 0) {
         list.innerHTML =
-            `<div style="text-align:center;padding:12px 0;font-size:0.9rem;color:var(--text-sub);">今天还没有日记，去写一篇吧</div>`;
+            `<div style="text-align:center;padding:12px 0;font-size:0.9rem;color:var(--text-sub);"></div>`;
         return;
     }
     list.innerHTML = todayDiaries.map(d => `
         <div class="history-diary-card" data-imgs="${(d.images || []).join('|')}">
             <button class="diary-edit-btn" onclick="openEditDiary('${d.id}')"><i class="fa-regular fa-pen-to-square"></i></button>
-            <div class="history-diary-date">${d.date}${d.mood ? `<span class="mood-emoji">${d.mood}</span>` : ''}</div>
+            <div class="history-diary-date">${d.date}${d.mood ? getMoodSvg(d.mood) : ''}</div>
             <div class="history-diary-text">${escapeHtml(d.text)}</div>
             <div class="history-diary-pics lazy-images"></div>
         </div>
@@ -344,13 +384,13 @@ function openAllDiaries() {
         return `
             <div class="diary-month-group">
                 <div class="diary-month-header" onclick="toggleDiaryMonth(this)">
-                    <span>📅 ${month} <span style="font-size:0.7rem;color:var(--text-sub);margin-left:4px;">${entries.length} 篇</span></span>
+                    <span>${month} <span style="font-size:0.7rem;color:var(--text-sub);margin-left:4px;">${entries.length} 篇</span></span>
                     <i class="fa-solid fa-chevron-down diary-month-chevron"></i>
                 </div>
                 <div class="diary-month-body">
                     ${entries.map(d => `
                     <div class="history-diary-card" style="margin-bottom:8px;cursor:pointer;" onclick="closeAllDiaries();setTimeout(()=>openDiaryViewer('${d.id}'),300)" data-imgs="${(d.images || []).join('|')}">
-                        <div class="history-diary-date">${d.date}${d.mood ? `<span class="mood-emoji">${d.mood}</span>` : ''}</div>
+                        <div class="history-diary-date">${d.date}${d.mood ? getMoodSvg(d.mood) : ''}</div>
                         <div class="history-diary-text">${escapeHtml(d.text)}</div>
                         <div class="history-diary-pics lazy-images"></div>
                     </div>`).join('')}
@@ -513,8 +553,13 @@ async function renderDiaryViewer() {
     if (!d) return;
     document.getElementById('diaryViewerDate').textContent = d.date || '日记';
     const moodEl = document.getElementById('diaryViewerMood');
-    moodEl.textContent = d.mood || '';
-    moodEl.style.display = d.mood ? 'block' : 'none';
+    if (d.mood) {
+        moodEl.innerHTML = getMoodSvg(d.mood);
+        moodEl.style.display = 'block';
+    } else {
+        moodEl.textContent = '';
+        moodEl.style.display = 'none';
+    }
     document.getElementById('diaryViewerText').textContent = d.text || '(无文字)';
     const picsEl = document.getElementById('diaryViewerPics');
     picsEl.innerHTML = '';

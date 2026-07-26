@@ -59,9 +59,6 @@ body.dark-theme {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('../assets/IRIS.jpg');
-    background-size: cover;
-    background-position: center 18%;
     z-index: 0;
 }
 
@@ -91,7 +88,7 @@ body.dark-theme .app-phone {
 }
 
 .app-header {
-    padding: 18px 20px 12px;
+    padding: 14px 18px 10px;
     background: rgba(255, 255, 255, 0.45);
     display: flex;
     justify-content: space-between;
@@ -106,18 +103,9 @@ body.dark-theme .app-header {
     background: rgba(26, 26, 36, 0.45);
 }
 
-.app-title {
-    font-family: 'Comfortaa', cursive;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--dark-purple);
-    letter-spacing: -0.5px;
-}
-
 .header-left {
     display: flex;
     align-items: center;
-    gap: 12px;
 }
 
 .avatar-btn {
@@ -128,7 +116,7 @@ body.dark-theme .app-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--dark-purple);
     cursor: pointer;
     border: 2px solid var(--main-purple);
@@ -155,14 +143,14 @@ body.dark-theme .app-header {
 
 .user-badge {
     background: var(--light-purple);
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--dark-purple);
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-weight: 500;
+    gap: 5px;
+    font-weight: 600;
     transition: background 0.3s, color 0.3s;
     cursor: pointer;
 }
@@ -172,7 +160,8 @@ body.dark-theme .app-header {
 }
 
 .user-badge i {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    color: var(--main-purple);
 }
 
 .header-icon-btn {

@@ -4,13 +4,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: var(--bg-color);
+    background: rgba(248, 245, 252, 0.98);
     z-index: 200;
     display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 30px;
+}
+
+body.dark-theme .lock-screen {
+    background: rgba(18, 18, 28, 0.98);
 }
 
 .lock-screen.open {
@@ -18,15 +22,20 @@
 }
 
 .lock-screen .lock-title {
+    font-family: 'Comfortaa', cursive;
     font-size: 1.4rem;
-    color: var(--dark-purple);
-    margin-bottom: 12px;
+    color: #5c4e6c;
+    margin-bottom: 6px;
     font-weight: 600;
+}
+
+body.dark-theme .lock-screen .lock-title {
+    color: #c5b8d5;
 }
 
 .lock-screen .lock-sub {
     font-size: 0.85rem;
-    color: var(--text-sub);
+    color: #867993;
     margin-bottom: 24px;
 }
 
@@ -37,24 +46,24 @@
 }
 
 .lock-screen .lock-pin-display .pin-dot {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: var(--light-purple);
-    border: 2px solid var(--border-light);
-    transition: background 0.2s;
+    background: rgba(200, 185, 220, 0.3);
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    transition: background 0.2s, border-color 0.2s;
 }
 
 .lock-screen .lock-pin-display .pin-dot.filled {
-    background: var(--main-purple);
-    border-color: var(--main-purple);
+    background: #9c8eb9;
+    border-color: #9c8eb9;
 }
 
 .lock-screen .lock-pad {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    max-width: 280px;
+    gap: 14px;
+    max-width: 240px;
     width: 100%;
 }
 
@@ -62,29 +71,293 @@
     aspect-ratio: 1;
     border-radius: 50%;
     border: none;
-    font-size: 1.6rem;
-    background: var(--card-bg);
-    color: var(--text-main);
-    box-shadow: var(--shadow);
+    font-size: 1.4rem;
+    background: rgba(255, 255, 255, 0.5);
+    color: #5c4e6c;
+    font-weight: 300;
+    border: 1px solid rgba(255, 255, 255, 0.4);
     cursor: pointer;
     transition: var(--transition);
-    font-weight: 300;
-    border: 1px solid var(--border-light);
+}
+
+body.dark-theme .lock-screen .lock-pad button {
+    background: rgba(60, 60, 80, 0.5);
+    color: #c5b8d5;
+    border-color: rgba(80, 80, 100, 0.4);
 }
 
 .lock-screen .lock-pad button:active {
     transform: scale(0.88);
-    background: var(--light-purple);
+    background: rgba(156, 142, 185, 0.3);
 }
 
 .lock-screen .lock-pad button.del-btn {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     background: transparent;
     box-shadow: none;
     border-color: transparent;
 }
 
+.lock-screen .lock-pad button.recovery-btn {
+    font-size: 0.6rem;
+    color: #9c8eb9;
+    background: transparent;
+    border: 1px dashed rgba(156, 142, 185, 0.4);
+    cursor: pointer;
+}
+
+.lock-screen .lock-pad button.recovery-btn:hover {
+    background: rgba(156, 142, 185, 0.1);
+    border-color: #9c8eb9;
+}
+
+.lock-screen .lock-hint {
+    font-size: 0.7rem;
+    color: #b0a5c0;
+    margin-top: 16px;
+    text-align: center;
+}
+
 .lock-screen .lock-error {
+    color: #e06a6a;
+    font-size: 0.8rem;
+    margin-top: 12px;
+    min-height: 20px;
+}
+
+/* ===== 锁屏密码设置界面 ===== */
+.lock-setup-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(248, 245, 252, 0.98);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 30px 30px;
+}
+
+body.dark-theme .lock-setup-screen {
+    background: rgba(18, 18, 28, 0.98);
+}
+
+.lock-setup-screen.open {
+    display: flex;
+}
+
+.lock-setup-icon {
+    margin-bottom: 16px;
+}
+
+.lock-setup-title {
+    font-size: 1.2rem;
+    color: #5c4e6c;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+body.dark-theme .lock-setup-title {
+    color: #c5b8d5;
+}
+
+.lock-setup-desc {
+    font-size: 0.85rem;
+    color: #867993;
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    padding: 0 10px;
+    word-break: break-all;
+}
+
+.lock-setup-group {
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 20px;
+}
+
+.lock-setup-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5c4e6c;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.dark-theme .lock-setup-label {
+    color: #c5b8d5;
+}
+
+.lock-setup-label i {
+    color: #9c8eb9;
+    font-size: 0.9rem;
+}
+
+.lock-setup-input {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.lock-digit-input {
+    width: 48px;
+    height: 56px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(200, 185, 220, 0.4);
+    background: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #5c4e6c;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -moz-appearance: textfield;
+}
+
+.lock-digit-input::-webkit-outer-spin-button,
+.lock-digit-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+body.dark-theme .lock-digit-input {
+    background: rgba(40, 40, 60, 0.5);
+    color: #c5b8d5;
+    border-color: rgba(80, 80, 100, 0.4);
+}
+
+.lock-digit-input:focus {
+    border-color: #9c8eb9;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-theme .lock-digit-input:focus {
+    background: rgba(50, 50, 70, 0.8);
+}
+
+.lock-setup-hint {
+    font-size: 0.7rem;
+    color: #b0a5c0;
+    text-align: center;
+}
+
+.lock-setup-divider {
+    width: 100%;
+    max-width: 320px;
+    height: 1px;
+    background: rgba(200, 185, 220, 0.25);
+    margin: 8px 0 20px;
+}
+
+.lock-setup-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin-top: 24px;
+}
+
+.lock-setup-actions button,
+.lock-recovery-actions button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.lock-btn-cancel {
+    background: rgba(200, 185, 220, 0.3);
+    color: #5c4e6c;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+body.dark-theme .lock-btn-cancel {
+    background: rgba(60, 60, 80, 0.3);
+    color: #c5b8d5;
+    border-color: rgba(80, 80, 100, 0.4);
+}
+
+.lock-btn-confirm {
+    background: #9c8eb9;
+    color: white;
+}
+
+.lock-btn-confirm:active {
+    transform: scale(0.95);
+}
+
+/* ===== 备用秘钥解锁界面 ===== */
+.lock-recovery-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(248, 245, 252, 0.98);
+    z-index: 250;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+body.dark-theme .lock-recovery-screen {
+    background: rgba(18, 18, 28, 0.98);
+}
+
+.lock-recovery-screen.open {
+    display: flex;
+}
+
+.lock-recovery-icon {
+    margin-bottom: 16px;
+}
+
+.lock-recovery-title {
+    font-size: 1.2rem;
+    color: #5c4e6c;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+body.dark-theme .lock-recovery-title {
+    color: #c5b8d5;
+}
+
+.lock-recovery-desc {
+    font-size: 0.8rem;
+    color: #867993;
+    text-align: center;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.lock-recovery-inputs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.lock-recovery-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 280px;
+}
+
+.lock-recovery-error {
     color: #e06a6a;
     font-size: 0.8rem;
     margin-top: 16px;

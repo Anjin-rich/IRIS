@@ -70,3 +70,54 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstallPrompt = e; });
+
+function showInstallModal() {
+  const steps = document.getElementById('installSteps');
+  const ua = navigator.userAgent;
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const isAndroid = /Android/i.test(ua);
+  const isChrome = /Chrome/i.test(ua) && !/Edg/i.test(ua);
+  const isEdge = /Edg/i.test(ua);
+  const isSafari = /Safari/i.test(ua) && !/Chrome/i.test(ua);
+  let html = '';
+
+  if (isChrome || isEdge) {
+    html = '<p style="font-size:2rem;">⬇️</p>' +
+      '<p><b>添加到主屏幕</b></p>' +
+      '<p style="font-size:0.85rem;color:var(--text-sub);">点击浏览器地址栏右侧的 <b>安装</b> 按钮<br>或点击菜单 → <b>安装应用</b></p>' +
+      '<button onclick="triggerInstall()" style="margin-top:12px;padding:10px 24px;border-radius:20px;background:var(--main-purple);color:white;border:none;font-size:0.95rem;cursor:pointer;">一键安装</button>';
+  } else if (isIOS) {
+    html = '<p style="font-size:2rem;">📲</p>' +
+      '<p><b>Safari 浏览器</b></p>' +
+      '<p style="font-size:0.85rem;color:var(--text-sub);">1. 用 <b>Safari</b> 打开此页面<br>2. 点击底部 <b>分享按钮</b> (⬆️)<br>3. 选择 <b>添加到主屏幕</b></p>' +
+      '<p style="font-size:0.75rem;color:var(--text-sub);margin-top:8px;">其他浏览器不支持安装，请复制链接到 Safari 打开</p>';
+  } else if (isAndroid) {
+    html = '<p style="font-size:2rem;">📲</p>' +
+      '<p><b>添加到主屏幕</b></p>' +
+      '<p style="font-size:0.85rem;color:var(--text-sub);">点击浏览器菜单 → <b>添加到主屏幕</b><br>或 <b>安装应用</b></p>' +
+      '<p style="font-size:0.75rem;color:var(--text-sub);margin-top:8px;">推荐使用 Chrome / Edge 浏览器获得最佳体验</p>';
+  } else {
+    html = '<p style="font-size:2rem;">📲</p>' +
+      '<p><b>添加到主屏幕</b></p>' +
+      '<p style="font-size:0.85rem;color:var(--text-sub);">点击浏览器菜单 → <b>添加到主屏幕</b>或<b>安装应用</b></p>';
+  }
+  steps.innerHTML = html;
+  document.getElementById('installModal').classList.add('open');
+}
+
+async function triggerInstall() {
+  if (!deferredInstallPrompt) {
+    showToast('请使用浏览器菜单中的「安装应用」选项');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  const { outcome } = await deferredInstallPrompt.userChoice;
+  if (outcome === 'accepted') showToast('🎉 安装成功！');
+  deferredInstallPrompt = null;
+  closeModal('installModal');
+}
+
+

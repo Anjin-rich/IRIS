@@ -2,22 +2,7 @@
 //  Core Energy Functions
 // ============================================================
 
-function updateWeatherEffect(mode) {
-  const el = document.getElementById('weatherEffects');
-  if (!el) return;
-  el.classList.remove('weather-sunrise', 'weather-cloudy', 'weather-rain');
-  el.innerHTML = '';
-  if (mode === 'high') {
-    el.classList.add('weather-sunrise');
-  } else if (mode === 'low') {
-    el.classList.add('weather-cloudy');
-    const extra = document.createElement('div');
-    extra.className = 'cloud-extra';
-    el.appendChild(extra);
-  } else if (mode === 'rest') {
-    el.classList.add('weather-rain');
-  }
-}
+function updateWeatherEffect(mode) {}
 
 function getEnergyBalance() {
   return (state.stats.achievementExp || 0) + (state.stats.signinExp || 0);

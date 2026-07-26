@@ -28,6 +28,7 @@ let state = JSON.parse(localStorage.getItem('IrisState')) || {
     userId: 'LQ-0001',
     avatar: null,
     lockPassword: '',
+    lockRecoveryKey: '',
     pet: null,
     ownedPets: [],
     ownedDecorations: [],

@@ -49,7 +49,93 @@ D:\中转\IRIS\
 
 ---
 
-## 2026-07-23 修改：日记编辑 Bug 修复 + 图片上传优化 + 卡片质感统一
+## 2026-07-23 修改：回退深夜防护 + PWA 安装修复（跨浏览器兼容）
+
+**为什么这样改：**
+> 深夜防护效果不理想，用户反馈太丑，移除。PWA 安装在 Edge 浏览器提示「无法安装此应用」，需要修复 manifest 配置并增加跨浏览器安装指引。
+
+### 1. 回退深夜防护
+- 移除 `css/variables.css` 中所有 `.night-mode` 和 `.night-diary-tip` 样式
+- 移除 `js/init.js` 中深夜检测逻辑
+- 移除 `index.html` 中 `nightDiaryTip` div
+- 移除 `js/utils.js` 中 `isNightTime()` 函数
+
+### 2. PWA 安装修复
+- `manifest.json` 补充 `scope`、`id`、`categories` 字段，图标路径统一加 `./` 前缀
+- 侧边栏系统菜单新增「安装到桌面」按钮
+- 新增 `showInstallModal()` 自动检测浏览器类型，给出对应安装指引：
+  - Chrome/Edge：显示安装按钮 + `beforeinstallprompt` 一键安装
+  - iOS Safari：显示「分享 → 添加到主屏幕」步骤
+  - Android 其他浏览器：显示菜单安装指引
+  - 其他：通用指引
+- 新增 `triggerInstall()` 触发浏览器原生安装流程
+
+**涉及文件：**
+- `manifest.json` — 补充字段 + 修正路径
+- `index.html` — 侧边栏新增安装按钮 + 安装弹窗 HTML
+- `js/utils.js` — 新增 `showInstallModal()` + `triggerInstall()` + `beforeinstallprompt` 监听
+
+---
+
+## 2026-07-23 修改：PWA 安装支持
+
+**为什么这样改：**
+> 用户希望应用可以像原生 App 一样安装到手机主屏幕，支持离线使用。需要实现 PWA（渐进式 Web 应用）标准配置。
+
+### 1. Web App Manifest
+- 创建 `manifest.json`，配置应用名称、图标、背景色、主题色、显示模式
+- 图标包含 8 种尺寸（72/96/128/144/152/192/384/512），全部为淡紫色占位色块
+- 显示模式 `standalone`（无浏览器地址栏）
+
+### 2. Service Worker
+- 创建 `sw.js`，实现资源预缓存和离线访问
+- 安装阶段缓存所有 JS/CSS/HTML/图标
+- 请求策略：先查缓存，缓存没有再请求网络
+- 激活时清理旧版本缓存
+
+### 3. PWA Meta 标签
+- `index.html` head 添加：`theme-color`、`apple-mobile-web-app-capable`、`apple-mobile-web-app-status-bar-style`、`apple-mobile-web-app-title`
+- 添加 `<link rel="manifest">` 和 `<link rel="apple-touch-icon">`
+- 底部添加 SW 注册脚本
+
+**涉及文件：**
+- `manifest.json` — 新增
+- `sw.js` — 新增
+- `icons/icon-*.png` — 新增（8 个尺寸的淡紫色占位图标）
+- `index.html` — 新增 PWA meta 标签 + SW 注册脚本
+
+---
+
+**为什么这样改：**
+> 深夜打开应用时用户看到待办/成就等数据容易引发焦虑，需要隐藏并给出温柔提示。手机端静心完成后因浏览器后台节流导致无弹窗无震动，需要改用更可靠的提醒方式。
+
+### 1. 深夜防护（23:00-06:00 北京时间）
+- 新增 `isNightTime()` 工具函数（`utils.js`），判断当前是否为深夜时段
+- `init.js` 初始化时检测深夜，给 body 加 `.night-mode` class
+- CSS 深夜模式效果：整体降低饱和度和亮度、能量栏半透明不可点击、用户徽章淡化、画廊入口淡化
+- 日记页新增深夜提示文字：「🌙 现在是深夜，明天再看这条日记会更清晰」
+- `index.html` 新增 `nightDiaryTip` div（默认隐藏，深夜时显示）
+
+**涉及文件：**
+- `js/utils.js` — 新增 `isNightTime()`
+- `js/init.js` — 初始化时检测深夜 + 请求通知权限
+- `css/variables.css` — 新增 `.night-mode` + `.night-diary-tip` 样式
+- `index.html` — 日记页新增深夜提示 div
+
+### 2. 静心手机端提醒修复
+- `startAfkTimer()` 从 `setInterval` 改为 `setTimeout` 递归调用，解决浏览器后台标签页节流问题
+- `pauseAfk()` 和 `recordAfkSession()` 中的 `clearInterval` 同步改为 `clearTimeout`
+- 静心完成时增强提醒：
+  - 震动：`navigator.vibrate([200,100,200,100,200])` 多次震动组合（比单次 200ms 更强感知）
+  - 系统通知：使用 Notification API 发送通知（需用户授权）
+  - 标题闪烁：document.title 在「🧘 静心完成！」和原标题间闪烁 3 次
+- `init.js` 初始化时自动请求 Notification 权限
+
+**涉及文件：**
+- `js/afk.js` — 重写 `startAfkTimer()`（setTimeout 递归）+ 修改 `pauseAfk()` + 增强 `endAfk()` 完成提醒
+- `js/init.js` — 请求 Notification 权限
+
+---
 
 **为什么这样改：**
 > 编辑日记时只添加图片不写文字会因空内容校验而无法保存。手机端多选图片超限时无提示，用户不知道为什么保存不了。全部日记卡片太小气，需要加大并统一为毛玻璃质感。

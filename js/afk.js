@@ -65,8 +65,7 @@ function pauseAfk() {
     if (!state.currentAfk || state.currentAfk.isPaused) return;
     state.currentAfk.isPaused = true;
     state.currentAfk.pausedAt = Date.now();
-    clearInterval(afkInterval);
-    afkInterval = null;
+    if (afkInterval) { clearTimeout(afkInterval); afkInterval = null; }
     saveState();
     updateAfkUI();
 }
@@ -88,7 +87,25 @@ function endAfk() {
     const reached = seconds >= afkTargetSeconds && afkTargetSeconds > 0;
 
     if (reached) {
-        try { if (navigator.vibrate) navigator.vibrate(200); } catch (e) { }
+        // 震动提醒（多次震动增强感知）
+        try {
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+        } catch (e) { }
+        // 系统通知
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('🧘 静心完成', { body: `沉淀了 ${formatDuration(seconds)}，做得很好`, icon: 'icons/icon-192.png' });
+        }
+        // 标题闪烁提醒
+        let flashCount = 0;
+        const originalTitle = document.title;
+        const flashInterval = setInterval(() => {
+            document.title = flashCount % 2 === 0 ? '🧘 静心完成！' : originalTitle;
+            flashCount++;
+            if (flashCount >= 6) {
+                clearInterval(flashInterval);
+                document.title = originalTitle;
+            }
+        }, 800);
         showToast('🧘 静心时间到！你已完成预定时间');
     }
 
@@ -131,8 +148,7 @@ function recordAfkSession(seconds) {
     checkAllRounder();
 
     // 统一 UI 收尾
-    clearInterval(afkInterval);
-    afkInterval = null;
+    if (afkInterval) { clearTimeout(afkInterval); afkInterval = null; }
     state.currentAfk = null;
     state.afkTimerSeconds = 0;
     const timerEl = document.getElementById('afkTimer');
@@ -146,21 +162,28 @@ function recordAfkSession(seconds) {
 }
 
 function startAfkTimer() {
-    if (afkInterval) clearInterval(afkInterval);
-    afkInterval = setInterval(() => {
-        if (!state.currentAfk || state.currentAfk.isPaused) return;
+    if (afkInterval) clearTimeout(afkInterval);
+    const tick = () => {
+        if (!state.currentAfk || state.currentAfk.isPaused) {
+            afkInterval = setTimeout(tick, 500);
+            return;
+        }
         const now = Date.now();
         let ms = now - state.currentAfk.startTime - (state.currentAfk.totalPaused || 0);
-        if (state.currentAfk.isPaused && state.currentAfk.pausedAt) ms -= (now - state.currentAfk
-            .pausedAt);
+        if (state.currentAfk.isPaused && state.currentAfk.pausedAt) ms -= (now - state.currentAfk.pausedAt);
         const secs = Math.floor(ms / 1000);
         state.afkTimerSeconds = secs;
-        document.getElementById('afkTimer').textContent = formatAfkTimerHMS(secs);
-        document.getElementById('meditationCircle').classList.add('breathing');
+        const timerEl = document.getElementById('afkTimer');
+        if (timerEl) timerEl.textContent = formatAfkTimerHMS(secs);
+        const circle = document.getElementById('meditationCircle');
+        if (circle) circle.classList.add('breathing');
         if (afkTargetSeconds > 0 && secs >= afkTargetSeconds) {
             endAfk();
+            return;
         }
-    }, 200);
+        afkInterval = setTimeout(tick, 500);
+    };
+    afkInterval = setTimeout(tick, 500);
 }
 
 function formatDuration(secs) {

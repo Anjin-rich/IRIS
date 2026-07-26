@@ -90,6 +90,7 @@ function renderBooks() {
   if (state.books.length === 0) {
     grid.innerHTML =
       `<div class="empty-state" style="grid-column:1/-1;"><i class="fa-regular fa-books"></i>还没有阅读记录，添加一本吧</div>`;
+    updateBookCountSubtitle();
     return;
   }
   grid.innerHTML = state.books.map(book => {
@@ -110,6 +111,7 @@ function renderBooks() {
       </div>
     </div>`;
   }).join('');
+  updateBookCountSubtitle();
 }
 
 function openBookDetail(id) {
