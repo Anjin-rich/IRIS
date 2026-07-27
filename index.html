@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link
-        href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Sans+SC:wght@300;400;500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">
@@ -121,7 +121,7 @@
                                 <div class="card-title-zh">灵感</div>
                                 <div class="card-title-en">INSPIRE</div>
 
-                                <div class="orbit-stage" data-orbit="7,0,56,320,-32">
+                                <div class="orbit-stage" data-orbit="7,0,110,450,-24">
                                     <div class="orbit-ring"></div>
                                 </div>
 
@@ -135,22 +135,13 @@
                             <!-- 抽牌后 -->
                             <div class="inspire-after"
                                 style="display:none; flex-direction:column; flex:1;">
-                                <div class="inspire-card-face" style="margin-top:8px;">
-                                    <div class="inspire-card-name">· 星桥 ·</div>
-                                    <div class="inspire-card-sub">STAR BRIDGE</div>
-                                    <div style="height:12px;"></div>
-                                    <div class="inspire-card-meaning">有人正在远方想念你，<br>试着联系那个重要的TA。</div>
-                                    <div class="inspire-card-action">给一个久未联系的朋友发消息</div>
-                                </div>
-
-                                <div style="flex:1;"></div>
-
-                                <div class="inspire-after-actions">
-                                    <div class="inspire-after-tip">将今日牌面写入日记？</div>
-                                    <div class="inspire-after-btns">
-                                        <button class="btn-skip">跳过</button>
-                                        <button class="btn-write">写入日记</button>
-                                    </div>
+                                <div class="inspire-card-face" id="inspireCardFace" style="margin-top:8px;">
+                                    <div class="inspire-card-num" id="inspireCardNum"></div>
+                                    <div class="inspire-card-icon" id="inspireCardIcon"></div>
+                                    <div class="inspire-card-name" id="inspireCardName">· 星桥 ·</div>
+                                    <div class="inspire-card-sub" id="inspireCardSub">STAR BRIDGE</div>
+                                    <div class="inspire-card-meaning" id="inspireCardMeaning">有人正在远方想念你，<br>试着联系那个重要的TA。</div>
+                                    <div class="inspire-card-action" id="inspireCardAction">给一个久未联系的朋友发消息</div>
                                 </div>
                             </div>
                         </div>
@@ -250,14 +241,22 @@
                     <!-- 心流卡牌 -->
                     <div class="soul-card breathe">
                         <div class="soul-card-inner">
-                            <div class="card-title-zh">心流</div>
-                            <div class="card-title-en">FLOW</div>
+                            <div class="breathe-header">
+                                <div>
+                                    <div class="card-title-zh">心流</div>
+                                    <div class="card-title-en">FLOW</div>
+                                </div>
+                                <div class="breathe-total-text" id="totalMinutes">心流时间累计 0h 0m</div>
+                            </div>
 
-                            <div class="card-center">
+                            <div class="card-center" style="padding-top:4px;">
                                 <div class="breathe-icon">
                                     <div class="breathe-ring"></div>
+                                    <div class="breathe-timer" id="breatheTimer">00:00:00</div>
                                 </div>
                             </div>
+
+                            <div class="breathe-quote">在纷扰的世界里，让心率和时间一同慢下来</div>
 
                             <div class="breathe-mode-grid">
                                 <div class="breathe-mode active">
@@ -278,23 +277,20 @@
                                 </div>
                             </div>
 
-                            <div class="breathe-stats">
-                                <div class="breathe-stat">
-                                    <div class="breathe-stat-val">3</div>
-                                    <div class="breathe-stat-label">轮次</div>
-                                </div>
-                                <div class="breathe-stat">
-                                    <div class="breathe-stat-val">2:30</div>
-                                    <div class="breathe-stat-label">时长</div>
-                                </div>
-                                <div class="breathe-stat">
-                                    <div class="breathe-stat-val">42</div>
-                                    <div class="breathe-stat-label">累计分钟</div>
-                                </div>
+                            <div class="breathe-duration-preset">
+                                <button class="duration-preset-btn" id="preset25">25分钟</button>
+                                <button class="duration-preset-btn" id="preset45">45分钟</button>
+                                <button class="duration-preset-btn" id="presetCustom">自定义</button>
+                            </div>
+                            <div class="breathe-custom-input" id="customInput" style="display:none;">
+                                <input type="number" id="customDuration" placeholder="输入时长(分钟)" min="1" max="180" value="25">
+                                <button class="custom-confirm-btn" id="customConfirm">确认</button>
                             </div>
 
-                            <button class="breathe-start-btn" style="margin-top:auto;"><i
-                                    class="fa-solid fa-circle-play"></i> 开始心流</button>
+                            <div class="breathe-actions">
+                                <button class="breathe-start-btn" id="breatheStartBtn"><i class="fa-solid fa-circle-play"></i> 开始</button>
+                                <button class="breathe-pause-btn" id="breathePauseBtn" style="display:none;"><i class="fa-solid fa-circle-pause"></i> 暂停</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -305,19 +301,17 @@
                 <div class="entry-cards-container">
                     <!-- 进入日记卡片 -->
                     <div class="entry-card diary-card" onclick="showDiaryContent()">
-                        <div class="fan-cards">
-                            <div class="fan-card"></div>
-                            <div class="fan-card"></div>
-                            <div class="fan-card"></div>
-                            <div class="fan-card">
-                                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="30" height="30">
-                                    <path d="M10 18 Q10 12 14 12 Q18 12 18 18" stroke="#5c4e6c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                                    <path d="M22 18 Q22 12 26 12 Q30 12 30 18" stroke="#5c4e6c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                                    <path d="M12 28 Q20 36 28 28" stroke="#5c4e6c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-                                    <ellipse cx="8" cy="22" rx="3" ry="2.5" fill="#EEC1DD" opacity="0.7"/>
-                                    <ellipse cx="32" cy="22" rx="3" ry="2.5" fill="#EEC1DD" opacity="0.7"/>
-                                </svg>
-                            </div>
+                        <div class="diary-icon-container">
+                            <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="12" y="20" width="76" height="52" rx="6" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
+                                <path d="M12 20 L40 20 L40 8 L88 8 L88 20" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+                                <path d="M28 16 L60 12 L60 32 L28 36 Z" fill="rgba(255,255,255,0.85)" stroke="rgba(255,255,255,0.9)" stroke-width="1"/>
+                                <path d="M32 18 L54 15" stroke="rgba(200,200,210,0.6)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M32 24 L54 21" stroke="rgba(200,200,210,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M52 14 L78 18 L78 34 L52 30 Z" fill="rgba(255,255,255,0.75)" stroke="rgba(255,255,255,0.85)" stroke-width="1"/>
+                                <path d="M56 16 L72 19" stroke="rgba(200,200,210,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M56 22 L72 25" stroke="rgba(200,200,210,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
                         </div>
                         <div class="entry-card-title">进入日记</div>
                         <div class="entry-card-subtitle">记录今天的心情和故事</div>
@@ -326,27 +320,16 @@
                     <!-- 进入书架卡片 -->
                     <div class="entry-card book-card" onclick="showBookContent()">
                         <div class="book-icon-container">
-                            <svg class="book-icon-svg" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15 80 L60 72 L105 80 L105 87 L60 95 L15 87 Z" fill="rgba(160,130,180,0.35)" stroke="#9c8eb9" stroke-width="1.2"/>
-                                <path d="M18 77 L60 70 L102 77 L102 81 L60 74 L18 81 Z" fill="rgba(240,235,245,0.6)" stroke="#c5b8d5" stroke-width="0.8"/>
-                                <path d="M58 70 L58 35" stroke="#8a7a9a" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M62 70 L62 35" stroke="#8a7a9a" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M58 35 C40 33, 16 31, 12 30 L12 72 C16 73, 40 74, 58 70" fill="rgba(255,255,255,0.85)" stroke="#b5a5cc" stroke-width="1.2"/>
-                                <line x1="20" y1="42" x2="50" y2="41" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="20" y1="48" x2="48" y2="47" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="20" y1="54" x2="50" y2="53" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="20" y1="60" x2="46" y2="59" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <path d="M62 35 C80 33, 104 31, 108 30 L108 72 C104 73, 80 74, 62 70" fill="rgba(255,255,255,0.9)" stroke="#b5a5cc" stroke-width="1.2"/>
-                                <line x1="70" y1="41" x2="100" y2="42" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="72" y1="47" x2="100" y2="48" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="70" y1="53" x2="100" y2="54" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <line x1="72" y1="59" x2="100" y2="60" stroke="#d5c8e5" stroke-width="1" stroke-linecap="round"/>
-                                <path d="M58 35 C42 25, 20 18, 10 16 L14 58 C22 59, 44 61, 58 58" fill="rgba(255,255,255,0.75)" stroke="#c5b8d5" stroke-width="1" opacity="0.9"/>
-                                <path d="M62 35 C78 25, 100 18, 110 16 L106 58 C98 59, 76 61, 62 58" fill="rgba(255,255,255,0.8)" stroke="#c5b8d5" stroke-width="1" opacity="0.9"/>
-                                <path d="M60 28 L60 10 L75 18 L60 26 Z" fill="#969BE7" opacity="0.8"/>
-                                <path d="M60 10 L75 18" stroke="#7a70b0" stroke-width="1"/>
-                                <path d="M75 18 L60 26" stroke="#7a70b0" stroke-width="1"/>
-                                <path d="M60 26 L60 10" stroke="#7a70b0" stroke-width="1"/>
+                            <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="12" y="20" width="76" height="52" rx="6" fill="rgba(255,255,255,0.35)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
+                                <path d="M12 20 L40 20 L40 8 L88 8 L88 20" fill="rgba(255,255,255,0.45)" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
+                                <path d="M26 18 L62 14 L62 34 L26 38 Z" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,0.85)" stroke-width="1"/>
+                                <path d="M30 20 L58 17" stroke="rgba(200,200,210,0.55)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M30 26 L58 23" stroke="rgba(200,200,210,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M30 32 L58 29" stroke="rgba(200,200,210,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M50 16 L80 20 L80 36 L50 32 Z" fill="rgba(255,255,255,0.7)" stroke="rgba(255,255,255,0.8)" stroke-width="1"/>
+                                <path d="M54 18 L76 21" stroke="rgba(200,200,210,0.45)" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M54 24 L76 27" stroke="rgba(200,200,210,0.35)" stroke-width="1.5" stroke-linecap="round"/>
                             </svg>
                         </div>
                         <div class="entry-card-title">进入书架</div>
@@ -557,7 +540,7 @@
         <div class="modal-overlay" id="addRoutineModal">
             <div class="modal-box">
                 <div class="modal-header">
-                    <h3>🌱 创建成长仪式</h3><button class="modal-close" onclick="closeAddRoutineModal()">×</button>
+                    <h3>创建成长仪式</h3><button class="modal-close" onclick="closeAddRoutineModal()">×</button>
                 </div>
                 <div class="modal-body">
                     <input type="text" id="routineNameInput" placeholder="仪式名称（如：晨间仪式、学习仪式）"

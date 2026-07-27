@@ -1361,24 +1361,27 @@
     transform: rotate(18deg) translateX(22px) translateY(-4px);
 }
 
+.diary-icon-container,
 .book-icon-container {
     position: relative;
-    width: 90px;
-    height: 70px;
+    width: 100px;
+    height: 80px;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.book-icon-svg {
+.diary-icon-container svg,
+.book-icon-container svg {
     width: 100px;
     height: 80px;
-    filter: drop-shadow(0 3px 8px rgba(156,142,185,0.3));
+    filter: drop-shadow(0 4px 12px rgba(156,142,185,0.15));
     transition: transform 0.3s;
 }
 
-.entry-card:hover .book-icon-svg {
+.entry-card:hover .diary-icon-container svg,
+.entry-card:hover .book-icon-container svg {
     transform: scale(1.06) translateY(-3px);
 }
 

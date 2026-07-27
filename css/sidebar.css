@@ -24,11 +24,7 @@ body.dark-theme .app-navbar {
     border-color: rgba(80, 70, 100, 0.5);
 }
 
-@media (max-width:480px) {
-    .app-navbar {
-        border-radius: 0;
-    }
-}
+
 
 .nav-item {
     display: flex;

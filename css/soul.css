@@ -3,6 +3,26 @@
    照抄自 实验田/心灵卡牌/心灵卡牌-副本.html
 */
 
+/* 灵感页整体布局：防刘海遮挡 + 卡牌填满到导航栏 */
+#tab-afk {
+    padding-top: 20px;
+    min-height: calc(100vh - 50px - 70px - 16px);
+}
+
+#tab-afk.tab-panel.active {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.soul-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+}
+
 .content-padding {
     padding: 0 10px;
 }
@@ -36,8 +56,8 @@
 
 .soul-tab.active {
     color: var(--dark-purple);
-    background: rgba(255, 255, 255, 0.45);
-    box-shadow: 0 2px 8px rgba(156, 142, 185, 0.08);
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 2px 10px rgba(156, 142, 185, 0.15);
 }
 
 .soul-tab-sub {
@@ -59,14 +79,15 @@
     border: 1px solid rgba(255, 255, 255, 0.55);
     transition: all 0.4s;
     box-shadow: 0 4px 24px rgba(156, 142, 185, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    height: 460px;
-    display: flex;
-    flex-direction: column;
+    flex: 1;
+    height: auto;
+    min-height: 0;
     display: none;
 }
 
 .soul-card.active {
     display: flex;
+    flex-direction: column;
 }
 
 /* 灵感 - 粉紫弥散 #E8A6B3 #F7C9D3 #B5ABCC #B8D7EE */
@@ -203,28 +224,75 @@
 }
 
 /* 心流 - 圆环 */
-.breathe-icon {
-    width: 64px;
-    height: 64px;
+.breathe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 0;
 }
 
-.breathe-ring {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 2px solid rgba(86, 136, 201, 0.3);
+.breathe-header .card-title-en {
+    margin-bottom: 0;
+}
+
+.breathe-total-text {
+    font-size: 0.6rem;
+    color: #9a8bb8;
+    padding-bottom: 3px;
+}
+
+.breathe-icon {
+    width: 120px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
 }
 
+.breathe-ring {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid rgba(86, 136, 201, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 .breathe-ring::before {
     content: '';
     position: absolute;
-    inset: 6px;
+    inset: 10px;
     border-radius: 50%;
-    border: 1.5px solid rgba(86, 136, 201, 0.2);
+    border: 2px solid rgba(86, 136, 201, 0.2);
+}
+
+.breathe-ring::after {
+    content: '';
+    position: absolute;
+    inset: 20px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(86, 136, 201, 0.15);
+}
+
+.breathe-timer {
+    position: relative;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #5c4e6c;
+    text-align: center;
+    z-index: 10;
+    letter-spacing: 1px;
+}
+
+.breathe-quote {
+    text-align: center;
+    font-size: 0.68rem;
+    color: #9a8bb8;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    line-height: 1.5;
 }
 
 @keyframes breathe {
@@ -261,49 +329,75 @@
 /* ===== 灵感内容 ===== */
 .inspire-card-face {
     text-align: center;
-    padding: 28px 14px;
+    padding: 36px 20px;
     background: #fff;
-    clip-path: polygon(50% 0%, 100% 15%, 100% 85%, 50% 100%, 0% 85%, 0% 15%);
+    clip-path: polygon(50% 0%, 100% 12%, 100% 88%, 50% 100%, 0% 88%, 0% 12%);
     margin: 0 auto;
-    width: 140px;
-    min-height: 230px;
+    width: 240px;
+    min-height: 432px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 20px rgba(156, 142, 185, 0.12);
+    justify-content: flex-start;
+    box-shadow: 0 8px 30px rgba(156, 142, 185, 0.15);
+    flex-shrink: 0;
 }
 
 .inspire-card-name {
-    font-size: 1.05rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: #4a3d5c;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
+}
+
+.inspire-card-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    color: #b0a3c0;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+
+.inspire-card-icon {
+    width: 56px;
+    height: 56px;
+    margin: 8px 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inspire-card-icon svg {
+    width: 100%;
+    height: 100%;
 }
 
 .inspire-card-sub {
-    font-size: 0.55rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.7rem;
     color: var(--text-sub);
-    letter-spacing: 3px;
-    margin-bottom: 10px;
+    letter-spacing: 4px;
+    margin-bottom: 14px;
+    font-style: italic;
 }
 
 .inspire-card-meaning {
-    font-size: 0.78rem;
-    color: var(--dark-purple);
-    line-height: 1.6;
-    margin-bottom: 12px;
+    font-size: 0.9rem;
+    color: #5c4e6c;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    flex: 1;
 }
 
 .inspire-card-action {
     display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: rgba(181, 171, 204, 0.15);
-    border: 1px solid rgba(181, 171, 204, 0.3);
-    font-size: 0.65rem;
-    color: var(--dark-purple);
-    margin-top: 4px;
+    padding: 8px 18px;
+    border-radius: 24px;
+    background: rgba(156, 142, 185, 0.12);
+    border: 1px solid rgba(156, 142, 185, 0.25);
+    font-size: 0.72rem;
+    color: #5c4e6c;
+    margin-top: 8px;
 }
 
 .inspire-draw-btn {
@@ -333,15 +427,15 @@
 .orbit-stage {
     position: relative;
     width: 100%;
-    height: 130px;
-    perspective: 320px;
-    margin: 4px 0 8px;
+    height: 280px;
+    perspective: 450px;
+    margin: 8px 0 12px;
 }
 
 .orbit-ring {
     position: absolute;
     left: 50%;
-    top: 45%;
+    top: 50%;
     width: 0;
     height: 0;
     transform-style: preserve-3d;
@@ -349,16 +443,16 @@
 
 .orbit-card {
     position: absolute;
-    width: 46px;
-    height: 84px;
-    margin-left: -23px;
-    margin-top: -42px;
-    clip-path: polygon(50% 0%, 100% 15%, 100% 85%, 50% 100%, 0% 85%, 0% 15%);
+    width: 80px;
+    height: 144px;
+    margin-left: -40px;
+    margin-top: -72px;
+    clip-path: polygon(50% 0%, 100% 12%, 100% 88%, 50% 100%, 0% 88%, 0% 12%);
     background: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 12px rgba(120, 100, 160, 0.25);
+    box-shadow: 0 4px 16px rgba(120, 100, 160, 0.25);
     backface-visibility: hidden;
     will-change: transform;
 }
@@ -454,18 +548,16 @@
 .breathe-mode {
     padding: 8px 2px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: transparent;
+    border: 1px solid rgba(156, 142, 185, 0.25);
     text-align: center;
     cursor: pointer;
     transition: all 0.3s;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
 }
 
 .breathe-mode.active {
-    background: rgba(255, 255, 255, 0.4);
-    border-color: rgba(255, 255, 255, 0.55);
+    background: rgba(156, 142, 185, 0.15);
+    border-color: rgba(156, 142, 185, 0.4);
 }
 
 .breathe-mode-name {
@@ -480,47 +572,115 @@
     margin-top: 2px;
 }
 
-.breathe-stats {
+.breathe-duration-preset {
     display: flex;
     justify-content: center;
-    gap: 18px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 16px;
 }
 
-.breathe-stat {
-    text-align: center;
+.duration-preset-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    background: transparent;
+    border: 1px solid rgba(156, 142, 185, 0.3);
+    color: #7a6d8a;
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
 }
 
-.breathe-stat-val {
-    font-size: 0.85rem;
-    font-weight: 700;
+.duration-preset-btn.active {
+    background: rgba(156, 142, 185, 0.2);
+    border-color: rgba(156, 142, 185, 0.5);
+    color: #5c4e6c;
+    font-weight: 600;
+}
+
+.duration-preset-btn:active {
+    transform: scale(0.96);
+}
+
+.breathe-custom-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.breathe-custom-input input {
+    width: 80px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(156, 142, 185, 0.25);
     color: #4a3d5c;
+    font-size: 0.75rem;
+    text-align: center;
+    outline: none;
 }
 
-.breathe-stat-label {
-    font-size: 0.45rem;
-    color: var(--text-sub);
+.breathe-custom-input input:focus {
+    border-color: rgba(156, 142, 185, 0.5);
+}
+
+.custom-confirm-btn {
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: rgba(156, 142, 185, 0.25);
+    border: 1px solid rgba(156, 142, 185, 0.35);
+    color: #4a3d5c;
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.custom-confirm-btn:active {
+    transform: scale(0.96);
+    background: rgba(156, 142, 185, 0.35);
+}
+
+.breathe-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
 }
 
 .breathe-start-btn {
-    width: 100%;
+    flex: 1;
     padding: 10px;
-    border: none;
+    border: 1px solid rgba(156, 142, 185, 0.3);
     border-radius: 14px;
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.45);
-    color: var(--dark-purple);
+    background: transparent;
+    color: #5c4e6c;
     font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 10px;
     transition: all 0.3s;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
 .breathe-start-btn:hover {
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(156, 142, 185, 0.1);
+}
+
+.breathe-pause-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid rgba(156, 142, 185, 0.3);
+    border-radius: 14px;
+    background: transparent;
+    color: #5c4e6c;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.breathe-pause-btn:hover {
+    background: rgba(156, 142, 185, 0.1);
 }
 
 /* 共享 */
@@ -541,47 +701,3 @@
 }
 
 .section-divider {
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.3);
-    margin: 14px 0;
-}
-
-/* 抽牌后的写入日记提示 */
-.inspire-after-actions {
-    text-align: center;
-    padding: 4px 0 8px;
-}
-
-.inspire-after-tip {
-    font-size: 0.65rem;
-    color: var(--text-sub);
-    margin-bottom: 6px;
-}
-
-.inspire-after-btns {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-}
-
-.inspire-after-btns .btn-skip {
-    padding: 6px 14px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: var(--text-sub);
-    font-size: 0.62rem;
-    cursor: pointer;
-}
-
-.inspire-after-btns .btn-write {
-    padding: 6px 14px;
-    border-radius: 10px;
-    background: rgba(181, 171, 204, 0.25);
-    border: 1px solid rgba(181, 171, 204, 0.3);
-    color: var(--dark-purple);
-    font-size: 0.62rem;
-    font-weight: 600;
-    cursor: pointer;
-}
