@@ -10,7 +10,7 @@ function init() {
     Notification.requestPermission();
   }
   updateSidebarInfo();
-  updatePetUI();
+  if (typeof updatePetUI === 'function') updatePetUI();
   updateLockBadge();
   renderMoodSelector();
   renderTodos();

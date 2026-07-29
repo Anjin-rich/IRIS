@@ -1,7 +1,7 @@
 # Iris v4.2 开发日志
 
 > 活文档：记录每一次修改的决策、原因和结果
-> 最后更新：2026-07-27
+> 最后更新：2026-07-29
 
 ---
 
@@ -17,27 +17,25 @@ D:\中转\IRIS\
 │   ├── energy.css      # 能量卡片 + 长按交互
 │   ├── routine.css     # 成长仪式
 │   ├── achieve.css     # 成就墙
-│   ├── diary.css       # 日记 + 时间轴
+│   ├── diary.css       # 日记 + 时间轴 + 书架 + 文件夹入口
 │   ├── sidebar.css     # 侧边抽屉
-│   ├── modals.css      # 弹窗
-│   ├── shop.css        # 商店
+│   ├── modals.css      # 弹窗（锁屏、密码设置等）
+│   ├── shop.css        # toast、设置面板、备份按钮、画廊弹窗、分享遮罩
 │   ├── soul.css        # 心灵卡牌（灵感/聆听/心流三合一）
 │   └── responsive.css  # 媒体查询（4档适配）
-├── js/                 # 18 个功能模块
+├── js/                 # 功能模块
 │   ├── state.js        # 全局状态 + 存储
-│   ├── utils.js        # 工具函数
-│   ├── sidebar.js      # 侧边栏控制
+│   ├── utils.js        # 工具函数（含 updatePetUI 兜底）
+│   ├── sidebar.js      # 侧边栏控制 + saveState
 │   ├── lock.js         # 锁屏
 │   ├── todo.js         # 待办核心逻辑
 │   ├── routines.js     # 成长仪式
 │   ├── energy.js       # 能量系统
 │   ├── achievements.js # 成就墙
 │   ├── diary.js        # 日记系统
-│   ├── afk.js          # 离开模式（沉淀页已替换为心灵卡牌，函数保留但未被调用）
-│   ├── audio.js        # 音频管理
-│   ├── soul.js         # 心灵卡牌（3D 轨道 + sub-tab 切换 + 抽牌交互）
-│   ├── shop.js         # 商店系统
-│   ├── pet.js          # 小狗系统
+│   ├── afk.js          # 旧静心模块（函数保留但未被调用，震动/能量逻辑已迁移至 soul.js 心流计时器）
+│   ├── audio.js        # 音频管理 + 书架
+│   ├── soul.js         # 心灵卡牌（3D 轨道 + sub-tab 切换 + 抽牌交互 + 心流计时器）
 │   ├── gallery.js      # 时光画廊
 │   ├── backup.js       # 数据备份
 │   ├── guide.js        # 新手引导
@@ -48,6 +46,172 @@ D:\中转\IRIS\
 ---
 
 ## 修改历史
+
+---
+
+## 2026-07-29 修改：日记文件夹布局修复 + 心流计时器接入反馈 + Tab 按钮增强
+
+**为什么这样改：**
+> 用户反馈手机上日记/书架文件夹组件往上偏、大小不够，三合一页顶部 Tab 按钮不够显眼。完成待办时的爱心动效希望去掉，改为简洁的震动+音效反馈。心流计时器结束时只有 alert，需要接入震动、音效、能量奖励等完整反馈。文件夹副标题字号偏大且加粗，需要调小去加粗。
+
+### 1. 日记文件夹布局修复
+- **根因**：`todo.js` L11 和 `diary.js` L26 中通过内联 `element.style.display = 'block'` 设置日记 Tab 的 display，覆盖了 `diary.css` 中 `#tab-diary.tab-panel.active` 的 `display: flex` 规则，导致 `.entry-cards-container` 的 `height: 100%` 完全失效，文件夹无法均匀分布
+- **修复**：将两处内联 `display` 改为 `'flex'`，使 CSS 中的 flex 布局正常生效
+- 文件夹缩放从 `scale(0.88)` 增大到 `scale(0.95)`，按下时 `scale(0.92)`
+- `#tab-diary.tab-panel.active` 容器确保 `display: flex` + `height: 100%`，文件夹依靠 `justify-content: space-evenly` 均匀分布
+
+### 2. 三合一页 Tab 按钮增强
+- `.soul-tab` padding `10px→12px`，字号 `0.8rem→0.85rem`
+- `.soul-tab.active` 背景透明度 `0.75→0.85`，阴影增强 `3px 12px→4px 16px`，位移 `translateY(-1px)→translateY(-2px)`，字重 `700→800`
+
+### 3. 待办爱心动效移除
+- 删除 `handleStarClick()` 中的 `spawnHeartParticles(element)` 调用
+- 删除整个 `spawnHeartParticles()` 函数定义（粒子动画代码）
+- 保留震动（30ms）和音效（`playGentleSound('longPress')`）反馈
+
+### 4. 心流计时器接入完整反馈
+- `finishBreatheTimer()` 重构，替换原 `alert()` 为分级反馈：
+  - **震动**：倒计时自然完成用长震动 `[200,100,200,100,200]`，手动结束用短震动 `[80,40,80]`
+  - **音效**：调用 `playGentleSound('longPress')`
+  - **能量奖励**：每 5 分钟 +1 能量，至少 +1（通过 `addEnergy()` 计入成就经验）
+  - **Toast 提示**：`showToast('心流结束，累计 X 分钟，+Y 能量')`
+- 保持与原 afk.js 静心模块一致的震动模式，确保用户跨功能体验统一
+
+### 5. 文件夹副标题样式调整
+- `.entry-subtitle` 字号 `14.5px→13px`，字重 `600→400`（取消加粗）
+- 两个副标题共用同一类，同时生效：「情绪、见闻、灵感，皆可落笔」和「每一页都在塑造此刻的你」
+
+### 6. 缓存破解
+- 为 `diary.css`、`soul.css`、`soul.js`、`todo.js`、`diary.js` 添加 `?v=2` 查询参数
+
+**涉及文件：**
+- `js/todo.js` — 内联 display 改为 flex + 删除爱心粒子函数
+- `js/diary.js` — 内联 display 改为 flex
+- `js/soul.js` — `finishBreatheTimer()` 重写，接入震动+音效+能量+Toast
+- `css/diary.css` — 文件夹缩放增大 + 副标题字号/字重调整
+- `css/soul.css` — Tab 按钮 padding/字号/阴影增强
+- `index.html` — 缓存破解参数
+
+---
+
+## 2026-07-28 修改：左下角文字bug根源修复 + 灵感聆听页按钮出界修复
+
+**为什么这样改：**
+> 左下角文字bug反复出现，之前只把 share-loading-overlay 样式搬到 modals.css，但未发现真正的根源：shop.css 整个文件未引入，导致 toast、设置面板、备份按钮等多个组件样式全部缺失。同时灵感页和聆听页底部按钮溢出卡片边界。
+
+### 1. 左下角文字bug根源修复
+- **根源**：`css/shop.css` 包含 `.toast`、`.share-loading-overlay`、设置面板、备份按钮等组件样式，但该文件从未被 `index.html` 引入。`showToast()` 被调用时 toast 元素无任何样式（无 `position:fixed`、无 `display:none`），文字以默认文档流出现在页面左下角
+- **修复**：在 `index.html` 的 CSS 引入列表中添加 `<link rel="stylesheet" href="css/shop.css">`
+- 删除 `modals.css` 中手动搬入的重复 `.share-loading-overlay` 样式（shop.css 已有原始定义）
+- **教训**：之前每次只搬一个组件样式是治标不治本，应该直接引入缺失的 CSS 文件
+
+### 2. 灵感页和聆听页底部按钮出界修复
+- `.soul-card` 从 `overflow: visible` 改为 `overflow: hidden`，防止内容溢出卡片边界
+- `.soul-card-inner` 添加 `overflow-y: auto` + 隐藏滚动条，内容过高时可在卡片内滚动
+- 减小轨道高度（280px → 240px）和内边距（20px → 16px）
+- 减小聆听网格间距（gap 12px → 10px，margin 16px → 12px）和卡片内边距（18px → 14px）
+- 底部按钮（inspire-draw-btn、listen-progress）添加 `flex-shrink: 0`，防止被压缩
+
+**涉及文件：**
+- `index.html` — 添加 shop.css 引入
+- `css/modals.css` — 删除重复的 share-loading-overlay 样式
+- `css/soul.css` — overflow 修复 + 间距压缩
+
+---
+
+## 2026-07-28 修改：日记书架入口文件夹复刻 + 能量选择bug修复
+
+**为什么这样改：**
+> 用户提供了 `实验田/日记书架页/文件夹.html` 原型，要求完全照搬其中的 3D 文件夹组件替换原入口卡片。同时能量选择后文案不出现的 bug 需要修复。
+
+### 1. 日记书架入口 — 3D文件夹组件
+- 从 `文件夹.html` 完整复制 3D 文件夹组件结构
+- **粉色文件夹**在上（日记入口），标题"今日札记"，副标题"情绪、见闻、灵感，皆可落笔"
+- **蓝色文件夹**在下（书架入口），标题"阅读纪事"，副标题"每一页都在塑造此刻的你"
+- 文件夹组件包含：背面底板 + 标签、波点纸张（3张，左右倾斜）、磨砂前袋（backdrop-filter blur）、白色线条装饰
+- 使用 `transform: scale(0.78)` 缩放适配手机屏幕
+- 容器使用 `justify-content: space-evenly` 上下均匀分布
+- 删除了原型中的标题文字（磨砂质感文件夹组件等说明性文字）
+- 书架副标题移除了"0本书 ·"，改为纯文案"记录读书笔记"→"每一页都在塑造此刻的你"
+
+### 2. 能量选择bug修复
+- **根源**：`pet.js` 未加载，`saveState()` 调用 `updatePetUI()` 时抛出 `ReferenceError`，中断了 `selectEnergy` 的执行，导致文案无法显示
+- **修复**：
+  - 在 `index.html` 添加内联兜底 `window.updatePetUI = window.updatePetUI || function(){};`
+  - 在 `js/utils.js` 添加同样的兜底定义
+  - 在 `js/sidebar.js` 和 `js/init.js` 中将 `updatePetUI()` 调用改为 `if (typeof updatePetUI === 'function') updatePetUI()`
+  - 移除 `energy.js` 中 `selectEnergy` 函数里阻碍模式切换的提前 return
+
+**涉及文件：**
+- `index.html` — 文件夹入口 HTML 重写 + updatePetUI 兜底
+- `css/diary.css` — 文件夹组件完整样式（folder-wrapper、folder-container、folder-back、papers、folder-front 等）
+- `js/utils.js` — updatePetUI 兜底
+- `js/sidebar.js` — updatePetUI 安全调用
+- `js/init.js` — updatePetUI 安全调用
+- `js/energy.js` — 移除阻碍切换的提前 return
+
+---
+
+## 2026-07-28 修改：心流页布局调整 + 能量规则弹窗恢复 + 聆听页布局优化
+
+**为什么这样改：**
+> 用户针对心流页提出布局修改（累计时间位置、文案格式），恢复被删除的种子图标和能量数字，调整聆听页布局更松散。
+
+### 1. 心流页布局调整
+- "心流时间累计 Xh Ym" 移至呼吸圆环正上方（居中显示）
+- 文案添加引号：`"在纷扰的世界里，让心率和时间一同慢下来"`，与聆听页 `"柔软的时间，绕过了语言"` 格式一致
+- 文案样式改为斜体，与聆听页 card-quote 统一
+
+### 2. 恢复种子图标和能量数字
+- 右上角恢复 `<i class="fa-solid fa-seedling"></i>` 种子图标和能量数字
+- 恢复能量规则弹窗 HTML 和 `openRulesModal()` / `closeRulesModal()` 函数
+
+### 3. 聆听页布局调松散
+- 蝴蝶图标 60px → 72px
+- 文案间距 10px/16px → 14px/20px
+- 网格间距 10px → 12px，外边距 12px → 16px
+- 声音卡片内边距 14px → 18px，圆角 14px → 16px
+- 声音图标 28px → 32px，播放按钮 30px → 34px
+- 进度条高度 3px → 4px，上边距 14px → 18px
+
+**涉及文件：**
+- `index.html` — 心流页 HTML 结构调整 + 种子图标恢复 + 能量规则弹窗恢复
+- `css/soul.css` — 心流页样式 + 聆听页间距调整
+- `js/utils.js` — 恢复 openRulesModal / closeRulesModal 函数
+
+---
+
+## 2026-07-28 修改：删除桌宠和商店 + 右上角改为时光画廊
+
+**为什么这样改：**
+> 用户决定暂时不开发桌宠和商店功能，要求完全删除。同时将清单页右上角的能量按钮改为时光画廊入口，删除能量规则弹窗。
+
+### 1. 删除桌宠功能
+- 删除侧边栏「玩法」分组（含桌宠小家、栖所小铺）
+- 删除页面上的桌宠容器（`pet-container`）
+- 删除桌宠小家弹窗（`petHomeModal`）
+- 删除给桌宠起名弹窗（`nameInputModal`）
+- 移除 `js/pet.js` 引用
+
+### 2. 删除商店功能
+- 删除栖所小铺弹窗（`shopModal`）
+- 移除 `js/shop.js` 引用
+- `css/shop.css` 当时移除了引用（后于 07-28 恢复，因 toast 等组件样式仍需要）
+
+### 3. 右上角改为时光画廊入口
+- 将右上角 `user-badge` 从能量种子图标 + 数字改为「画廊」图片图标 + 文字
+- 点击打开时光画廊（调用 `openGalleryPreview()`）
+- 删除能量规则模态框（`rulesModal`）
+- 删除 `utils.js` 中的 `openRulesModal()` 和 `closeRulesModal()` 函数
+- `energy.js` 的 `updateEnergyDisplay()` 增加空值保护
+
+**涉及文件：**
+- `index.html` — 删除桌宠/商店/能量规则相关HTML，右上角按钮改为画廊入口
+- `css/shop.css` — 移除引用（文件保留）
+- `js/pet.js` — 移除引用（文件保留）
+- `js/shop.js` — 移除引用（文件保留）
+- `js/utils.js` — 删除能量规则模态框函数
+- `js/energy.js` — 增加空值保护
 
 ---
 

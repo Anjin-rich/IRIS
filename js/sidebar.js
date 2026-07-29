@@ -19,7 +19,7 @@ function saveState() {
   }
   updateEnergyDisplay();
   updateSidebarInfo();
-  updatePetUI();
+  if (typeof updatePetUI === 'function') updatePetUI();
   updateLockBadge();
   renderMoodSelector();
   updateEnergyUI();

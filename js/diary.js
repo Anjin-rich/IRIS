@@ -23,7 +23,7 @@ function showBookContent() {
 }
 
 function showEntryCards() {
-    document.getElementById('tab-diary').style.display = 'block';
+    document.getElementById('tab-diary').style.display = 'flex';
     document.getElementById('diary-content').style.display = 'none';
     document.getElementById('books-content').style.display = 'none';
 }

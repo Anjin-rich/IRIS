@@ -25,11 +25,11 @@
     <link rel="stylesheet" href="css/energy.css">
     <link rel="stylesheet" href="css/routine.css">
     <link rel="stylesheet" href="css/achieve.css">
-    <link rel="stylesheet" href="css/diary.css">
+    <link rel="stylesheet" href="css/diary.css?v=2">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/modals.css">
     <link rel="stylesheet" href="css/shop.css">
-    <link rel="stylesheet" href="css/soul.css">
+    <link rel="stylesheet" href="css/soul.css?v=2">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 
@@ -242,21 +242,19 @@
                     <div class="soul-card breathe">
                         <div class="soul-card-inner">
                             <div class="breathe-header">
-                                <div>
-                                    <div class="card-title-zh">心流</div>
-                                    <div class="card-title-en">FLOW</div>
-                                </div>
-                                <div class="breathe-total-text" id="totalMinutes">心流时间累计 0h 0m</div>
+                                <div class="card-title-zh">心流</div>
+                                <div class="card-title-en">FLOW</div>
                             </div>
 
                             <div class="card-center" style="padding-top:4px;">
+                                <div class="breathe-total-text" id="totalMinutes">心流时间累计 0h 0m</div>
                                 <div class="breathe-icon">
                                     <div class="breathe-ring"></div>
                                     <div class="breathe-timer" id="breatheTimer">00:00:00</div>
                                 </div>
                             </div>
 
-                            <div class="breathe-quote">在纷扰的世界里，让心率和时间一同慢下来</div>
+                            <div class="breathe-quote">"在纷扰的世界里，让心率和时间一同慢下来"</div>
 
                             <div class="breathe-mode-grid">
                                 <div class="breathe-mode active">
@@ -299,42 +297,55 @@
             <!-- 日记+书架入口页 -->
             <section id="tab-diary" class="tab-panel">
                 <div class="entry-cards-container">
-                    <!-- 进入日记卡片 -->
-                    <div class="entry-card diary-card" onclick="showDiaryContent()">
-                        <div class="diary-icon-container">
-                            <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="12" y="20" width="76" height="52" rx="6" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"/>
-                                <path d="M12 20 L40 20 L40 8 L88 8 L88 20" fill="rgba(255,255,255,0.5)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                                <path d="M28 16 L60 12 L60 32 L28 36 Z" fill="rgba(255,255,255,0.85)" stroke="rgba(255,255,255,0.9)" stroke-width="1"/>
-                                <path d="M32 18 L54 15" stroke="rgba(200,200,210,0.6)" stroke-width="1.5" stroke-linecap="round"/>
-                                <path d="M32 24 L54 21" stroke="rgba(200,200,210,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-                                <path d="M52 14 L78 18 L78 34 L52 30 Z" fill="rgba(255,255,255,0.75)" stroke="rgba(255,255,255,0.85)" stroke-width="1"/>
-                                <path d="M56 16 L72 19" stroke="rgba(200,200,210,0.5)" stroke-width="1.5" stroke-linecap="round"/>
-                                <path d="M56 22 L72 25" stroke="rgba(200,200,210,0.4)" stroke-width="1.5" stroke-linecap="round"/>
-                            </svg>
+                    <!-- 粉色文件夹：日记入口 -->
+                    <div class="folder-wrapper" onclick="showDiaryContent()">
+                        <div class="folder-container">
+                            <div class="folder-back-integrated"></div>
+                            <div class="papers">
+                                <div class="paper paper-left polka-pink-white"></div>
+                                <div class="paper paper-center">
+                                    <div class="paper-line"></div>
+                                    <div class="paper-line"></div>
+                                    <div class="paper-line"></div>
+                                </div>
+                                <div class="paper paper-right polka-white-pink"></div>
+                            </div>
+                            <div class="folder-front folder-front-pink">
+                                <div class="entry-container">
+                                    <div class="entry-title entry-title-pink">今日札记</div>
+                                    <div class="entry-subtitle entry-subtitle-pink">情绪、见闻、灵感，皆可落笔</div>
+                                </div>
+                                <div class="white-lines-wrapper">
+                                    <div class="line-thin"></div>
+                                    <div class="line-thick"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="entry-card-title">进入日记</div>
-                        <div class="entry-card-subtitle">记录今天的心情和故事</div>
-                        <div class="entry-card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                     </div>
-                    <!-- 进入书架卡片 -->
-                    <div class="entry-card book-card" onclick="showBookContent()">
-                        <div class="book-icon-container">
-                            <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="12" y="20" width="76" height="52" rx="6" fill="rgba(255,255,255,0.35)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
-                                <path d="M12 20 L40 20 L40 8 L88 8 L88 20" fill="rgba(255,255,255,0.45)" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
-                                <path d="M26 18 L62 14 L62 34 L26 38 Z" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,0.85)" stroke-width="1"/>
-                                <path d="M30 20 L58 17" stroke="rgba(200,200,210,0.55)" stroke-width="1.5" stroke-linecap="round"/>
-                                <path d="M30 26 L58 23" stroke="rgba(200,200,210,0.45)" stroke-width="1.5" stroke-linecap="round"/>
-                                <path d="M30 32 L58 29" stroke="rgba(200,200,210,0.4)" stroke-width="1.5" stroke-linecap="round"/>
-                                <path d="M50 16 L80 20 L80 36 L50 32 Z" fill="rgba(255,255,255,0.7)" stroke="rgba(255,255,255,0.8)" stroke-width="1"/>
-                                <path d="M54 18 L76 21" stroke="rgba(200,200,210,0.45)" stroke-width="1.5" stroke-linecap="round"/>
-                                <path d="M54 24 L76 27" stroke="rgba(200,200,210,0.35)" stroke-width="1.5" stroke-linecap="round"/>
-                            </svg>
+                    <!-- 蓝色文件夹：书架入口 -->
+                    <div class="folder-wrapper" onclick="showBookContent()">
+                        <div class="folder-container">
+                            <div class="folder-back-integrated"></div>
+                            <div class="papers">
+                                <div class="paper paper-left polka-blue-white"></div>
+                                <div class="paper paper-center">
+                                    <div class="paper-line"></div>
+                                    <div class="paper-line"></div>
+                                    <div class="paper-line"></div>
+                                </div>
+                                <div class="paper paper-right polka-lightblue-blue"></div>
+                            </div>
+                            <div class="folder-front folder-front-blue">
+                                <div class="entry-container">
+                                    <div class="entry-title entry-title-blue">阅读纪事</div>
+                                    <div class="entry-subtitle entry-subtitle-blue">每一页都在塑造此刻的你</div>
+                                </div>
+                                <div class="white-lines-wrapper">
+                                    <div class="line-thin"></div>
+                                    <div class="line-thick"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="entry-card-title">进入书架</div>
-                        <div class="entry-card-subtitle" id="bookCountSubtitle">0本书 · 记录读书笔记</div>
-                        <div class="entry-card-arrow"><i class="fa-solid fa-arrow-right"></i></div>
                     </div>
                 </div>
             </section>
@@ -506,7 +517,6 @@
                     <div class="rule-usage">
                         <strong>⚡ 能量使用场景：</strong><br>
                         · 切换能量模式（满电/低电量/休整）：消耗 5 能量 / 次（每日前两次免费）<br>
-                        · 栖所小铺购买桌宠或装饰：按商品标价消耗<br>
                     </div>
                     <div style="text-align:right;margin-top:12px;">
                         <button class="btn-cancel" onclick="closeRulesModal()"
@@ -609,17 +619,6 @@
                     </div>
                 </div>
                 <div class="sidebar-group">
-                    <div class="sidebar-group-header" onclick="toggleGroup('groupPlay')">玩法<span
-                            class="group-chevron open" id="groupPlayChevron"><i
-                                class="fa-solid fa-chevron-down"></i></span></div>
-                    <div class="sidebar-group-body open" id="groupPlayBody">
-                        <div class="menu-item" onclick="showPetHome()"><i class="fa-solid fa-paw"></i> 桌宠小家 <span
-                                class="badge" id="petStatusBadge">无</span></div>
-                        <div class="menu-item shop-trigger" onclick="openShop()"><i class="fa-solid fa-store"></i> 栖所小铺
-                            <span class="badge">✨</span></div>
-                    </div>
-                </div>
-                <div class="sidebar-group">
                     <div class="sidebar-group-header" onclick="toggleGroup('groupSystem')">系统<span
                             class="group-chevron open" id="groupSystemChevron"><i
                                 class="fa-solid fa-chevron-down"></i></span></div>
@@ -641,13 +640,6 @@
                 </div>
             </div>
             <div class="sidebar-footer">Iris v4.2 · 能量即选择</div>
-        </div>
-
-        <!-- 桌宠 -->
-        <div class="pet-container" id="petContainer" style="display:none;" onclick="openShop()">
-            <span id="petEmoji">🐱</span>
-            <span class="pet-decoration" id="petDecoration" style="display:none;"></span>
-            <div class="pet-bubble" id="petBubble">喵~ 点我逛逛小铺</div>
         </div>
 
         <div class="particle-container" id="particleContainer"></div>
@@ -820,35 +812,6 @@
             <div class="lock-recovery-error" id="recoveryError"></div>
         </div>
 
-        <div class="modal-overlay" id="petHomeModal">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <h3>🐾 桌宠小家</h3><button class="modal-close" onclick="closePetHome()">×</button>
-                </div>
-                <div class="modal-body">
-                    <div id="petHomeGrid" class="pet-grid"></div>
-                    <div style="margin-top:12px;text-align:center;font-size:0.8rem;color:var(--text-sub);">点击选择当前携带的桌宠
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="nameInputModal">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <h3>📝 给桌宠起个名字</h3><button class="modal-close" onclick="closeNameInput()">×</button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" id="petNameInput" placeholder="输入名字"
-                        style="width:100%;padding:12px;border:1px solid var(--border-light);border-radius:14px;background:var(--input-bg);color:var(--text-main);font-size:1rem;">
-                    <div class="modal-actions">
-                        <button class="btn-cancel" onclick="closeNameInput()">取消</button>
-                        <button class="btn-save" onclick="confirmPetName()">确定</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="modal-overlay" id="installModal">
             <div class="modal-box" style="max-width:380px;">
                 <div class="modal-header">
@@ -1017,36 +980,21 @@
             <div>⏳ 正在生成长图…</div>
         </div>
 
-        <div class="modal-overlay" id="shopModal">
-            <div class="modal-box" style="max-height:90vh;">
-                <div class="modal-header">
-                    <h3>🏪 栖所小铺</h3><button class="modal-close" onclick="closeShop()">×</button>
-                </div>
-                <div class="modal-body" style="overflow-y:auto;">
-                    <div style="font-size:0.8rem;color:var(--text-sub);margin-bottom:10px;">用能量兑换可爱的桌宠和装饰</div>
-                    <div class="shop-grid" id="shopGrid"></div>
-                    <div style="margin-top:10px;font-size:0.65rem;color:var(--text-sub);text-align:center;">⚡ 能量余额:
-                        <span id="shopEnergyBalance">0</span></div>
-                </div>
-            </div>
-        </div>
-
         <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
 
+        <script>window.updatePetUI = window.updatePetUI || function(){};</script>
         <script src="js/state.js" defer></script>
         <script src="js/utils.js" defer></script>
         <script src="js/sidebar.js" defer></script>
         <script src="js/lock.js" defer></script>
-        <script src="js/todo.js" defer></script>
+        <script src="js/todo.js?v=2" defer></script>
         <script src="js/routines.js" defer></script>
         <script src="js/energy.js" defer></script>
         <script src="js/achievements.js" defer></script>
-        <script src="js/diary.js" defer></script>
+        <script src="js/diary.js?v=2" defer></script>
         <script src="js/afk.js" defer></script>
         <script src="js/audio.js" defer></script>
-        <script src="js/soul.js" defer></script>
-        <script src="js/shop.js" defer></script>
-        <script src="js/pet.js" defer></script>
+        <script src="js/soul.js?v=2" defer></script>
         <script src="js/gallery.js" defer></script>
         <script src="js/backup.js" defer></script>
         <script src="js/guide.js" defer></script>

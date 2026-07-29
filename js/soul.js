@@ -352,6 +352,8 @@
 
     function finishBreatheTimer() {
         var completedMinutes;
+        var isCountdownDone = breatheTimerState.isCountdown && breatheTimerState.remainingSeconds <= 0;
+
         if (breatheTimerState.isCountdown) {
             var actualUsedSeconds = (breatheTimerState.durationMinutes * 60) - breatheTimerState.remainingSeconds;
             completedMinutes = Math.floor(actualUsedSeconds / 60);
@@ -363,6 +365,13 @@
         saveTotalMinutes();
         updateSettingsDisplay();
 
+        // 能量奖励：每5分钟1点能量，至少1点
+        var energyGain = 0;
+        if (completedMinutes > 0) {
+            energyGain = Math.max(1, Math.floor(completedMinutes / 5));
+            addEnergy(energyGain);
+        }
+
         clearInterval(breatheTimerState.interval);
         breatheTimerState.isRunning = false;
         breatheTimerState.isPaused = false;
@@ -373,7 +382,20 @@
         updateTimerDisplay();
         updateButtonStates();
 
-        alert('心流时间结束！已累计 ' + completedMinutes + ' 分钟');
+        // 震动提醒：倒计时自然完成用长震动，手动结束用短震动
+        try {
+            if (navigator.vibrate) {
+                navigator.vibrate(isCountdownDone ? [200, 100, 200, 100, 200] : [80, 40, 80]);
+            }
+        } catch (e) { }
+
+        // 音效
+        playGentleSound('longPress');
+
+        // Toast 提示
+        var msg = '心流结束，累计 ' + completedMinutes + ' 分钟';
+        if (energyGain > 0) msg += '，+' + energyGain + ' 能量';
+        showToast(msg);
     }
 
     function stopBreatheTimer() {

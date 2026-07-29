@@ -1,6 +1,11 @@
 // ============================================================
 //  工具函数
 // ============================================================
+
+// 兜底：pet.js 未加载时防止 ReferenceError
+if (typeof updatePetUI !== 'function') {
+  window.updatePetUI = function() {};
+}
 function applyTheme(theme) {
   const body = document.body;
   if (theme === 'dark') body.classList.add('dark-theme');

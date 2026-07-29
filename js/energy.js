@@ -9,7 +9,8 @@ function getEnergyBalance() {
 }
 
 function updateEnergyDisplay() {
-  document.getElementById('headerEnergy').textContent = getEnergyBalance();
+  const el = document.getElementById('headerEnergy');
+  if (el) el.textContent = getEnergyBalance();
 }
 
 function addEnergy(amount) {
@@ -128,11 +129,6 @@ function selectEnergy(mode) {
 
   if (currentMode === mode) {
     showToast('已处于该能量模式');
-    return;
-  }
-
-  const cardEl = document.getElementById('energyCard');
-  if (cardEl && cardEl.classList.contains('show')) {
     return;
   }
 

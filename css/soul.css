@@ -31,22 +31,23 @@
 .soul-tabs {
     display: flex;
     gap: 0;
-    margin-bottom: 10px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 14px;
-    padding: 3px;
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 16px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 2px 8px rgba(156, 142, 185, 0.08);
 }
 
 .soul-tab {
     flex: 1;
-    padding: 7px 4px;
+    padding: 12px 6px;
     border: none;
-    border-radius: 11px;
-    font-size: 0.72rem;
-    font-weight: 600;
+    border-radius: 13px;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--text-sub);
     background: transparent;
     cursor: pointer;
@@ -56,23 +57,25 @@
 
 .soul-tab.active {
     color: var(--dark-purple);
-    background: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 2px 10px rgba(156, 142, 185, 0.15);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 4px 16px rgba(156, 142, 185, 0.25);
+    transform: translateY(-2px);
+    font-weight: 800;
 }
 
 .soul-tab-sub {
     display: block;
-    font-size: 0.5rem;
+    font-size: 0.55rem;
     color: inherit;
-    opacity: 0.6;
-    margin-top: 1px;
-    font-weight: 400;
+    opacity: 0.65;
+    margin-top: 2px;
+    font-weight: 500;
 }
 
 /* 卡片主体 - 宝石形 + 统一高度 */
 .soul-card {
     border-radius: 22px;
-    overflow: visible;
+    overflow: hidden;
     position: relative;
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
@@ -121,10 +124,15 @@
 }
 
 .soul-card-inner {
-    padding: 20px 16px;
+    padding: 16px 16px 14px;
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+.soul-card-inner::-webkit-scrollbar {
+    display: none;
 }
 
 .card-spacer {
@@ -180,7 +188,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 12px 0 8px;
+    padding: 16px 0 12px;
 }
 
 /* 灵感 - 星芒 */
@@ -206,8 +214,8 @@
 
 /* 聆听 - 蝴蝶 */
 .listen-icon {
-    width: 48px;
-    height: 48px;
+    width: 72px;
+    height: 72px;
 }
 
 @keyframes float {
@@ -215,7 +223,7 @@
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-4px);
+        transform: translateY(-6px);
     }
 }
 
@@ -225,9 +233,6 @@
 
 /* 心流 - 圆环 */
 .breathe-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
     margin-bottom: 0;
 }
 
@@ -238,7 +243,8 @@
 .breathe-total-text {
     font-size: 0.6rem;
     color: #9a8bb8;
-    padding-bottom: 3px;
+    text-align: center;
+    margin-bottom: 8px;
 }
 
 .breathe-icon {
@@ -248,6 +254,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: 0 auto;
 }
 
 .breathe-ring {
@@ -288,11 +295,12 @@
 
 .breathe-quote {
     text-align: center;
-    font-size: 0.68rem;
-    color: #9a8bb8;
+    font-size: 0.72rem;
+    color: #6a5a7a;
+    line-height: 1.6;
     margin-top: 10px;
-    margin-bottom: 8px;
-    line-height: 1.5;
+    margin-bottom: 10px;
+    font-style: italic;
 }
 
 @keyframes breathe {
@@ -322,7 +330,7 @@
     font-size: 0.78rem;
     color: #6a5a7a;
     line-height: 1.6;
-    margin: 6px 0 14px;
+    margin: 14px 0 20px;
     font-style: italic;
 }
 
@@ -411,7 +419,8 @@
     font-size: 0.78rem;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 12px;
+    margin-top: 8px;
+    flex-shrink: 0;
     transition: all 0.3s;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -427,9 +436,9 @@
 .orbit-stage {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: 240px;
     perspective: 450px;
-    margin: 8px 0 12px;
+    margin: 4px 0 8px;
 }
 
 .orbit-ring {
@@ -461,13 +470,13 @@
 .listen-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 5px;
-    margin: 6px 0;
+    gap: 10px;
+    margin: 12px 0;
 }
 
 .listen-item {
-    padding: 8px 4px;
-    border-radius: 12px;
+    padding: 14px 8px;
+    border-radius: 16px;
     background: rgba(255, 255, 255, 0.25);
     border: 1px solid rgba(255, 255, 255, 0.4);
     text-align: center;
@@ -484,26 +493,27 @@
 }
 
 .listen-item-icon {
-    width: 22px;
-    height: 22px;
-    margin: 0 auto 2px;
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 6px;
 }
 
 .listen-item-name {
-    font-size: 0.55rem;
+    font-size: 0.6rem;
     color: var(--dark-purple);
 }
 
 .listen-progress {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 8px;
+    gap: 12px;
+    margin-top: 12px;
+    flex-shrink: 0;
 }
 
 .listen-play {
-    width: 24px;
-    height: 24px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.45);
@@ -511,7 +521,7 @@
     align-items: center;
     justify-content: center;
     color: var(--dark-purple);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     cursor: pointer;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -519,7 +529,7 @@
 
 .listen-bar {
     flex: 1;
-    height: 3px;
+    height: 4px;
     background: rgba(255, 255, 255, 0.3);
     border-radius: 2px;
     overflow: hidden;

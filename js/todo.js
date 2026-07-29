@@ -8,7 +8,7 @@ function switchTab(tabId, el) {
     // 重置日记/书架子页面显示
     document.getElementById('diary-content').style.display = 'none';
     document.getElementById('books-content').style.display = 'none';
-    document.getElementById('tab-diary').style.display = tabId === 'tab-diary' ? 'block' : 'none';
+    document.getElementById('tab-diary').style.display = tabId === 'tab-diary' ? 'flex' : 'none';
     
     // 控制顶部导航栏显示：只在清单页显示
     const header = document.getElementById('appHeader');
@@ -86,8 +86,7 @@ function handleStarClick(idx, element) {
     // 切换状态
     todo.done = !todo.done;
     if (todo.done) {
-        // 从未完成变为完成 → 触发爱心动效 + 震动
-        spawnHeartParticles(element);
+        // 从未完成变为完成 → 震动 + 音效
         playGentleSound('longPress');
         try { if (navigator.vibrate) navigator.vibrate(30); } catch (e) { }
         state.stats.todoCount++;
@@ -259,35 +258,6 @@ function renderTodos() {
             isDragging = false;
         }, { passive: true });
     });
-}
-
-function spawnHeartParticles(element) {
-    const container = document.getElementById('particleContainer');
-    const rect = element.getBoundingClientRect();
-    const hearts = ['❤️', '💜', '✨', '🌸', '💗', '🌟'];
-    for (let i = 0; i < 20; i++) {
-        const p = document.createElement('div');
-        p.textContent = hearts[i % hearts.length];
-        p.style.cssText = `
-            position: fixed;
-            left: ${rect.left + Math.random() * rect.width}px;
-            top: ${rect.top + Math.random() * rect.height}px;
-            font-size: ${16 + Math.random() * 22}px;
-            pointer-events: none;
-            z-index: 999;
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            opacity: 1;
-            transform: scale(1);
-        `;
-        container.appendChild(p);
-        const dx = (Math.random() - 0.5) * 220;
-        const dy = -Math.random() * 200 - 60;
-        requestAnimationFrame(() => {
-            p.style.transform = `translate(${dx}px, ${dy}px) scale(0.2)`;
-            p.style.opacity = '0';
-        });
-        setTimeout(() => p.remove(), 1400);
-    }
 }
 
 function playGentleSound(type) {
