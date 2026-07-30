@@ -35,6 +35,26 @@ function showToast(msg, duration) {
   toastTimer = setTimeout(() => el.classList.remove('show'), duration || 2200);
 }
 
+function showConfirmModal({ title = '提示', message = '', confirmText = '确定', confirmClass = '', onConfirm } = {}) {
+  const backdrop = document.createElement('div');
+  backdrop.style.cssText = 'position:fixed;inset:0;background:rgba(30,20,50,0.45);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;';
+  const danger = confirmClass === 'danger';
+  backdrop.innerHTML = `
+    <div style="background:#fff;border-radius:18px;padding:20px;margin:0;max-width:300px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,0.2);border:1.5px solid rgba(203,185,232,0.4);">
+      <div style="font-size:0.95rem;font-weight:700;color:#5a4d72;margin-bottom:8px;">${title}</div>
+      <div style="font-size:0.8rem;color:#82709a;line-height:1.7;white-space:pre-line;margin-bottom:18px;">${message}</div>
+      <div style="display:flex;gap:10px;">
+        <button id="__cancelBtn" style="flex:1;padding:10px;border-radius:14px;border:1px solid rgba(203,185,232,0.5);background:rgba(255,255,255,0.6);color:#82709a;font-size:0.82rem;font-weight:600;cursor:pointer;">取消</button>
+        <button id="__confirmBtn" style="flex:1;padding:10px;border-radius:14px;border:none;background:${danger ? 'linear-gradient(135deg,#f0a8a8,#e88c8c)' : 'linear-gradient(135deg,rgba(203,185,232,0.9),rgba(203,185,232,0.7))'};color:${danger ? '#6e3a3a' : '#5a4d72'};font-size:0.82rem;font-weight:600;cursor:pointer;">${confirmText}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(backdrop);
+  const close = () => backdrop.remove();
+  backdrop.querySelector('#__cancelBtn').onclick = close;
+  backdrop.querySelector('#__confirmBtn').onclick = () => { close(); onConfirm && onConfirm(); };
+  backdrop.onclick = (e) => { if (e.target === backdrop) close(); };
+}
+
 function showToastOnce(key, msg, duration) {
   if (state.shownToasts && state.shownToasts.includes(key)) return;
   showToast(msg, duration);

@@ -25,9 +25,9 @@
     <link rel="stylesheet" href="css/energy.css">
     <link rel="stylesheet" href="css/routine.css">
     <link rel="stylesheet" href="css/achieve.css">
-    <link rel="stylesheet" href="css/diary.css?v=2">
+    <link rel="stylesheet" href="css/diary.css?v=6">
     <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/modals.css?v=2">
     <link rel="stylesheet" href="css/shop.css">
     <link rel="stylesheet" href="css/soul.css?v=2">
     <link rel="stylesheet" href="css/responsive.css">
@@ -387,21 +387,15 @@
 
             <!-- 书架内容页 -->
             <section id="books-content" class="tab-panel" style="display:none;">
-                <div class="card-ins" style="margin-bottom:16px;">
-                    <div class="book-add-area">
-                        <div class="row">
-                            <input type="text" id="bookTitleInput" placeholder="书名 *">
-                            <input type="text" id="bookAuthorInput" placeholder="作者（填写无/未知 则留空）">
-                        </div>
-                        <div class="book-cover-upload">
-                            <label for="bookCoverInput">封面</label>
-                            <input type="file" id="bookCoverInput" accept="image/*">
-                            <img id="bookCoverPreview" class="cover-preview" style="display:none;" alt="封面预览">
-                            <button class="add-book-btn" onclick="addReadingRecord()">记录读书笔记</button>
-                        </div>
-                    </div>
+                <div class="bookshelf-header">
+                    <div style="width:32px;"></div>
+                    <h3>书架</h3>
+                    <button class="bookshelf-add-btn" onclick="openBookEntry()"><i class="fa-solid fa-plus"></i></button>
                 </div>
-                <div class="book-grid" id="bookGrid"></div>
+                <div class="bookshelf-filters" id="bookshelfFilters"></div>
+                <div class="content-padding">
+                    <div class="fb-bookshelf" id="fbBookshelf"></div>
+                </div>
             </section>
 
             <!-- 成就页 -->
@@ -526,25 +520,153 @@
             </div>
         </div>
 
-        <!-- 书籍详情模态框 -->
-        <div class="modal-overlay" id="bookDetailModal">
-            <div class="modal-box book-detail-modal">
-                <div class="modal-header">
-                    <h3 id="bookDetailTitle">书名</h3><button class="modal-close" onclick="closeBookDetail()">×</button>
+        <!-- 书籍录入全屏页 -->
+        <div class="fullscreen-overlay" id="bookEntryModal">
+            <div class="fullscreen-box">
+                <div class="entry-top-bar">
+                    <button class="back-btn" onclick="closeBookEntry()"><i class="fa-solid fa-chevron-left"></i></button>
+                    <h3>录入新书</h3>
+                    <button class="save-btn" onclick="submitBookEntry()">保存</button>
                 </div>
-                <div class="modal-body">
-                    <img id="bookDetailCover" class="book-detail-cover" src="" alt="封面">
-                    <div class="book-detail-author" id="bookDetailAuthor">作者</div>
-                    <div class="book-detail-progress"><span>进度</span><input type="range" id="bookDetailProgress" min="0"
-                            max="100" value="0"><span id="bookDetailProgressLabel">0%</span></div>
-                    <textarea id="bookDetailExcerpt" class="book-detail-excerpt" placeholder="摘抄或碎碎念…"></textarea>
-                    <div style="display:flex;gap:8px;margin-top:8px;">
-                        <button class="btn-danger" onclick="deleteBook()" style="flex-shrink:0;">🗑️ 删除</button>
-                        <button class="book-detail-save" onclick="saveBookDetail()" style="flex:1;">💾 保存</button>
+                <div class="fullscreen-body" style="padding:0;">
+                    <div class="entry-search-row">
+                        <input type="text" id="bookSearchInput" placeholder="输入 ISBN 或书名搜索" onkeydown="if(event.key==='Enter')searchBooks()">
+                        <button class="scan-btn" onclick="scanBarcode()"><i class="fa-solid fa-barcode"></i></button>
+                    </div>
+                    <div class="entry-search-results" id="entrySearchResults"></div>
+                    <div class="entry-cover-info">
+                        <div class="entry-cover-upload" onclick="document.getElementById('bookCoverInput').click()">
+                            <i class="fa-solid fa-plus"></i>
+                            <span>上传封面</span>
+                        </div>
+                        <input type="file" id="bookCoverInput" accept="image/*" style="display:none;">
+                        <img id="bookCoverPreview" class="entry-cover-preview" style="display:none;" alt="封面预览">
+                        <div class="entry-cover-fields">
+                            <div>
+                                <label>书名 *</label>
+                                <input type="text" id="bookTitleInput" placeholder="输入书名">
+                            </div>
+                            <div>
+                                <label>作者</label>
+                                <input type="text" id="bookAuthorInput" placeholder="输入作者/译者">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="entry-fields-row">
+                        <div>
+                            <label>总页数</label>
+                            <input type="number" id="bookPagesInput" placeholder="如 280" min="0">
+                        </div>
+                        <div>
+                            <label>选择书架分类</label>
+                            <select id="bookCategorySelect">
+                                <option value="" disabled selected>选择分类</option>
+                                <option value="思维/认知">思维/认知</option>
+                                <option value="个人成长">个人成长</option>
+                                <option value="文学/小说">文学/小说</option>
+                                <option value="custom">自定义...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="text" id="bookCustomCategoryInput" class="entry-custom-category" placeholder="输入自定义分类" style="display:none;">
+                    <div class="entry-status-chips">
+                        <span class="entry-status-chip" data-status="想读" onclick="selectBookStatus(this)">想读</span>
+                        <span class="entry-status-chip active" data-status="在读" onclick="selectBookStatus(this)">在读</span>
+                        <span class="entry-status-chip" data-status="已读完" onclick="selectBookStatus(this)">已读完</span>
+                    </div>
+                    <button class="entry-submit-btn" onclick="submitBookEntry()">
+                        <i class="fa-solid fa-book-open"></i> 存入书架
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 书籍详情全屏页 -->
+        <div class="fullscreen-overlay" id="bookDetailModal">
+            <div class="fullscreen-box">
+                <div class="bd-top-bar">
+                    <button class="back-btn" onclick="closeBookDetail()"><i class="fa-solid fa-chevron-left"></i></button>
+                    <h3 id="bookDetailTitle">书名</h3>
+                    <div style="width:36px;"></div>
+                </div>
+                <div class="fullscreen-body" style="padding:0;">
+                    <div class="bd-detail-card">
+                        <div class="bd-cover" id="bookDetailCover" onclick="uploadDetailCover()"></div>
+                        <div class="bd-info">
+                            <div class="bd-title" id="bookDetailTitleText"></div>
+                            <div class="bd-author" id="bookDetailAuthor"></div>
+                            <div class="bd-rating" id="bookDetailRating"></div>
+                            <div class="bd-progress-row">
+                                <input type="range" min="0" max="100" value="0" class="bd-progress-range" id="bookDetailProgress" oninput="updateProgressText()">
+                                <span class="bd-progress-text" id="bookDetailProgressText">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bd-actions">
+                        <button class="bd-action-btn" onclick="openProgressUpdate()"><i class="fa-solid fa-pen-fancy"></i> 更新进度</button>
+                    </div>
+                    <div class="bd-timeline-title">阅读历程</div>
+                    <div class="bd-timeline" id="bookTimeline"></div>
+                    <div style="padding:0 14px 20px;">
+                        <button class="btn-danger" onclick="deleteBook()" style="width:100%;padding:8px;border-radius:12px;font-size:0.72rem;">删除此书</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 进度更新弹窗 -->
+        <div class="modal-overlay" id="progressUpdateModal">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>更新阅读进度</h3><button class="modal-close" onclick="closeProgressUpdate()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="record-form-date" id="progressDate"></div>
+                    <div class="record-form-group">
+                        <label>当前读到第几页</label>
+                        <input type="number" id="progressPageInput" class="record-form-input" placeholder="如 126" min="0">
+                    </div>
+                    <div class="record-form-group">
+                        <label>摘抄或碎碎念</label>
+                        <textarea id="progressNoteInput" class="record-form-textarea" placeholder="记录此刻的思考..."></textarea>
+                    </div>
+                    <div class="record-form-group">
+                        <label>金句摘录（可选）</label>
+                        <textarea id="progressQuoteInput" class="record-form-textarea" placeholder=""今天是你余生的第一天"..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-cancel-modal" onclick="closeProgressUpdate()">取消</button>
+                        <button class="btn-save-modal" onclick="saveProgressUpdate()">记录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 思考记录弹窗 -->
+        <div class="modal-overlay" id="noteEditorModal">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>写下思考</h3><button class="modal-close" onclick="closeNoteEditor()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="record-form-date" id="noteDate"></div>
+                    <div class="record-form-group">
+                        <label>你的思考</label>
+                        <textarea id="noteTextInput" class="record-form-textarea" placeholder="关于这一章的所思所想..." style="height:100px;"></textarea>
+                    </div>
+                    <div class="record-form-group">
+                        <label>金句摘录（可选）</label>
+                        <textarea id="noteQuoteInput" class="record-form-textarea" placeholder=""留白也是一种声音"..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-cancel-modal" onclick="closeNoteEditor()">取消</button>
+                        <button class="btn-save-modal" onclick="saveNoteEntry()">记录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="file" id="detailCoverInput" accept="image/*" style="display:none;">
 
         <!-- 添加仪式模态框 -->
         <div class="modal-overlay" id="addRoutineModal">
@@ -983,8 +1105,8 @@
         <input type="file" id="avatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
 
         <script>window.updatePetUI = window.updatePetUI || function(){};</script>
-        <script src="js/state.js" defer></script>
-        <script src="js/utils.js" defer></script>
+        <script src="js/state.js?v=3" defer></script>
+        <script src="js/utils.js?v=2" defer></script>
         <script src="js/sidebar.js" defer></script>
         <script src="js/lock.js" defer></script>
         <script src="js/todo.js?v=2" defer></script>
@@ -993,7 +1115,7 @@
         <script src="js/achievements.js" defer></script>
         <script src="js/diary.js?v=2" defer></script>
         <script src="js/afk.js" defer></script>
-        <script src="js/audio.js" defer></script>
+        <script src="js/audio.js?v=5" defer></script>
         <script src="js/soul.js?v=2" defer></script>
         <script src="js/gallery.js" defer></script>
         <script src="js/backup.js" defer></script>

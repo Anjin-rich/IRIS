@@ -32,7 +32,7 @@ function updateBookCountSubtitle() {
     const count = state.books ? state.books.length : 0;
     const subtitle = document.getElementById('bookCountSubtitle');
     if (subtitle) {
-        subtitle.textContent = `${count}本书 · 记录读书笔记`;
+        subtitle.textContent = '记录读书笔记';
     }
 }
 

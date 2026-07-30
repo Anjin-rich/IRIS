@@ -21,6 +21,7 @@ let state = JSON.parse(localStorage.getItem('IrisState')) || {
         signinExp: 0
     },
     books: [],
+    bookFilter: 'all',
     afkTimerSeconds: 0,
     theme: 'light',
     selectedMood: null,
@@ -136,6 +137,18 @@ if (!state.routineFoldState) state.routineFoldState = {};
 if (state.energySelectionCount === undefined) state.energySelectionCount = 0;
 if (!state.energySelectionDate) state.energySelectionDate = null;
 if (!state.shownToasts) state.shownToasts = [];
+if (!state.bookFilter) state.bookFilter = 'all';
+// 兼容旧书架数据：为新字段提供默认值
+if (state.books && state.books.length > 0) {
+    state.books.forEach(b => {
+        if (b.category === undefined) b.category = '';
+        if (b.status === undefined) b.status = '在读';
+        if (b.rating === undefined) b.rating = 0;
+        if (b.totalPages === undefined) b.totalPages = 0;
+        if (b.currentPage === undefined) b.currentPage = 0;
+        if (!b.timeline) b.timeline = [];
+    });
+}
 
 const defaultPetData = [
     { emoji: '🐱', name: '小猫', rarity: 'common', requiredExp: 0, requiredAchievements: [] },
