@@ -25,11 +25,12 @@
     <link rel="stylesheet" href="css/energy.css">
     <link rel="stylesheet" href="css/routine.css">
     <link rel="stylesheet" href="css/achieve.css">
-    <link rel="stylesheet" href="css/diary.css?v=6">
+    <link rel="stylesheet" href="css/diary.css?v=7">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/modals.css?v=2">
     <link rel="stylesheet" href="css/shop.css">
-    <link rel="stylesheet" href="css/soul.css?v=2">
+    <link rel="stylesheet" href="css/soul.css?v=3">
+    <link rel="stylesheet" href="css/heatmap.css?v=1">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
 
@@ -43,7 +44,7 @@
                 </div>
             </div>
             <div class="header-right">
-                <div class="user-badge" onclick="openRulesModal()">
+                <div class="user-badge" onclick="openHeatmap()">
                     <i class="fa-solid fa-seedling"></i>
                     <span id="headerEnergy">0</span>
                 </div>
@@ -358,7 +359,11 @@
                         <button class="prompt-refresh" onclick="refreshPrompt()" title="换一个提问"><i
                                 class="fa-solid fa-rotate-right"></i></button>
                     </div>
-                    <textarea id="diaryInput" class="diary-input-area" placeholder="捕捉生活流光…"></textarea>
+                    <div class="diary-editor">
+                        <input type="text" id="diaryTitle" class="diary-title-input" placeholder="标题">
+                        <div class="diary-divider"></div>
+                        <textarea id="diaryInput" class="diary-body-input" placeholder="捕捉生活流光…"></textarea>
+                    </div>
                     <div class="diary-remain" id="diaryRemain">今日剩余 3/3 篇</div>
                     <div class="mood-section-title">选择今日心情</div>
                     <div class="mood-selector" id="moodSelector">
@@ -453,7 +458,9 @@
                     <button class="fullscreen-close" onclick="closeEditDiary()">×</button>
                 </div>
                 <div class="fullscreen-body">
-                    <textarea id="editDiaryText" class="diary-input-area" placeholder="修改你的日记…"></textarea>
+                    <input type="text" id="editDiaryTitle" class="diary-title-input" placeholder="标题" style="margin-bottom:6px;">
+                    <div class="diary-divider"></div>
+                    <textarea id="editDiaryText" class="diary-body-input" placeholder="修改你的日记…" style="height:200px;"></textarea>
                     <div class="edit-diary-images" id="editDiaryImages"></div>
                     <label class="edit-diary-upload" for="editDiaryImageInput"><i class="fa-regular fa-image"></i>
                         添加图片</label>
@@ -492,31 +499,54 @@
             </div>
         </div>
 
-        <!-- 能量规则模态框 -->
-        <div class="modal-overlay" id="rulesModal">
-            <div class="modal-box">
-                <div class="modal-header">
-                    <h3>💚 能量规则</h3><button class="modal-close" onclick="closeRulesModal()">×</button>
+        <!-- 能量气象图 热力表全屏页 -->
+        <div class="fullscreen-overlay" id="heatmapModal">
+            <div class="fullscreen-box">
+                <div class="entry-top-bar">
+                    <button class="back-btn" onclick="closeHeatmap()"><i class="fa-solid fa-chevron-left"></i></button>
+                    <h3>能量气象图</h3>
+                    <span style="width:40px;"></span>
                 </div>
-                <div class="modal-body">
-                    <ul class="rule-list">
-                        <li><span class="rule-label">完成一个待办任务</span><span class="rule-value">+1</span></li>
-                        <li><span class="rule-label">完成一篇日记</span><span class="rule-value">+5</span></li>
-                        <li><span class="rule-label">完成一条成长仪式（全部子步骤）</span><span class="rule-value">+10</span></li>
-                        <li><span class="rule-label">记录一本书摘</span><span class="rule-value">+2</span></li>
-                        <li><span class="rule-label">静心每满 1 小时</span><span class="rule-value">+5</span></li>
-                        <li><span class="rule-label">解锁一个成就</span><span class="rule-value">+20</span></li>
-                        <li><span class="rule-label">每日选择能量</span><span class="rule-value">+1（连续加成）</span></li>
-                    </ul>
-                    <div class="rule-usage">
-                        <strong>⚡ 能量使用场景：</strong><br>
-                        · 切换能量模式（满电/低电量/休整）：消耗 5 能量 / 次（每日前两次免费）<br>
-                    </div>
-                    <div style="text-align:right;margin-top:12px;">
-                        <button class="btn-cancel" onclick="closeRulesModal()"
-                            style="padding:8px 24px;border:none;border-radius:14px;background:var(--light-purple);color:var(--dark-purple);cursor:pointer;">知道了</button>
+                <div class="fullscreen-body">
+                    <div class="heatmap-panel">
+                        <div class="hm-view-tabs">
+                            <button class="hm-view-tab active" onclick="hmSwitchView('week', this)">周视图</button>
+                            <button class="hm-view-tab" onclick="hmSwitchView('month', this)">月视图</button>
+                            <button class="hm-view-tab" onclick="hmSwitchView('year', this)">年视图</button>
+                        </div>
+                        <div class="hm-time-nav">
+                            <button class="hm-nav-btn" onclick="hmPrevPeriod()">‹</button>
+                            <div class="hm-time-label" id="hmTimeLabel" onclick="hmShowDatePicker()">本周</div>
+                            <button class="hm-nav-btn" onclick="hmNextPeriod()">›</button>
+                            <input type="date" id="hmDatePicker" class="hm-date-picker" onchange="hmOnDatePick(this.value)">
+                        </div>
+                        <div id="hmWeekView"></div>
+                        <div id="hmMonthView" style="display:none;"></div>
+                        <div id="hmYearView" style="display:none;"></div>
+                        <div class="hm-legend">
+                            <div class="hm-legend-row">
+                                <span class="hm-legend-label">少</span>
+                                <div class="hm-legend-scale">
+                                    <div class="hm-legend-cell hm-bg-high hm-L1"></div>
+                                    <div class="hm-legend-cell hm-bg-high hm-L2"></div>
+                                    <div class="hm-legend-cell hm-bg-high hm-L3"></div>
+                                    <div class="hm-legend-cell hm-bg-high hm-L4"></div>
+                                    <div class="hm-legend-cell hm-bg-high hm-L5"></div>
+                                </div>
+                                <span class="hm-legend-label">多</span>
+                            </div>
+                            <div class="hm-legend-hint">光晕 = 活动次数: 1-2淡 · 3-4中 · 5-6亮 · 7-8强光 · 9+最亮</div>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- 时光小票弹窗 -->
+        <div id="receiptModal">
+            <div class="receipt-paper">
+                <button class="receipt-close-btn" onclick="closeReceipt()">✕</button>
+                <div id="receiptContent"></div>
             </div>
         </div>
 
@@ -1113,10 +1143,11 @@
         <script src="js/routines.js" defer></script>
         <script src="js/energy.js" defer></script>
         <script src="js/achievements.js" defer></script>
-        <script src="js/diary.js?v=2" defer></script>
+        <script src="js/diary.js?v=3" defer></script>
         <script src="js/afk.js" defer></script>
         <script src="js/audio.js?v=5" defer></script>
         <script src="js/soul.js?v=2" defer></script>
+        <script src="js/heatmap.js?v=1" defer></script>
         <script src="js/gallery.js" defer></script>
         <script src="js/backup.js" defer></script>
         <script src="js/guide.js" defer></script>

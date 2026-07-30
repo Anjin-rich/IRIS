@@ -185,6 +185,7 @@ function toggleStep(routineIdx, stepIdx) {
     return;
   }
   steps[stepIdx].done = true;
+  if (typeof logActivity === 'function') logActivity('routine', r.name + ' - ' + steps[stepIdx].text);
   saveState();
   renderRoutines();
 }

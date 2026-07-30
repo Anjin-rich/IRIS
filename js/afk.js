@@ -137,6 +137,7 @@ function recordAfkSession(seconds) {
     state.afkSessions.unshift(session);
     state.stats.afkCount += seconds;
     state.totalMeditationSecs = (state.totalMeditationSecs || 0) + seconds;
+    if (typeof logActivity === 'function') logActivity('meditation', '心流冥想 ' + Math.floor(seconds / 60) + ' 分钟');
 
     const totalSecs = state.afkSessions.reduce((sum, s) => sum + s.duration, 0);
     checkUnlock('afk_1m', totalSecs >= 60);

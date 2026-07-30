@@ -100,6 +100,7 @@ function handleStarClick(idx, element) {
         checkUnlock('todo_100', state.stats.todoCount >= 100);
         checkAllRounder();
         checkGenAchievements();
+        if (typeof logActivity === 'function') logActivity('todo', todo.text);
     } else {
         // 从完成变为未完成
     }

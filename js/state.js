@@ -127,6 +127,7 @@ if (!state.dailyTodoExp) state.dailyTodoExp = {};
 if (!state.settings) state.settings = { sound: true };
 if (!state.totalMeditationSecs) state.totalMeditationSecs = 0;
 if (!state.energyHistory) state.energyHistory = {};
+if (!state.dailyLogs) state.dailyLogs = {};
 if (!state.hiddenTodoIds) state.hiddenTodoIds = [];
 if (!state.energySpends) state.energySpends = [];
 if (!state.meditationRecords) state.meditationRecords = [];

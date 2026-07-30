@@ -223,12 +223,14 @@ function renderPreviews() {
 
 function saveDiary() {
     const text = document.getElementById('diaryInput').value.trim();
-    if (!text && tempImages.length === 0) { showToast('📝 写点什么吧'); return; }
+    const title = document.getElementById('diaryTitle')?.value.trim() || '';
+    if (!text && !title && tempImages.length === 0) { showToast('📝 写点什么吧'); return; }
     const todayStr = getBeijingDateKey();
     const todayCount = state.diaries.filter(d => d.createdAt && getBeijingDateKey(new Date(d.createdAt)) === todayStr).length;
     if (todayCount >= 3) { showToast('📔 今天已写了3篇日记，明天再来吧！'); return; }
     const entry = {
         id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        title: title,
         text: text || '',
         images: [...tempImages],
         date: new Date().toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) + ' ' + new Date()
@@ -239,12 +241,15 @@ function saveDiary() {
     state.diaries.unshift(entry);
     state.stats.diaryCount++;
     addEnergy(5);
+    if (typeof logActivity === 'function') logActivity('diary', entry.title || '无标题', { title: entry.title, text: entry.text });
     checkUnlock('diary_3', state.stats.diaryCount >= 3);
     checkUnlock('diary_5', state.stats.diaryCount >= 5);
     checkUnlock('diary_10', state.stats.diaryCount >= 10);
     checkUnlock('diary_20', state.stats.diaryCount >= 20);
     checkAllRounder();
     document.getElementById('diaryInput').value = '';
+    const titleEl = document.getElementById('diaryTitle');
+    if (titleEl) titleEl.value = '';
     tempImages = [];
     selectedMood = null;
     document.querySelectorAll('.mood-btn[data-mood]').forEach(o => o.classList.remove('selected'));
@@ -350,6 +355,7 @@ function renderDiaries() {
         <div class="history-diary-card" data-imgs="${(d.images || []).join('|')}">
             <button class="diary-edit-btn" onclick="openEditDiary('${d.id}')"><i class="fa-regular fa-pen-to-square"></i></button>
             <div class="history-diary-date">${d.date}${d.mood ? getMoodSvg(d.mood) : ''}</div>
+            ${d.title ? `<div class="history-diary-title">${escapeHtml(d.title)}</div>` : ''}
             <div class="history-diary-text">${escapeHtml(d.text)}</div>
             <div class="history-diary-pics lazy-images"></div>
         </div>
@@ -435,6 +441,7 @@ function openEditDiary(id) {
     const entry = state.diaries.find(d => d.id === id);
     if (!entry) return;
     editDiaryId = id;
+    document.getElementById('editDiaryTitle').value = entry.title || '';
     document.getElementById('editDiaryText').value = entry.text;
     editDiaryImages = [...entry.images];
     renderEditDiaryImages();
@@ -496,9 +503,11 @@ function closeEditDiary() {
 
 function saveEditDiary() {
     const text = document.getElementById('editDiaryText').value.trim();
-    if (!text && editDiaryImages.length === 0) { showToast('写点什么吧'); return; }
+    const title = document.getElementById('editDiaryTitle').value.trim();
+    if (!text && !title && editDiaryImages.length === 0) { showToast('写点什么吧'); return; }
     const entry = state.diaries.find(d => d.id === editDiaryId);
     if (entry) {
+        entry.title = title;
         entry.text = text;
         entry.images = [...editDiaryImages];
         entry.updatedAt = new Date().toISOString();

@@ -533,6 +533,7 @@
 
                 beforeFace.style.display = 'none';
                 afterFace.style.display = 'flex';
+                if (typeof logActivity === 'function') logActivity('card', oracleCard.name_zh, { cardName: oracleCard.name_zh, cardMeaning: oracleCard.meaning.replace(/\n/g, ' ') });
             });
         });
     }

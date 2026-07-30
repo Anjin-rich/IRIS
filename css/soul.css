@@ -64,12 +64,7 @@
 }
 
 .soul-tab-sub {
-    display: block;
-    font-size: 0.55rem;
-    color: inherit;
-    opacity: 0.65;
-    margin-top: 2px;
-    font-weight: 500;
+    display: none;
 }
 
 /* 卡片主体 - 宝石形 + 统一高度 */
@@ -149,12 +144,7 @@
 }
 
 .card-title-en {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--text-sub);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 14px;
+    display: none;
 }
 
 /* 右上角箭头 */

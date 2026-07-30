@@ -247,6 +247,7 @@ function submitBookEntry() {
   state.books.unshift(record);
   state.stats.bookCount++;
   addEnergy(2);
+  if (typeof logActivity === 'function') logActivity('book', '录入《' + (record.title || '新书') + '》');
   checkUnlock('book_1', state.stats.bookCount >= 1);
   checkUnlock('book_3', state.stats.bookCount >= 3);
   checkUnlock('book_5', state.stats.bookCount >= 5);
@@ -487,6 +488,7 @@ function saveProgressUpdate() {
   });
   saveState();
   renderBooks();
+  if (typeof logActivity === 'function') logActivity('book', '《' + (book.title || '书') + '》读至 ' + (book.progress || 0) + '%');
   // 刷新详情页
   openBookDetail(currentDetailBookId);
   closeProgressUpdate();

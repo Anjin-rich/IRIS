@@ -85,9 +85,9 @@ function toggleFold(id) {
   if (body) { body.classList.toggle('open'); if (chevron) chevron.classList.toggle('open'); }
 }
 
-function openRulesModal() { document.getElementById('rulesModal').classList.add('open'); }
+function openRulesModal() { openHeatmap(); }
 
-function closeRulesModal() { document.getElementById('rulesModal').classList.remove('open'); }
+function closeRulesModal() {}
 
 function escapeHtml(str) {
   if (!str) return '';
