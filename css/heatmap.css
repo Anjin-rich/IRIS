@@ -65,13 +65,16 @@
 }
 .hm-time-label:hover { background: rgba(203,185,232,0.2); }
 .hm-date-picker {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    width: 1px; height: 1px;
-    opacity: 0.01;
-    border: none;
-    padding: 0; margin: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100px;
+    height: 30px;
+    opacity: 0;
+    pointer-events: auto;
+    z-index: -1;
+    padding: 0;
+    margin: 0;
 }
 
 /* 周视图 */

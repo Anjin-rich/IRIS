@@ -1,7 +1,7 @@
 # Iris v4.2 开发日志
 
 > 活文档：记录每一次修改的决策、原因和结果
-> 最后更新：2026-07-29
+> 最后更新：2026-08-02
 
 ---
 
@@ -46,6 +46,47 @@ D:\中转\IRIS\
 ---
 
 ## 修改历史
+
+---
+
+## 2026-08-02 修改：呼吸圈光晕优化 + 能量气象小票修复 + 神谕牌新布局
+
+**为什么这样改：**
+> 用户反馈呼吸圈动画生硬，与参考文件不一致；能量气象图点击日期无法查看小票；神谕牌需要按照定稿HTML重新布局，新增罗马数字、关键词标签、独立今日行动块等字段。
+
+### 1. 呼吸圈光晕动画优化
+- **尺寸与结构**：`.breathe-orb` 从 120px 三层圆环改为 160px 单层径向渐变，内部嵌套 100px 柔和白色内圈
+- **背景渐变**：外圈 `radial-gradient(circle, rgba(157,132,214,0.35) 0%, rgba(148,187,237,0.18) 60%, transparent 100%)`，内圈柔和白色径向渐变
+- **动画周期**：从原呼吸节拍模式改为统一 6 秒周期（`animation: orbBreath 6s ease-in-out infinite`）
+- **光晕扩散**：`@keyframes orbBreath` 中 `box-shadow` 从 `0 0 30px` → `0 0 50px` 脉动扩散，配合 `scale(1) → scale(1.08)` 缩放，营造流体光晕呼吸感
+
+### 2. 能量气象图小票渲染修复
+- **根因**：`renderReceipt()` 中尝试通过 `document.getElementById('receiptDateLine')` 设置日期行，但该元素从未写入 DOM，导致 JS 报错中断小票渲染
+- **修复**：将日期行 HTML（日期 + 星期 + 能量标签）直接拼入 `html` 字符串，通过 `document.getElementById('receiptContent').innerHTML = html` 一次性渲染
+- 日期格式：`YYYY-MM-DD 周X · 能量标签`（充沛/温和/休息能量日）
+
+### 3. 神谕牌新布局重构（36张完整版）
+- **数据结构升级**：`ORACLE_CARDS` 数组 36 张牌全部更新：
+  - 新增 `num` 字段（罗马数字，每组 Ⅰ-Ⅸ：破晓Ⅰ-Ⅸ、盛光Ⅰ-Ⅸ、暮影Ⅰ-Ⅸ、深眠Ⅰ-Ⅸ）
+  - 新增 `keywords` 字段（每张牌 3 个关键词，如「起跑点、临界突破、微明」）
+  - `name_zh` / `name_en` / `meaning` / `action` 全部按定稿 HTML 更新
+- **HTML 结构调整**（抽牌后显示区）：
+  - 自上而下：罗马数字 → 主图 → 中文牌名 → 英文牌名 → 关键词标签行 → 启示文案
+  - 卡牌外正下方独立「今日行动」深色底块（`.inspire-action-block`），与卡片分离
+- **CSS 样式更新**：
+  - `.inspire-card-roman`：Cormorant Garamond 字体，金色 `#b8923d`，letter-spacing 2px
+  - `.keyword-tag`：金色描边胶囊，`padding: 3px 10px`，圆角 8px，淡金底
+  - `.inspire-action-block`：深色背景独立块，label「今日行动」+ action 文案
+- **JS 渲染逻辑**：
+  - 抽牌后依次设置 `inspireCardRoman` / `inspireCardIcon` / `inspireCardName` / `inspireCardSub`
+  - 关键词通过 `oracleCard.keywords.map()` 生成 `.keyword-tag` 插入 `inspireCardKeywords`
+  - 今日行动文案注入 `inspireCardAction`
+
+**涉及文件：**
+- `css/soul.css` — 呼吸圈 160px 径向渐变 + 6s 呼吸动画 + 神谕牌罗马数字/关键词标签/今日行动块样式
+- `js/heatmap.js` — `renderReceipt()` 日期行拼入 html 字符串修复
+- `js/soul.js` — `ORACLE_CARDS` 36 张牌数据更新（罗马数字、关键词、新文案）+ 抽牌后关键词渲染
+- `index.html` — 神谕牌抽牌后展示区 HTML 结构（新增罗马数字、关键词、独立今日行动块）
 
 ---
 

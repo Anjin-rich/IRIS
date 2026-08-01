@@ -46,6 +46,9 @@ function logActivity(type, label, extra) {
   };
   if (extra) Object.assign(entry, extra);
   state.dailyLogs[today].push(entry);
+  // 同步更新能量历史，确保热力图能正确渲染
+  if (!state.energyHistory) state.energyHistory = {};
+  if (!state.energyHistory[today]) state.energyHistory[today] = 'high';
   saveState();
 }
 
@@ -89,11 +92,22 @@ function hmShowDatePicker() {
   var picker = document.getElementById('hmDatePicker');
   if (!picker) return;
   picker.value = hmAnchorDate || hmFmtDate(new Date());
+  picker.focus();
   if (picker.showPicker) {
-    try { picker.showPicker(); } catch(e) { picker.focus(); picker.click(); }
-  } else {
-    picker.focus();
-    picker.click();
+    try { picker.showPicker(); } catch(e) { /* fallback below */ }
+  }
+  // 兼容性回退：暂时显示并触发原生点击
+  var wasHidden = picker.style.opacity === '0';
+  picker.style.opacity = '0.01';
+  picker.style.left = '0px';
+  picker.style.top = '0px';
+  picker.click();
+  if (wasHidden) {
+    setTimeout(function() {
+      picker.style.opacity = '0';
+      picker.style.left = '0';
+      picker.style.top = '0';
+    }, 500);
   }
 }
 
@@ -210,8 +224,9 @@ function renderReceipt(dateStr) {
   var energy = hmGetEnergy(dateStr);
   var energyLabel = energy ? ({high:'充沛能量日', low:'温和能量日', rest:'休息能量日'}[energy] || '') : '未选能量';
 
-  document.getElementById('receiptDateLine').innerHTML =
+  var dateLineHtml =
     d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') +
+    ' ' + weekdays[d.getDay()] +
     ' · <span class="receipt-energy-label">' + energyLabel + '</span>';
 
   var logs = (state.dailyLogs && state.dailyLogs[dateStr]) || [];
@@ -234,7 +249,7 @@ function renderReceipt(dateStr) {
   var diaries = logs.filter(function(l) { return l.type === 'diary'; });
   var meditations = logs.filter(function(l) { return l.type === 'meditation'; });
 
-  var html = inspireHtml;
+  var html = '<div class="receipt-date-line">' + dateLineHtml + '</div>' + inspireHtml;
 
   // 完成明细
   html += '<div class="receipt-section"><div class="receipt-section-title">' +

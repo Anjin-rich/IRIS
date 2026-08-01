@@ -63,6 +63,7 @@ function renderRoutines() {
       r.completedToday = true;
       r.lastCompletedDate = today;
       addEnergy(10);
+      if (typeof logActivity === 'function') logActivity('routine', r.name);
       showToast(`🌟 仪式「${r.name}」完成！+10能量`);
       checkUnlock('routine_1', true);
       needsSave = true;
