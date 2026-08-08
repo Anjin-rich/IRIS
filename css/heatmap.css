@@ -204,6 +204,9 @@
 .hm-legend-hint {
     font-size: 0.58rem; color: #a095b5;
     text-align: center; line-height: 1.4;
+    width: 100%;
+    word-break: break-all;
+    white-space: normal;
 }
 
 /* ===== 时光小票弹窗 ===== */
@@ -246,6 +249,9 @@
     font-size: 0.82rem; font-weight: 600; color: #6e5f88; margin-top: 6px;
 }
 .receipt-energy-label { color: #b9a5d9; }
+.receipt-energy-label.energy-high { color: #e07a5f; }
+.receipt-energy-label.energy-low { color: #5ba4c9; }
+.receipt-energy-label.energy-rest { color: #9e7dc5; }
 
 /* 今日灵感卡片 */
 .inspire-card {
@@ -263,7 +269,9 @@
 }
 .inspire-card-meaning {
     font-size: 0.82rem; color: #6e5f88;
-    font-style: italic; line-height: 1.5;
+    font-style: italic; line-height: 1.55;
+    text-align: center;
+    white-space: pre-line;
 }
 
 /* 小票分区 */
@@ -286,6 +294,12 @@
 }
 .receipt-item .item-label { display: flex; align-items: center; gap: 6px; }
 .receipt-item .item-time { color: #b0a8c0; font-size: 0.7rem; }
+.receipt-tag-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    flex-shrink: 0; display: inline-block;
+}
+.receipt-tag-dot.tag-life { background: #5ba4c9; }
+.receipt-tag-dot.tag-work { background: #e07a5f; }
 .receipt-empty {
     font-size: 0.75rem; color: #b0a8c0; font-style: italic; padding: 4px 0;
 }
@@ -316,12 +330,17 @@
     padding-top: 14px; border-top: 1px solid #ece5f5;
 }
 .receipt-barcode {
-    font-family: monospace; font-size: 0.65rem;
-    letter-spacing: 4px; color: #b0a8c0; margin-bottom: 8px;
+    font-family: monospace; font-size: 0.58rem;
+    letter-spacing: 3px; color: #b0a8c0; margin-bottom: 8px;
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .receipt-thanks {
     font-size: 0.68rem; letter-spacing: 3px;
     color: #9a8eb0; margin-bottom: 14px;
+    white-space: nowrap;
 }
 .receipt-share-btn {
     width: 100%; padding: 12px;

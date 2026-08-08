@@ -227,7 +227,7 @@ function renderReceipt(dateStr) {
   var dateLineHtml =
     d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') +
     ' ' + weekdays[d.getDay()] +
-    ' · <span class="receipt-energy-label">' + energyLabel + '</span>';
+    ' · <span class="receipt-energy-label energy-' + (energy || 'rest') + '">' + energyLabel + '</span>';
 
   var logs = (state.dailyLogs && state.dailyLogs[dateStr]) || [];
 
@@ -235,10 +235,15 @@ function renderReceipt(dateStr) {
   var cardLog = logs.find(function(l) { return l.type === 'card'; });
   var inspireHtml = '';
   if (cardLog) {
+    var meaningText = escapeHtml(cardLog.cardMeaning || '');
+    var meaningParts = meaningText.split(/,|，/);
+    var meaningDisplay = meaningParts.length > 1
+      ? meaningParts[0].trim() + '，\n' + meaningParts.slice(1).join('，').trim()
+      : meaningText;
     inspireHtml = '<div class="inspire-card">' +
       '<div class="inspire-label">— 今 日 灵 感 —</div>' +
       '<div class="inspire-card-name">' + escapeHtml(cardLog.cardName || '神谕牌') + '</div>' +
-      '<div class="inspire-card-meaning">"' + escapeHtml(cardLog.cardMeaning || '') + '"</div>' +
+      '<div class="inspire-card-meaning">"' + meaningDisplay + '"</div>' +
       '</div>';
   }
 
@@ -256,7 +261,8 @@ function renderReceipt(dateStr) {
     '<span class="icon">✓</span><span>完成明细</span><span class="en">(TODOS)</span></div>';
   if (todos.length > 0) {
     todos.forEach(function(l) {
-      html += '<div class="receipt-item"><span class="item-label">· ' + escapeHtml(l.label) + '</span><span class="item-time">' + l.time + '</span></div>';
+      var tagDot = l.tag ? '<span class="receipt-tag-dot tag-' + l.tag + '"></span>' : '';
+      html += '<div class="receipt-item"><span class="item-label">' + tagDot + escapeHtml(l.label) + '</span><span class="item-time">' + l.time + '</span></div>';
     });
   } else {
     html += '<div class="receipt-empty">今天还没有完成的待办</div>';

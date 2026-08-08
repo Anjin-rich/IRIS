@@ -218,6 +218,53 @@
     }
 }
 
+/* ===== 手机热力图/小票自适应 ===== */
+@media (max-width: 480px) {
+    .hm-legend-hint {
+        font-size: 0.52rem;
+        line-height: 1.35;
+        width: 100%;
+        white-space: normal;
+        word-break: break-all;
+    }
+
+    .receipt-barcode {
+        font-size: 0.5rem;
+        letter-spacing: 2px;
+        white-space: nowrap;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    .receipt-thanks {
+        font-size: 0.55rem;
+        letter-spacing: 1px;
+        white-space: nowrap;
+    }
+
+    .receipt-paper {
+        padding: 16px 12px 24px;
+    }
+
+    .receipt-date-line {
+        font-size: 0.75rem;
+    }
+
+    .inspire-card-meaning {
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+
+    .todo-tag-capsules {
+        gap: 2px;
+    }
+
+    .todo-tag-capsule {
+        font-size: 0.55rem;
+        padding: 3px 6px;
+    }
+}
+
 /* ===== 超小屏幕 (< 360px) — 极端压缩 ===== */
 @media (max-width: 360px) {
     .energy-pill-btn {
@@ -241,6 +288,21 @@
 
     .energy-streak-display {
         font-size: 0.52rem;
+    }
+
+    .hm-legend-hint {
+        font-size: 0.48rem;
+        line-height: 1.3;
+    }
+
+    .receipt-barcode {
+        font-size: 0.45rem;
+        letter-spacing: 1px;
+    }
+
+    .todo-tag-capsule {
+        font-size: 0.5rem;
+        padding: 2px 5px;
     }
 }
 

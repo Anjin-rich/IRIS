@@ -332,7 +332,7 @@
 /* ===== 灵感内容 ===== */
 .inspire-card-face {
     text-align: center;
-    padding: 28px 18px;
+    padding: 48px 18px 28px;
     background: #fff;
     clip-path: polygon(50% 0%, 100% 12%, 100% 88%, 50% 100%, 0% 88%, 0% 12%);
     margin: 0 auto;
@@ -356,28 +356,33 @@
 
 .inspire-card-roman {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
-    color: #b8923d;
-    font-weight: 600;
-    letter-spacing: 2px;
-    margin-bottom: 14px;
+    font-size: 1.3rem;
+    color: inherit;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.inspire-card-roman-line {
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,97,0.35), transparent);
+    margin-bottom: 18px;
 }
 
 .inspire-card-icon {
-    width: 70px;
-    height: 70px;
-    margin: 0 0 14px;
+    width: 48px;
+    height: 48px;
+    margin: 0 0 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    border: 1.5px solid rgba(184,146,61,0.3);
-    background: rgba(250,246,240,0.6);
 }
 
 .inspire-card-icon svg {
-    width: 70%;
-    height: 70%;
+    width: 100%;
+    height: 100%;
 }
 
 .inspire-card-sub {
@@ -392,20 +397,32 @@
 
 .inspire-card-keywords {
     display: flex;
-    gap: 6px;
+    gap: 0;
     flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 14px;
+    align-items: center;
 }
 
 .keyword-tag {
-    font-size: 0.58rem;
-    color: #B8923D;
-    padding: 3px 10px;
-    border: 1px solid rgba(184,146,61,0.2);
-    border-radius: 8px;
-    background: rgba(184,146,61,0.04);
-    letter-spacing: 0.5px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.65rem;
+    color: #fff;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.7);
+    letter-spacing: 0.08em;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: 0 1px 3px rgba(90,77,114,0.12);
+}
+
+.keyword-tag-sep {
+    color: #fff;
+    font-size: 0.5rem;
+    margin: 0 2px;
+    text-shadow: 0 1px 3px rgba(90,77,114,0.12);
 }
 
 .inspire-card-meaning {
@@ -413,37 +430,45 @@
     color: #5c4e6c;
     line-height: 1.8;
     text-align: center;
-    margin-top: auto;
+    margin-top: 8px;
     padding: 0 6px;
     font-style: italic;
 }
 
 .inspire-action-block {
-    width: 240px;
-    margin: 12px auto 0;
-    padding: 12px 16px;
-    background: #2A2233;
-    border-radius: 12px;
+    width: 170px;
+    margin: 14px auto 0;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(42,34,51,0.05), inset 0 1px 0 rgba(255,255,255,0.6);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 16px rgba(42,34,51,0.15);
+    gap: 6px;
 }
 
 .inspire-action-label {
-    font-size: 0.52rem;
-    letter-spacing: 2px;
-    color: #C9A961;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.5rem;
+    font-style: italic;
+    letter-spacing: 0.25em;
+    color: #8A8294;
     text-transform: uppercase;
     white-space: nowrap;
-    border-right: 1px solid rgba(201,169,97,0.3);
-    padding-right: 10px;
 }
 
 .inspire-action-text {
-    font-size: 0.72rem;
-    color: #FAF6F0;
-    line-height: 1.6;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: #4A4258;
+    letter-spacing: 0.05em;
+    text-align: center;
+    line-height: 1.5;
 }
 
 .inspire-draw-btn {

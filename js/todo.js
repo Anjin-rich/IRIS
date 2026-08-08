@@ -48,6 +48,18 @@ function switchTodoTab(tabId, el) {
 // ============================================================
 //  1. 待办
 // ============================================================
+let currentTodoTag = null;
+
+function setTodoTag(tag, btn) {
+    currentTodoTag = currentTodoTag === tag ? null : tag;
+    document.querySelectorAll('.todo-tag-capsule').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    if (currentTodoTag) {
+        btn.classList.add('active');
+    }
+}
+
 function addTodo() {
     const input = document.getElementById('todoInput');
     const text = input.value.trim();
@@ -56,9 +68,14 @@ function addTodo() {
         id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
         text: text,
         done: false,
+        tag: currentTodoTag || null,
         createdAt: new Date().toISOString()
     });
     input.value = '';
+    currentTodoTag = null;
+    document.querySelectorAll('.todo-tag-capsule').forEach(function(el) {
+        el.classList.remove('active');
+    });
     saveState();
     renderTodos();
     if (state.todos.length === 1 && state.isFirstLaunch) {
@@ -100,7 +117,7 @@ function handleStarClick(idx, element) {
         checkUnlock('todo_100', state.stats.todoCount >= 100);
         checkAllRounder();
         checkGenAchievements();
-        if (typeof logActivity === 'function') logActivity('todo', todo.text);
+        if (typeof logActivity === 'function') logActivity('todo', todo.text, { tag: todo.tag || null });
     } else {
         // 从完成变为未完成
     }
@@ -122,11 +139,14 @@ function renderTodos() {
         const realIdx = state.todos.indexOf(todo);
         const starChar = todo.done ? '✦' : '✧';
         const starClass = todo.done ? 'todo-star-check done' : 'todo-star-check';
+        const tagLabel = todo.tag === 'life' ? '生活' : todo.tag === 'work' ? '工作' : '';
+        const tagClass = todo.tag ? ' tag-' + todo.tag : '';
         return `
             <li class="todo-item ${todo.done ? 'done' : ''}" id="todo-${realIdx}" draggable="true" data-idx="${realIdx}" data-id="${todo.id}">
                 <span class="todo-drag-handle" title="拖拽排序"><i class="fa-solid fa-grip-lines"></i></span>
                 <span class="${starClass}" onclick="handleStarClick(${realIdx}, this)">${starChar}</span>
                 <span class="todo-text">${escapeHtml(todo.text)}</span>
+                ${tagLabel ? '<span class="todo-tag-label' + tagClass + '">' + tagLabel + '</span>' : ''}
                 <span class="todo-reward">+1</span>
                 <span class="todo-delete" onclick="deleteTodo(${realIdx})"><i class="fa-regular fa-trash-can"></i></span>
             </li>
